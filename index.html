@@ -18,16 +18,21 @@
       <div style="overflow:hidden;"><div id="celestial-map"></div></div>    
     </div> 
     <div class="col-sm-7">
+<!--       Input for auto location suggestions  -->
       <label for="address" class="display-4">Location</label>
       <input type="search" class="form-control" placeholder="Start typing your location" id="address">
+      
       <div id="celestial-form"></div>    
     </div>
   </div>
 </div>
+  
+<!--   Places api cdn -->
 <script src="https://cdn.jsdelivr.net/npm/places.js@1.18.1"></script>
 <script src="https://cdn.jsdelivr.net/algoliasearch/3.31/algoliasearchLite.min.js"></script>
-<script>
 
+<!--   Calling Places APi -->
+  <script>
   (function() {
     var placesAutocomplete = places({
       appId: 'pl74W5KEPN0D',
@@ -54,15 +59,15 @@ function trigger_change_event(element_id){
     var event = new Event('change');
     element.dispatchEvent(event);
 }
-
 </script>
   
+<!--   Calling celestial display -->
   <script type="text/javascript">
 
 Celestial.display({
   form: true,
   formFields: {download: true},
-  datapath: "/data/",
+  datapath: "./data/",
   stars: {propername: true}
 });
 
