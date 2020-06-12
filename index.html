@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>D3-Celestial Starmap</title>
+  <script type="text/javascript" src="d3.min.js"></script>
+  <script type="text/javascript" src="d3.geo.projection.min.js"></script>
+  <script type="text/javascript" src="celestial.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="celestial.css">
+
+</head>
+<body>
+  <div class="container-fluid h-100" style="margin: 60px auto;">
+  <div class="row">
+    <div class="col-sm-5">
+      <div style="overflow:hidden;"><div id="celestial-map"></div></div>    
+    </div> 
+    <div class="col-sm-7">
+      <label for="address" class="display-4">Location</label>
+      <input type="search" class="form-control" placeholder="Start typing your location" id="address">
+      <div id="celestial-form"></div>    
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/places.js@1.18.1"></script>
+<script src="https://cdn.jsdelivr.net/algoliasearch/3.31/algoliasearchLite.min.js"></script>
+<script>
+
+  (function() {
+    var placesAutocomplete = places({
+      appId: 'pl74W5KEPN0D',
+      apiKey: '223db8723743c5f6d999e52eb8471b18',
+      container: document.querySelector('#address')
+    });
+  
+  
+    placesAutocomplete.on('change', function(e) {
+          //store all values in hidden form
+          document.querySelector('#address').value = e.suggestion.value
+          document.querySelector('#lat').value =  e.suggestion.latlng.lat
+          document.querySelector('#lon').value =  e.suggestion.latlng.lng
+  
+          trigger_change_event("lon");
+  
+        
+  
+    });
+  
+  })();
+function trigger_change_event(element_id){
+  element = document.getElementById(element_id);
+    var event = new Event('change');
+    element.dispatchEvent(event);
+}
+
+</script>
+  
+  <script type="text/javascript">
+
+Celestial.display({
+  form: true,
+  formFields: {download: true},
+  datapath: "/data/",
+  stars: {propername: true}
+});
+
+  </script>
+
+  <footer id="d3-celestial-footer">
+    <p><a href="https://github.com/ofrohn/d3-celestial"><b>D3-Celestial</b></a> released under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD license</a>. Copyright 2015-19 <a href="http://armchairastronautics.blogspot.com/" rel="author">Olaf Frohn</a>.</p>
+  </footer>
+</body>
+</html>
