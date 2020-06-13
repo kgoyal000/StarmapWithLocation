@@ -5149,7 +5149,7 @@
     
       q.await(function(error) {
         if (error) throw error;
-        var svg = d3.select("svg")
+        var svg = d3.select("#d3-celestial-svg svg")
           .attr("title", "D3-Celestial")
           .attr("version", 1.1)
           .attr("xmlns", "http://www.w3.org/2000/svg");
