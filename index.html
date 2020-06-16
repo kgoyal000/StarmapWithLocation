@@ -44,7 +44,7 @@
     placesAutocomplete.on('change', function(e) {
           //store all values in hidden form
       console.log(e.suggestion.city + ", "+e.suggestion.country);
-          document.querySelector('#address').value = e.suggestion.value
+          document.querySelector('#address').value = e.suggestion.city + ", "+e.suggestion.country
           document.querySelector('#lat').value =  e.suggestion.latlng.lat
           document.querySelector('#lon').value =  e.suggestion.latlng.lng
   
