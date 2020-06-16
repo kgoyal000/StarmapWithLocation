@@ -38,12 +38,12 @@
       appId: 'pl74W5KEPN0D',
       apiKey: '223db8723743c5f6d999e52eb8471b18',
       container: document.querySelector('#address'),
-      templates:'city, country'
     });
   
   
     placesAutocomplete.on('change', function(e) {
           //store all values in hidden form
+      console.log(e.suggestion.city + ", "+e.suggestion.country);
           document.querySelector('#address').value = e.suggestion.value
           document.querySelector('#lat').value =  e.suggestion.latlng.lat
           document.querySelector('#lon').value =  e.suggestion.latlng.lng
