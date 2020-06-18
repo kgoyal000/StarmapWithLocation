@@ -7,7 +7,7 @@ function trigger_change_event(element_id){
 }
 
 //Color changes
-window.addEventListener(function(){
+window.addEventListener('load',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
 var color;
   var fcolor;
