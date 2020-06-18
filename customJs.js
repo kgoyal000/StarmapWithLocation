@@ -131,3 +131,68 @@ document.getElementById("toggle-switch-comp-kbkfry6q").addEventListener('change'
     trigger_change_event("lines-graticule-show");
 });
 
+// Date Change
+function set_res_date(day,monthh,year){
+
+    console.log(day+" "+monthh+" "+year);
+    var month_list = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+    month = month_list.indexOf(monthh);
+    month_str = month;
+    if(month<=9){
+        month_str = "0"+month_str;
+    }
+    day_str = day;
+
+    if(day<=9){
+        day_str = "0"+day_str;
+    }
+
+    month_val = month-1;
+    $("#datepick").click();
+
+    $('#yr option:contains('+year+')').prop('selected','selected');
+    trigger_change_event("yr");
+
+    $('#mon').val(month_val);
+    trigger_change_event("mon");
+
+
+    // day id click
+    date_val = year+"-"+month_str+"-"+day_str;
+    $("#"+date_val).click();
+    trigger_change_event(date_val);
+
+     //hrs
+     var time = document.getElementById('comp-kbkfr8b3-inner').value
+    var t_hr = parseInt(time.split(':')[0]);
+    $("#hr").val(t_hr);
+    trigger_change_event("hr");
+    //min
+    var t_min = document.parseInt(time.split(':')[1]);
+    $("#min").val(t_min);
+    trigger_change_event("min");
+    //sec
+    
+
+    tz_val = document.getElementById("tz_form").value;
+    $("#tz").val(tz_val);
+
+    trigger_change_event("tz");
+
+}
+
+document.getElementById('comp-kbkg9zglinput').addEventListener('change',function(){
+	   var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month = parseInt(date.split('/')[0]);
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+});
+
+document.getElementById('comp-kbkfr8b3-inner').addEventListener('change',function(){
+	   var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month = parseInt(date.split('/')[0]);
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+});
