@@ -66,6 +66,7 @@ var color;
     strokeColor = '#d19b81';
   }else if( color=='#efc8be' ){
    strokeColor = '#efc8be';
+   lineColor = '#787878';
     }
    else{
    lineColor = "#949494";
