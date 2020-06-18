@@ -7,7 +7,6 @@ function trigger_change_event(element_id){
 }
 
 //Color changes
-window.addEventListener('load',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
 var color;
   var fcolor;
@@ -117,7 +116,6 @@ planets: {
    trigger_change_event("background-fill");
    trigger_change_event("stars-style-fill");
 
-});
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
     var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
