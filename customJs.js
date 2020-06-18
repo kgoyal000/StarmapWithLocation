@@ -1,3 +1,4 @@
+document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
 //trigger starmap change event
 function trigger_change_event(element_id){
   element = document.getElementById(element_id);
@@ -189,4 +190,7 @@ document.getElementById('comp-kbkfviu6input').addEventListener('click',function(
         var year = parseInt(date.split('/')[2]);
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
+});
+document.getElementById('comp-kbkfxefvlink').addEventListener('click',function(){
+	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
