@@ -191,6 +191,7 @@ document.getElementById('comp-kbkfviu6input').addEventListener('click',function(
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
-document.getElementById('comp-kbkfxefvlink').addEventListener('click',function(){
+document.getElementById('comp-kbkfxefvlink').addEventListener('click',function(event){
+	event.preventDefault();
 	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
