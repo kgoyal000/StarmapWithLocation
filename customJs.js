@@ -180,6 +180,7 @@ function set_res_date(day,monthh,year){
 //     trigger_change_event("tz");
 
 }
+if(document.getElementById('comp-kbkg9zgl').classList.contains('style-kbkg9zhv_focused')){
 document.getElementById('comp-kbkg9zglcalendar').addEventListener('click',function(){
 	console.log('inside Date');
         var date = document.getElementById('comp-kbkg9zglinput').value;
@@ -189,6 +190,7 @@ document.getElementById('comp-kbkg9zglcalendar').addEventListener('click',functi
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
+}
 
 document.getElementById('comp-kbkfr8b3-inner').addEventListener('change',function(){
 	   var date = document.getElementById('comp-kbkg9zglinput').value;
