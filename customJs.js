@@ -174,10 +174,10 @@ function set_res_date(day,monthh,year){
     //sec
     
 
-    tz_val = document.getElementById("tz_form").value;
-    $("#tz").val(tz_val);
+//     tz_val = document.getElementById("tz_form").value;
+//     $("#tz").val(tz_val);
 
-    trigger_change_event("tz");
+//     trigger_change_event("tz");
 
 }
 document.getElementById('comp-kbkg9zglcalendar').addEventListener('click',function(){
