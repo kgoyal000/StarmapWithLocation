@@ -1,3 +1,11 @@
+//trigger starmap change event
+function trigger_change_event(element_id){
+  element = document.getElementById(element_id);
+    var event = new Event('change');
+    // Dispatch it.
+    element.dispatchEvent(event);
+}
+
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
     var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
