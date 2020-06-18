@@ -182,17 +182,19 @@ function set_res_date(day,monthh,year){
 }
 document.getElementById('comp-kbkg9zglcalendar').addEventListener('click',function(){
 	console.log('inside Date');
-	   var date = document.getElementById('comp-kbkg9zglinput').value;
-        var month = parseInt(date.split('/')[0]);
+        var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =month_list1[parseInt(date.split('/')[0])];
         var year = parseInt(date.split('/')[2]);
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
 
-// document.getElementById('comp-kbkfr8b3-inner').addEventListener('change',function(){
-// 	   var date = document.getElementById('comp-kbkg9zglinput').value;
-//         var month = parseInt(date.split('/')[0]);
-//         var year = parseInt(date.split('/')[2]);
-//         var day = parseInt(date.split('/')[1]);
-//         set_res_date(day,month,year);
-// });
+document.getElementById('comp-kbkfr8b3-inner').addEventListener('change',function(){
+	   var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =month_list1[parseInt(date.split('/')[0])];
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+});
