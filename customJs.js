@@ -7,7 +7,9 @@ function trigger_change_event(element_id){
 }
 
 //Color changes
+document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
+var showConstellations = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
 var color;
   var fcolor;
   var textColor;
@@ -86,7 +88,11 @@ Celestial.display({
     form: false,
     formFields: {download: true},
     datapath:  "https://ofrohn.github.io/data/",
+stars: {
+    style: { fill: starColor, opacity: 1 },
+}, 
 constellations: {
+    lines: showConstellations, 
     lineStyle: { stroke: gridColor, width: 0.7, opacity: 0.6 },
   },
   lines: {
@@ -97,6 +103,7 @@ constellations: {
 		  lat: {pos: [], fill: "#eee", font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"}},
   },
   background: {
+    fill: color,
     stroke: strokeColor, // Outline
   },
 planets: {
@@ -108,24 +115,18 @@ planets: {
       }
     }
   })
-
-
-
-   document.querySelector('#background-fill').value =  color;
-   document.querySelector('#stars-style-fill').value = starColor;
-   trigger_change_event("background-fill");
-   trigger_change_event("stars-style-fill");
-
-//for constellations
+});
+/*for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
     var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
     document.getElementById("constellations-lines").checked = showConst;
     trigger_change_event("constellations-lines")
 });
 
-//for Grid
+for Grid
 document.getElementById("toggle-switch-comp-kbkfry6q").addEventListener('change',function(){
        var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
     document.getElementById("lines-graticule-show").checked = showGrid;
     trigger_change_event("lines-graticule-show");
 });
+*/
