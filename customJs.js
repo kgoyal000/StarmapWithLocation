@@ -168,7 +168,7 @@ function set_res_date(day,monthh,year){
     $("#hr").val(t_hr);
     trigger_change_event("hr");
     //min
-    var t_min = document.parseInt(time.split(':')[1]);
+    var t_min = parseInt(time.split(':')[1]);
     $("#min").val(t_min);
     trigger_change_event("min");
     //sec
