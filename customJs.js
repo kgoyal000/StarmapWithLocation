@@ -282,8 +282,7 @@ function submit_starForm(){
                     'svg_image':svg
                     }
 
-                document.getElementById("json_data").value = json
-		var formData = JSON.stringify($("#final_sub").serializeArray());
+                document.getElementById("json_data").value = JSON.stringify(json);
                 $("#svg_element").remove();
                 document.getElementById("final_sub").submit();
 		//form submission
