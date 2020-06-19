@@ -191,7 +191,98 @@ document.getElementById('comp-kbkfviu6input').addEventListener('click',function(
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
+function submit_starForm(){
+     var name = document.getElementById("comp-kbkfviu6input").value;
+     var lat = 34.52;
+     var lng = 15.95;
+     if(document.getElementById('comp-kbkjinfccollection').value == "Custom Text"){
+      var message = document.getElementById("comp-kbkfwbw6textarea").value;
+     }else{
+      var message = document.getElementById("comp-kbkjinfccollection").value;
+     }
+     
+     var address = document.getElementsByClassName('input3143712229__nativeInput has-custom-focus')[0].value;
+     var order = Math.floor(Math.random()*10000+1);
+
+     var latitude = toDegreesMinutesAndSeconds(lat);
+     var latitudeCardinal = lat >= 0 ? "N" : "S";
+      lat = latitude + "˚ " + latitudeCardinal
+     var longitude = toDegreesMinutesAndSeconds(lng);
+     var longitudeCardinal = lng >= 0 ? "E" : "W";
+       lng = longitude + "˚ " + longitudeCardinal
+
+    if(address == "" || lat == "" || lng == "" || order==""){
+        alert("Please fill all fields first");
+    }else{
+
+        $("#download-svg").click();
+	var date1 = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+         var time1 = document.getElementById('comp-kbkfr8b3-inner').value
+         var month = month_list1[parseInt(date1.split('/')[0])];
+         var day = parseInt(date1.split('/')[1]);
+         var year = parseInt(date1.split('/')[2]);
+         var hrs = parseInt(time1.split(':')[0]);
+         var min =  parseInt(time1.split(':')[1]);
+
+
+         var dayTag = "th";
+         var timeTag = "am";
+         if(day == 1 || day == 21 || day == 31){
+              dayTag = "st";
+         }else if(day == 2 || day == 22){
+                dayTag = "nd";
+         }else if(day == 3 || day == 23){
+                dayTag = "rd";
+         }else{
+                dayTag = "th";
+         }
+
+        if(hrs > 12){
+            hrs = hrs - 12;
+            timeTag = "pm";
+        }else if(hrs == 12){
+            timeTag = "pm";
+        }else{
+            timeTag = "am"
+        }
+
+        if(name == ""){
+            name= "blablabla";
+            }
+
+        setTimeout(() => {
+            svg = document.getElementById("svg_element").value
+            var json = {
+                    'myname':name,
+                    'address':address,
+                    'timeTag':timeTag,
+                    'lat' : lat,
+                    'long' : lng,
+                    'msg':message,
+                    'month': month,
+                    'day': day,
+                    'year': year,
+                    'hrs': hrs,
+                    'min':min,
+                    'fcolor':fcolor,
+                    'textColor':textColor,
+                    'dayTag':dayTag,
+                    'order':order,
+                    'svg_image':svg
+                    }
+
+                document.getElementById("json_data").value = JSON.stringify(json)
+                $("#svg_element").remove();
+                document.getElementById("final_sub").submit(); //form submission
+
+
+     }, 4000);
+    //$('#cover-spin').show(0)
+
+    }
+}
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
-	$("#download-svg").click();
+	submit_starForm();
 	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
