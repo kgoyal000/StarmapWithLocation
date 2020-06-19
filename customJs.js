@@ -191,6 +191,16 @@ document.getElementById('comp-kbkfviu6input').addEventListener('click',function(
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
+function toDegreesMinutesAndSeconds(coordinate) {
+  var absolute = Math.abs(coordinate);
+  var degrees = Math.floor(absolute);
+  var minutesNotTruncated = (absolute - degrees) * 60;
+  var minutes = Math.floor(minutesNotTruncated);
+  var seconds = Math.floor((minutesNotTruncated - minutes) * 60);
+
+  return degrees + "." + minutes;
+}
+
 function submit_starForm(){
      var name = document.getElementById("comp-kbkfviu6input").value;
      var lat = 34.52;
