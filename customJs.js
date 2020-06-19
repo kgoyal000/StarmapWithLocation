@@ -1,6 +1,4 @@
- if ($(window).width() < 767) {
- 	document.getElementsByTagName('select')[13].id="comp-kbkfr8b3-inner";
- }
+
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
 //trigger starmap change event
 function trigger_change_event(element_id){
@@ -121,6 +119,9 @@ planets: {
     }
   })
 //});
+ if ($(window).width() < 767) {
+ 	document.getElementsByTagName('select')[13].id="comp-kbkfr8b3-inner";
+ }
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
     var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
