@@ -119,9 +119,7 @@ planets: {
     }
   })
 //});
- if ($(window).width() < 767) {
- 	document.getElementsByTagName('select')[13].id="comp-kbkfr8b3-inner";
- }
+
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
     var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
