@@ -289,7 +289,7 @@ function submit_starForm(){
 		//form submission
 $.ajax({
   type: "POST",
-  url: "http://ec2-3-130-33-236.us-east-2.compute.amazonaws.com/api/data-fetch/",
+  url: "https://ec2-3-130-33-236.us-east-2.compute.amazonaws.com/api/data-fetch/",
   data: formData,
   success: function(){
   document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
