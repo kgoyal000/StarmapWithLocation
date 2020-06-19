@@ -239,6 +239,9 @@ function submit_starForm(){
          var hrs = parseInt(time1.split(':')[0]);
          var min =  parseInt(time1.split(':')[1]);
 
+	    if(min < 10){
+	    	min = "0"+min;
+	    }
 
          var dayTag = "th";
          var timeTag = "am";
