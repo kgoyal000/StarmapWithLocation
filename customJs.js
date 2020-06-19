@@ -285,18 +285,9 @@ function submit_starForm(){
                 document.getElementById("json_data").value = json
 		var formData = JSON.stringify($("#final_sub").serializeArray());
                 $("#svg_element").remove();
-//                 document.getElementById("final_sub").submit();
+                document.getElementById("final_sub").submit();
 		//form submission
-$.ajax({
-  type: "POST",
-  url: "https://ec2-3-130-33-236.us-east-2.compute.amazonaws.com/api/data-fetch/",
-  data: formData,
-  success: function(){
-  document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
-  },
-  dataType: "json",
-  contentType : "application/json"
-});
+
 
      }, 4000);
     //$('#cover-spin').show(0)
@@ -305,4 +296,5 @@ $.ajax({
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
 	submit_starForm();
+	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
