@@ -195,6 +195,16 @@ function toDegreesMinutesAndSeconds(coordinate) {
   return degrees + "." + minutes;
 }
 
+$('#comp-kbkg9zglinput').on('change',function(){
+	console.log('inside Date');
+        var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =month_list1[parseInt(date.split('/')[0])];
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+});
+
 function submit_starForm(){
      var name = document.getElementById("comp-kbkfviu6input").value;
      var lat = 34.52;
@@ -223,16 +233,7 @@ function submit_starForm(){
      var longitude = toDegreesMinutesAndSeconds(lng);
      var longitudeCardinal = lng >= 0 ? "E" : "W";
        lng = longitude + "˚ " + longitudeCardinal
-		  
-	setTimeout(() => {
-	console.log('inside Date');
-        var date = document.getElementById('comp-kbkg9zglinput').value;
-        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
-        var month =month_list1[parseInt(date.split('/')[0])];
-        var year = parseInt(date.split('/')[2]);
-        var day = parseInt(date.split('/')[1]);
-        set_res_date(day,month,year);
-	   },3000);
+	
 
     if(address == "" || lat == "" || lng == "" || order==""){
         alert("Please fill all fields first");
