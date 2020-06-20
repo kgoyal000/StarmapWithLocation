@@ -57,8 +57,8 @@
           const userAction = async () => {
             const response = await fetch('http://api.timezonedb.com/v2.1/get-time-zone?key=OAPK8QHQLKTM&format=json&by=position&lat='+lat1+'&lng='+lng1);
             const myJson = await response.json();
+            console.log( response.json())
           }
-          console.log(myJson)
     });
   
   })();
