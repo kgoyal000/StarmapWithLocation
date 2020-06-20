@@ -44,7 +44,7 @@
 };
   const placesInstance = places(fixedOptions).configure(reconfigurableOptions);
   
-    placesAutocomplete.on('change', function(e) {
+    placesInstance.on('change', function(e) {
           //store all values in hidden form
       console.log(e.suggestion.city + ", "+e.suggestion.country);
           document.querySelector('#address').value = e.suggestion.city + ", "+e.suggestion.country
