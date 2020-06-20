@@ -1,5 +1,6 @@
 
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
+set_date();
 //trigger starmap change event
 function trigger_change_event(element_id){
   element = document.getElementById(element_id);
@@ -194,13 +195,9 @@ function toDegreesMinutesAndSeconds(coordinate) {
 
   return degrees + "." + minutes;
 }
-var $val = $('#comp-kbkg9zg').val;
-$('#comp-kbkg9zg').val = function(newVal) {
-  if (this.attr('id') === 'comp-kbkg9zgl') this.trigger('input');
-  $val.call(this, newVal);
-}
 
-$('#comp-kbkg9zg').on('input', function() {
+
+$('#comp-kbnmp412collection,#comp-kbnmpvw5collection,comp-kbnmoeqacollection,#comp-kbnaf0lycollection,#comp-kbnamx97collection').on('change', function() {
 	console.log('inside Date');
         var date = document.getElementById('comp-kbkg9zglinput').value;
         var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -209,6 +206,23 @@ $('#comp-kbkg9zg').on('input', function() {
         var day = parseInt(date.split('/')[1]);
         set_res_date(day,month,year);
 });
+
+function convert_month(month){
+    var months = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+    return months[month];
+}
+
+function set_date(){
+        dates('option');
+        months('option');
+        var d = new Date();
+        var year = d.getFullYear();
+        years('option', year-70, year+10);
+        var month = convert_month(d.getMonth()+1);
+        document.getElementById("comp-kbnmp412collection").value = month;
+        document.getElementById("comp-kbnmpvw5collection").value = d.getFullYear();
+        document.getElementById("comp-kbnmoeqacollection").value = d.getDate();
+}
 
 function submit_starForm(){
      var name = document.getElementById("comp-kbkfviu6input").value;
