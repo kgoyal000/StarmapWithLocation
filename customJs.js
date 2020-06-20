@@ -136,7 +136,6 @@ document.getElementById("toggle-switch-comp-kbkfry6q").addEventListener('change'
     document.getElementById("lines-graticule-show").checked = showGrid;
     trigger_change_event("lines-graticule-show");
 });
-set_date();
 // Date Change
 function set_res_date(day,monthh,year){
 
@@ -212,18 +211,6 @@ $('#comp-kbnmp412collection,#comp-kbnmpvw5collection,comp-kbnmoeqacollection,#co
 function convert_month(month){
     var months = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
     return months[month];
-}
-
-function set_date(){
-        dates('option');
-        months('option');
-        var d = new Date();
-        var year = d.getFullYear();
-        years('option', year-70, year+10);
-        var month = convert_month(d.getMonth()+1);
-        document.getElementById("comp-kbnmp412collection").value = month;
-        document.getElementById("comp-kbnmpvw5collection").value = d.getFullYear();
-        document.getElementById("comp-kbnmoeqacollection").value = d.getDate();
 }
 
 function submit_starForm(){
