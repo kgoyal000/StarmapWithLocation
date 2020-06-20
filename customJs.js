@@ -223,12 +223,10 @@ function submit_starForm(){
       var message = document.getElementById("comp-kbkjinfccollection").value;
      }
 	
-	var date1 = document.getElementById('comp-kbkg9zglinput').value;
-        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
 //          var time1 = document.getElementById('comp-kbkfr8b3-inner').value
-         var month = month_list1[parseInt(date1.split('/')[0])];
-         var day = parseInt(date1.split('/')[1]);
-         var year = parseInt(date1.split('/')[2]);
+	 var month =document.getElementById('comp-kbnmp412collection').value;
+       	 var year = parseInt(document.getElementById('comp-kbnmpvw5collection').value);
+         var day = parseInt(document.getElementById('comp-kbnmoeqacollection').value);
          var hrs = parseInt(document.getElementById('comp-kbnaf0lycollection').value);
          var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
      
