@@ -3289,7 +3289,7 @@ function geo(cfg) {
   function setPosition(p, settime) {
     if (!p) return;
     var timestamp = Math.floor(date.getTime() / 1000),
-        url = "http://api.timezonedb.com/v2.1/get-time-zone?key=AEFXZPQ3FDPF&format=json&by=position" +
+        url = "https://api.timezonedb.com/v2.1/get-time-zone?key=OAPK8QHQLKTM&format=json&by=position" +
               "&lat=" + p[0] + "&lng=" + p[1] + "&time=" + timestamp;
 
     d3.json(url, function(error, json) {
