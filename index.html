@@ -59,8 +59,10 @@
             const myJson = await response.json();
             return myJson;
           }
-          const result = timeZone();
+      (async () => {
+          const result = await timeZone();
           console.log(result);
+        })();
     });
   
   })();
