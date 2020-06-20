@@ -54,11 +54,13 @@
           var lng1 = e.suggestion.latlng.lng;
           trigger_change_event("lon");
   
-          const userAction = async () => {
+            async function timeZone() {
             const response = await fetch('http://api.timezonedb.com/v2.1/get-time-zone?key=OAPK8QHQLKTM&format=json&by=position&lat='+lat1+'&lng='+lng1);
             const myJson = await response.json();
-            console.log( response.json())
+            return myJson;
           }
+          const result = timeZone();
+          console.log(result);
     });
   
   })();
