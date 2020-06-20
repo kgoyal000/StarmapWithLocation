@@ -223,6 +223,16 @@ function submit_starForm(){
      var longitude = toDegreesMinutesAndSeconds(lng);
      var longitudeCardinal = lng >= 0 ? "E" : "W";
        lng = longitude + "˚ " + longitudeCardinal
+		  
+	setTimeout(() => {
+	console.log('inside Date');
+        var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =month_list1[parseInt(date.split('/')[0])];
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+	   },3000);
 
     if(address == "" || lat == "" || lng == "" || order==""){
         alert("Please fill all fields first");
@@ -293,15 +303,6 @@ function submit_starForm(){
     }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
-	   setTimeout(() => {
-		console.log('inside Date');
-        var date = document.getElementById('comp-kbkg9zglinput').value;
-        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
-        var month =month_list1[parseInt(date.split('/')[0])];
-        var year = parseInt(date.split('/')[2]);
-        var day = parseInt(date.split('/')[1]);
-        set_res_date(day,month,year);
-	   },3000);
 	submit_starForm();
 	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
