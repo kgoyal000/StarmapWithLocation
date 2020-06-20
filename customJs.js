@@ -184,15 +184,7 @@ function set_res_date(day,monthh,year){
 
 }
 
-document.getElementById('comp-kbkfviu6input').addEventListener('click',function(){
-	console.log('inside Date');
-        var date = document.getElementById('comp-kbkg9zglinput').value;
-        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
-        var month =month_list1[parseInt(date.split('/')[0])];
-        var year = parseInt(date.split('/')[2]);
-        var day = parseInt(date.split('/')[1]);
-        set_res_date(day,month,year);
-});
+
 function toDegreesMinutesAndSeconds(coordinate) {
   var absolute = Math.abs(coordinate);
   var degrees = Math.floor(absolute);
@@ -295,12 +287,21 @@ function submit_starForm(){
 		//form submission
 
 
-     }, 4000);
-    //$('#cover-spin').show(0)
+     }, 1000);
+    $('#cover-spin').show(0)
 
     }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
+	   setTimeout(() => {
+		console.log('inside Date');
+        var date = document.getElementById('comp-kbkg9zglinput').value;
+        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =month_list1[parseInt(date.split('/')[0])];
+        var year = parseInt(date.split('/')[2]);
+        var day = parseInt(date.split('/')[1]);
+        set_res_date(day,month,year);
+	   },3000);
 	submit_starForm();
 	document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
