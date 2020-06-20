@@ -166,12 +166,12 @@ function set_res_date(day,monthh,year){
     trigger_change_event(date_val);
 
      //hrs
-     var time = document.getElementById('comp-kbkfr8b3-inner').value
-    var t_hr = parseInt(time.split(':')[0]);
+//      var time = document.getElementById('comp-kbnamx97collection').value
+    var t_hr = parseInt(document.getElementById('comp-kbnaf0lycollection').value);
     $("#hr").val(t_hr);
     trigger_change_event("hr");
     //min
-    var t_min = parseInt(time.split(':')[1]);
+    var t_min = parseInt(document.getElementById('comp-kbnamx97collection').value);
     $("#min").val(t_min);
     trigger_change_event("min");
     //sec
