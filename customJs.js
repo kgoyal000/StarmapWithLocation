@@ -194,8 +194,13 @@ function toDegreesMinutesAndSeconds(coordinate) {
 
   return degrees + "." + minutes;
 }
+var $val = $('#comp-kbkg9zg').val;
+$('#comp-kbkg9zg').val = function(newVal) {
+  if (this.attr('id') === 'comp-kbkg9zgl') this.trigger('input');
+  $val.call(this, newVal);
+}
 
-$('#comp-kbkg9zglinput').on('change',function(){
+$('#comp-kbkg9zg').on('input', function() {
 	console.log('inside Date');
         var date = document.getElementById('comp-kbkg9zglinput').value;
         var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
