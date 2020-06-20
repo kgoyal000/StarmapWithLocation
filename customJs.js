@@ -1,5 +1,8 @@
 
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
+        document.getElementById("comp-kbnmp412collection").classList.add("bear-months")= month;
+        document.getElementById("comp-kbnmpvw5collection").classList.add("bear-years") = d.getFullYear();
+        document.getElementById("comp-kbnmoeqacollection").classList.add("bear-dates") = d.getDate();
 set_date();
 //trigger starmap change event
 function trigger_change_event(element_id){
