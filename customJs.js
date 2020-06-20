@@ -15,6 +15,7 @@ function trigger_change_event(element_id){
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
 var showConstellations = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
+var woodFrame = document.getElementById('comp-kbkgri28collection').value;
 var color;
   var fcolor;
   var textColor;
@@ -241,7 +242,7 @@ function submit_starForm(){
        lng = longitude + "˚ " + longitudeCardinal
 	
 
-    if(address == "" || lat == "" || lng == "" || order==""){
+    if(address == "" || lat == "" || lng == "" || order=="" || woodFrame=""){
         alert("Please fill all fields first");
     }else{
 
