@@ -46,15 +46,19 @@
   
     placesInstance.on('change', function(e) {
           //store all values in hidden form
-      console.log(e.suggestion.city + ", "+e.suggestion.country);
-          document.querySelector('#address').value = e.suggestion.city + ", "+e.suggestion.country
+      console.log(e.suggestion.name + ", "+e.suggestion.country);
+          document.querySelector('#address').value = e.suggestion.name + ", "+e.suggestion.country
           document.querySelector('#lat').value =  e.suggestion.latlng.lat
           document.querySelector('#lon').value =  e.suggestion.latlng.lng
-  
+          var lat1 = e.suggestion.latlng.lat;
+          var lng1 = e.suggestion.latlng.lng;
           trigger_change_event("lon");
   
-        
-  
+          const userAction = async () => {
+            const response = await fetch('http://api.timezonedb.com/v2.1/get-time-zone?key=OAPK8QHQLKTM&format=json&by=position&lat='+lat1+'&lng='+lng1);
+            const myJson = await response.json();
+          }
+          console.log(myJson)
     });
   
   })();
