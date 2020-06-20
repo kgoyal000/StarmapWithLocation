@@ -34,12 +34,15 @@
 <!--   Calling Places APi -->
   <script>
   (function() {
-    var placesAutocomplete = places({
+    var fixedOptions = {
       appId: 'pl74W5KEPN0D',
       apiKey: '223db8723743c5f6d999e52eb8471b18',
       container: document.querySelector('#address'),
-    });
-  
+    };
+    const reconfigurableOptions = {
+  type: 'city', // Search only for cities names
+};
+  const placesInstance = places(fixedOptions).configure(reconfigurableOptions);
   
     placesAutocomplete.on('change', function(e) {
           //store all values in hidden form
