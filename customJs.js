@@ -15,7 +15,6 @@ function trigger_change_event(element_id){
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
 var showConstellations = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
-var woodFrame = document.getElementById('comp-kbkgri28collection').value;
 var color;
   var fcolor;
   var textColor;
@@ -233,6 +232,7 @@ function submit_starForm(){
      
      var address = document.getElementsByClassName('input3143712229__nativeInput has-custom-focus')[0].value;
      var order = Math.floor(Math.random()*10000+1);
+     var woodFrame = document.getElementById('comp-kbkgri28collection').value;
 
      var latitude = toDegreesMinutesAndSeconds(lat);
      var latitudeCardinal = lat >= 0 ? "N" : "S";
@@ -242,7 +242,7 @@ function submit_starForm(){
        lng = longitude + "˚ " + longitudeCardinal
 	
 
-    if(address == "" || lat == "" || lng == "" || order=="" || woodFrame=""){
+    if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == ""){
         alert("Please fill all fields first");
     }else{
 
