@@ -200,11 +200,11 @@ function toDegreesMinutesAndSeconds(coordinate) {
 
 $('#comp-kbnmp412collection,#comp-kbnmpvw5collection,comp-kbnmoeqacollection,#comp-kbnaf0lycollection,#comp-kbnamx97collection').on('change', function() {
 	console.log('inside Date');
-        var date = document.getElementById('comp-kbkg9zglinput').value;
-        var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
-        var month =month_list1[parseInt(date.split('/')[0])];
-        var year = parseInt(date.split('/')[2]);
-        var day = parseInt(date.split('/')[1]);
+//         var date = document.getElementById('comp-kbkg9zglinput').value;
+//         var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
+        var month =parseInt(document.getElementById('comp-kbnmp412collection').value);
+        var year = parseInt(document.getElementById('comp-kbnmpvw5collection').value);
+        var day = parseInt(document.getElementById('comp-kbnmoeqacollection').value);
         set_res_date(day,month,year);
 });
 
