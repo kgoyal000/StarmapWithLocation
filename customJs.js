@@ -198,7 +198,7 @@ function toDegreesMinutesAndSeconds(coordinate) {
 }
 
 
-$('#comp-kbnmp412collection,#comp-kbnmpvw5collection,comp-kbnmoeqacollection,#comp-kbnaf0lycollection,#comp-kbnamx97collection').on('change', function() {
+$('#comp-kbnmp412collection,#comp-kbnmpvw5collection,#comp-kbnmoeqacollection,#comp-kbnaf0lycollection,#comp-kbnamx97collection').on('change', function() {
 	console.log('inside Date');
 //         var date = document.getElementById('comp-kbkg9zglinput').value;
 //         var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
