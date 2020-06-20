@@ -32,8 +32,8 @@ function dates(tags)
 		}
 		
 	//You can call the class multiple times						
-    var multiple_list = document.document.querySelectorAll('select');
-    for (i = 17; i <19; i++)
+    var multiple_list = document.getElementsByClassName("bear-dates");
+    for (i = 0; i < multiple_list.length; i++)
 	{
     	multiple_list[i].innerHTML = dates;
     }	
@@ -75,7 +75,7 @@ function days(tags)
 		}
 		
 	//You can call the class multiple times						
-    var multiple_list = document.getElementsByClassNames("comp-kbnmoeqacollection");
+    var multiple_list = document.getElementsByClassName("bear-days");
     for (i = 0; i < multiple_list.length; i++)
 	{
     	multiple_list[i].innerHTML = days;
@@ -164,7 +164,7 @@ function months(tags)
 		}
 		
 	//You can call the class multiple times						
-    var multiple_list = document.getElementById("comp-kbnmp412collection");
+    var multiple_list = document.getElementsByClassName("bear-months");
     for (i = 0; i < multiple_list.length; i++)
 	{
     	multiple_list[i].innerHTML = months;
@@ -245,7 +245,7 @@ function years(tags, startY, endY)
 		}
 		
 	//You can call the class multiple times						
-    var multiple_list = document.getElementById("comp-kbnmpvw5collection");
+    var multiple_list = document.getElementsByClassName("bear-years");
     for (i = 0; i < multiple_list.length; i++)
 	{
     	multiple_list[i].innerHTML = years;
