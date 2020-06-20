@@ -3,7 +3,6 @@ document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061
         document.getElementById("comp-kbnmp412collection").classList.add("bear-months");
         document.getElementById("comp-kbnmpvw5collection").classList.add("bear-years")
         document.getElementById("comp-kbnmoeqacollection").classList.add("bear-dates")
-set_date();
 //trigger starmap change event
 function trigger_change_event(element_id){
   element = document.getElementById(element_id);
@@ -137,7 +136,7 @@ document.getElementById("toggle-switch-comp-kbkfry6q").addEventListener('change'
     document.getElementById("lines-graticule-show").checked = showGrid;
     trigger_change_event("lines-graticule-show");
 });
-
+set_date();
 // Date Change
 function set_res_date(day,monthh,year){
 
