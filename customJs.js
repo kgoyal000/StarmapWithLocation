@@ -215,12 +215,12 @@ function submit_starForm(){
 	
 	var date1 = document.getElementById('comp-kbkg9zglinput').value;
         var month_list1 = ['test','January','February','March','April','May','June','July','August','September','October','November','December'];
-         var time1 = document.getElementById('comp-kbkfr8b3-inner').value
+//          var time1 = document.getElementById('comp-kbkfr8b3-inner').value
          var month = month_list1[parseInt(date1.split('/')[0])];
          var day = parseInt(date1.split('/')[1]);
          var year = parseInt(date1.split('/')[2]);
-         var hrs = parseInt(time1.split(':')[0]);
-         var min =  parseInt(time1.split(':')[1]);
+         var hrs = parseInt(document.getElementById('comp-kbnaf0lycollection').value);
+         var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
      
      var address = document.getElementsByClassName('input3143712229__nativeInput has-custom-focus')[0].value;
      var order = Math.floor(Math.random()*10000+1);
