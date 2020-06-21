@@ -218,6 +218,8 @@ function submit_starForm(){
   document.getElementById("lon").value = document.getElementById("comp-kboxpkppinput").value;
     trigger_change_event("lon");
   setTimeout(function(){
+var lat = document.getElementById("comp-kboxpr47input").value;
+var lng = document.getElementById("comp-kboxpkppinput").value;
 var name = document.getElementById("comp-kbkfviu6input").value;
 if(document.getElementById('comp-kbkjinfccollection').value == "Custom Text"){
 var message = document.getElementById("comp-kbkfwbw6textarea").value;
