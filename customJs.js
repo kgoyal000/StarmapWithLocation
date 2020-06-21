@@ -12,19 +12,20 @@ function trigger_change_event(element_id){
 }
 
 //googleapi
- var autocomplete;
         function initialize() {
             var input = document.getElementById('comp-kbosn1rpinput');
-            autocomplete = new google.maps.places.Autocomplete(input);
-		var place = autocomplete.getPlace();
+		var autocomplete = new google.maps.places.Autocomplete(input);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            var nameG = place.name;
+            var latG = place.geometry.location.lat();
+           var lonG= place.geometry.location.lng();
+            //alert("This function is working!");
+            //alert(place.name);
+           // alert(place.address_components[0].long_name);
+		console.log(place +" Place G " +" name "+nameG+" lat "+latG+" lon "+lonG)
 
-	var latG = place.geometry.location.lat(),
-   	 lngG = place.geometry.location.lng();
-		
-// Then do whatever you want with them
-
-console.log(latG);
-console.log(lngG);
+        });
           }
 google.maps.event.addDomListener(window, 'load', initialize);
           
