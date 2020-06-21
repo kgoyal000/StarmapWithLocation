@@ -23,8 +23,6 @@ function trigger_change_event(element_id){
             //alert("This function is working!");
             //alert(place.name);
            // alert(place.address_components[0].long_name);
-		console.log(JSON.stringify(" name "+nameG+" lat "+latG+" lon "+lonG)
-
         });
           }
 google.maps.event.addDomListener(window, 'load', initialize);
