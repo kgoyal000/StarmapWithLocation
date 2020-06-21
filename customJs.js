@@ -21,7 +21,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
     var latG = place.geometry.location.lat();
    var lonG= place.geometry.location.lng();
 document.getElementById('comp-kboxpr47input').value =parseFloat(latG).toFixed(2);
-document.getElementById('comp-kboxpkppinput').value =parseFloat(lonG).toFixed(2);;
+document.getElementById('comp-kboxpkppinput').value =parseFloat(lonG).toFixed(2);
     //alert("This function is working!");
     //alert(place.name);
    // alert(place.address_components[0].long_name);
