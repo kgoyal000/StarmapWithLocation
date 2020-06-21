@@ -26,6 +26,7 @@ function trigger_change_event(element_id){
 console.log(latG);
 console.log(lngG);
           }
+google.maps.event.addDomListener(window, 'load', initialize);
           
 //Color changes
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
