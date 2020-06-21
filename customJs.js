@@ -12,13 +12,11 @@ function trigger_change_event(element_id){
 }
 
 //googleapi
+ var autocomplete;
         function initialize() {
             var input = document.getElementById('comp-kbosn1rpinput');
-            new google.maps.places.Autocomplete(input);
-          }
-          google.maps.event.addDomListener(window, 'load', initialize);
-google.maps.event.addListener(autocomplete, 'place_changed', function() {
-          var place = autocomplete.getPlace();
+            autocomplete = new google.maps.places.Autocomplete(input);
+		var place = autocomplete.getPlace();
 
 	var latG = place.geometry.location.lat(),
    	 lngG = place.geometry.location.lng();
@@ -27,7 +25,8 @@ google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
 console.log(latG);
 console.log(lngG);
-});
+          }
+          
 //Color changes
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
