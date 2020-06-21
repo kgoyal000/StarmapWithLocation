@@ -194,27 +194,9 @@ trigger_change_event("hr");
 var t_min = parseInt(document.getElementById('comp-kbnamx97collection').value);
 $("#min").val(t_min);
 trigger_change_event("min");
-//sec
 
-
-//     tz_val = document.getElementById("tz_form").value;
-//     $("#tz").val(tz_val);
-
-//     trigger_change_event("tz");
 
 }
-
-
-function toDegreesMinutesAndSeconds(coordinate) {
-var absolute = Math.abs(coordinate);
-var degrees = Math.floor(absolute);
-var minutesNotTruncated = (absolute - degrees) * 60;
-var minutes = Math.floor(minutesNotTruncated);
-var seconds = Math.floor((minutesNotTruncated - minutes) * 60);
-
-return degrees + "." + minutes;
-}
-
 
 $('#comp-kbnmp412collection,#comp-kbnmpvw5collection,#comp-kbnmoeqacollection,#comp-kbnaf0lycollection,#comp-kbnamx97collection').on('change', function() {
 console.log('inside Date');
@@ -232,12 +214,9 @@ return months[month];
 }
 
 function submit_starForm(){
-    document.getElementById("lat").value = document.getElementById("lat_form").value;
-  document.getElementById("lon").value = document.getElementById("lng_form").value;
+    document.getElementById("lat").value = document.getElementById("comp-kboxpr47input").value;
+  document.getElementById("lon").value = document.getElementById("comp-kboxpkppinput").value;
     trigger_change_event("lon");
-  setTimeout(function(){
-    document.getElementById('tz_form').value = document.getElementById('datetime').value.split(' ')[2];
-  },1600);
   setTimeout(function(){
 var name = document.getElementById("comp-kbkfviu6input").value;
 if(document.getElementById('comp-kbkjinfccollection').value == "Custom Text"){
@@ -253,7 +232,7 @@ var month =document.getElementById('comp-kbnmp412collection').value;
  var hrs = parseInt(document.getElementById('comp-kbnaf0lycollection').value);
  var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
 
-var address = document.getElementsByClassName('input3143712229__nativeInput has-custom-focus')[0].value;
+var address = document.getElementById('comp-kbosn1rpinput').value;
 var order = Math.floor(Math.random()*10000+1);
 var latitudeCardinal;
 var longitudeCardinal;
