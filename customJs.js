@@ -20,8 +20,8 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
     var nameG = place.name;
     var latG = place.geometry.location.lat();
    var lonG= place.geometry.location.lng();
-document.getElementById('comp-kboxpr47input').value = latG;
-document.getElementById('comp-kboxpkppinput').value = lonG;
+document.getElementById('comp-kboxpr47input').value =parseFloat(latG).toFixed(2);
+document.getElementById('comp-kboxpkppinput').value =parseFloat(lonG).toFixed(2);;
     //alert("This function is working!");
     //alert(place.name);
    // alert(place.address_components[0].long_name);
@@ -240,7 +240,7 @@ function submit_starForm(){
   },1600);
   setTimeout(function(){
 var name = document.getElementById("comp-kbkfviu6input").value;
-if(document.getElementById('comp-kbkjinfccollection').value == "Other- please instert text below"){
+if(document.getElementById('comp-kbkjinfccollection').value == "Custom Text"){
 var message = document.getElementById("comp-kbkfwbw6textarea").value;
 }else{
 var message = document.getElementById("comp-kbkjinfccollection").value;
