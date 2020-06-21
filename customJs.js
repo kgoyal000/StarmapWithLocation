@@ -11,6 +11,14 @@ function trigger_change_event(element_id){
     element.dispatchEvent(event);
 }
 
+//googleapi
+        function initialize() {
+            var input = document.getElementById('comp-kbosn1rpinput');
+            new google.maps.places.Autocomplete(input);
+          }
+          
+          google.maps.event.addDomListener(window, 'load', initialize);
+
 //Color changes
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
 var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
