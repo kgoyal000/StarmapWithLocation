@@ -254,10 +254,10 @@ if(lng >= 0){
 }
  lat = latitude + "˚ " + latitudeCardinal
  lng = longitude + "˚ " + longitudeCardinal
+var woodFrame = document.getElementsByClassName('DropdownBase1877381437--childrenWrapper')[0].innerText;
 
 
-
-if(address == "" || lat == "" || lng == "" || order==""){
+if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"){
 alert("Please fill all fields first");
 $('#cover-spin').hide(0)
 }else{
