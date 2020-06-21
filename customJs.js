@@ -240,7 +240,7 @@ function submit_starForm(){
   },1600);
   setTimeout(function(){
 var name = document.getElementById("comp-kbkfviu6input").value;
-if(document.getElementById('comp-kbkjinfccollection').value == "Custom Text"){
+if(document.getElementById('comp-kbkjinfccollection').value == "Other- please instert text below"){
 var message = document.getElementById("comp-kbkfwbw6textarea").value;
 }else{
 var message = document.getElementById("comp-kbkjinfccollection").value;
