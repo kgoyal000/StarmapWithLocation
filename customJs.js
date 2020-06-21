@@ -16,8 +16,17 @@ function trigger_change_event(element_id){
             var input = document.getElementById('comp-kbosn1rpinput');
             new google.maps.places.Autocomplete(input);
           }
-          
           google.maps.event.addDomListener(window, 'load', initialize);
+
+          var place = autocomplete.getPlace();
+
+	var latG = place.geometry.location.lat(),
+   	 lngG = place.geometry.location.lng();
+		
+// Then do whatever you want with them
+
+console.log(latG);
+console.log(lngG);
 
 //Color changes
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
