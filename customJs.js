@@ -254,8 +254,13 @@ if(lng >= 0){
 }
  lat = latitude + "˚ " + latitudeCardinal
  lng = longitude + "˚ " + longitudeCardinal
+      if ($(window).width() > 720) {
 var woodFrame = document.getElementsByClassName('DropdownBase1877381437--childrenWrapper')[0].innerText;
-
+      }else{
+        if(document.getElementsByClassName('DropdownNativeSelect534429653--root Button73195782--root Dropdown2876011947--dropdownNativeSelect')[0].value == ""){
+            var woodFrame = "Select";
+        }
+      }
 
 if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"){
 alert("Please fill all fields first");
