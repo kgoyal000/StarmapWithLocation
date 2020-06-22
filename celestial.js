@@ -5238,19 +5238,12 @@ function exportSVG(fname) {
      .attr(":inkscape:window-width", m.width+200)
      .attr(":inkscape:window-height", m.height)
      .attr(":inkscape:window-maximized", "1");*/
-    if (fname) {
       var blob = new Blob([svg.node().outerHTML], {type:"image/svg+xml;charset=utf-8"});
     
-      var a = d3.select("body").append("a").node(); 
-      a.download = fname || "d3-celestial.svg";
-      a.rel = "noopener";
-      a.href = URL.createObjectURL(blob);
-      a.click();
-      d3.select(a).remove();
-      d3.select("#d3-celestial-svg").remove();
-    } else {
-      return svg.node().outerHTML;
-    }
+     var x = document.createElement("textarea");
+      x.setAttribute("id", "svg_element");
+      x.setAttribute("value", blob);
+      document.body.appendChild(x);
   });
 
 }
