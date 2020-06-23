@@ -147,12 +147,12 @@ document.getElementById("comp-kbrjtjnvinput").addEventListener('click',function(
   if (document.getElementById('comp-kbrjtjnvinput').checked) {
     unknownTimeChecked = true;
   $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', true);
-  document.getElementById("comp-kbnaf0lycollection").value = 00;
-  document.getElementById("comp-kbnamx97collection").value = 01;
-  $("#hr").val(document.getElementById("comp-kbnaf0lycollection").value);
+  document.getElementById("comp-kbnaf0lycollection").value = "00";
+  document.getElementById("comp-kbnamx97collection").value = "01";
+  $("#hr").val(parseInt(document.getElementById("comp-kbnaf0lycollection").value));
     trigger_change_event("hr");
     //min
-    $("#min").val(document.getElementById("comp-kbnamx97collection").value);
+    $("#min").val(parseInt(document.getElementById("comp-kbnamx97collection").value));
     trigger_change_event("min");
   } else {
     $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', false);
