@@ -252,7 +252,7 @@ var month =document.getElementById('comp-kbnmp412collection').value;
  var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
 
 var address = document.getElementById('comp-kbosn1rpinput').value;
-var order = day+month+year+" "+Math.floor(Math.random()*33000+Math.random()*33000+Math.random()*3300+786);
+var order = day+year+hrs+Math.floor(Math.random()*33000+Math.random()*33000+Math.random()*3300+786);
 var latitudeCardinal;
 var longitudeCardinal;
 var latitude = lat;
@@ -341,10 +341,9 @@ setTimeout(() => {
         $('textarea._2ORQo').on('focus click change',function(){
         document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
         })
+        document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
         $("textarea._2ORQo").focus();
         $("textarea._2ORQo").trigger("change");
-     $("textarea._2ORQo").trigger("click");
-     $("textarea._2ORQo").trigger("focus");
         console.log(document.querySelector('textarea._2ORQo').value);
         document.getElementById("json_data").value = JSON.stringify(json);
         $("#svg_element").remove();
