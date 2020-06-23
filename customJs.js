@@ -142,6 +142,25 @@ symbols: {
 })
 //});
 
+
+document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unkownTime(this));
+var unknownTimeChecked = false;
+function unknownTime(checkboxElem) {
+  if (checkboxElem.checked) {
+    unknownTimeChecked = true;
+  $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', true);
+  document.getElementById("comp-kbnaf0lycollection").value = 00;
+  document.getElementById("comp-kbnamx97collection").value = 01;
+  $("#hr").val(document.getElementById("comp-kbnaf0lycollection").value);
+    trigger_change_event("hr");
+    //min
+    $("#min").val(document.getElementById("comp-kbnamx97collection").value);
+    trigger_change_event("min");
+  } else {
+    $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', false);
+    unknownTimeChecked = false;
+  }
+}
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
 var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
@@ -236,7 +255,7 @@ var month =document.getElementById('comp-kbnmp412collection').value;
  var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
 
 var address = document.getElementById('comp-kbosn1rpinput').value;
-var order = Math.floor(Math.random()*10000+1);
+var order = Math.floor(Math.random()*33000+Math.random()*33000+Math.random()*33000+786);
 var latitudeCardinal;
 var longitudeCardinal;
 var latitude = lat;
@@ -294,11 +313,13 @@ if(hrs > 12){
 }else{
     timeTag = "am"
 }
-
+if(unknownTimeChecked){
+          hrs = 35;
+        }
 if(name == ""){
     name= "blablabla";
     }
-
+document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
 setTimeout(() => {
     svg = document.getElementById("svg_element").value
     var json = {
