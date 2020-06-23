@@ -142,10 +142,8 @@ symbols: {
 })
 //});
 
-
-document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unknownTime());
 var unknownTimeChecked = false;
-function unknownTime() {
+document.getElementById("comp-kbrjtjnvinput").addEventListener('click',function(){
   if (document.getElementById('comp-kbrjtjnvinput').checked) {
     unknownTimeChecked = true;
   $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', true);
