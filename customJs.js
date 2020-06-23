@@ -234,6 +234,8 @@ var months = ['test','January','February','March','April','May','June','July','A
 return months[month];
 }
 
+var details;
+
 function submit_starForm(){
 var lat = document.getElementById("comp-kboxpr47input").value;
 var lng = document.getElementById("comp-kboxpkppinput").value;
@@ -319,13 +321,8 @@ if(name == ""){
     document.getElementsByClassName('_2ORQo')[0].classList.add('_1dGXc');
     document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
    
-    document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        $('textarea._2ORQo').on('focus',function(){
-        document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        })
-              $("textarea._2ORQo").focus();
-        console.log(document.querySelector('textarea._2ORQo').value);
-setTimeout(() => {
+    details = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
+       setTimeout(() => {
     svg = document.getElementById("svg_element").value
     var json = {
             'myname':name,
@@ -355,7 +352,15 @@ setTimeout(() => {
 }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
+
     $('#cover-spin').show(0)
+    submit_starForm();
+    document.querySelector('textarea._2ORQo').value = details; 
+    $('textarea._2ORQo').on('focus',function(){
+        document.querySelector('textarea._2ORQo').value = details; 
+     })
+              $("textarea._2ORQo").focus();
+        console.log(document.querySelector('textarea._2ORQo').value);
+
     document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
-submit_starForm();
 });
