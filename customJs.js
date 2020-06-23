@@ -320,10 +320,10 @@ if(name == ""){
     document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
    
     document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        $('textarea._2ORQo').on('focus click change',function(){
+        $('textarea._2ORQo').on('focus',function(){
         document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
         })
-            //   $("textarea._2ORQo").focus();
+              $("textarea._2ORQo").focus();
         console.log(document.querySelector('textarea._2ORQo').value);
 setTimeout(() => {
     svg = document.getElementById("svg_element").value
