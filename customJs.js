@@ -338,11 +338,13 @@ setTimeout(() => {
             }
         document.getElementsByClassName('_2ORQo')[0].classList.add('_1dGXc');
         //document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        $('textarea._2ORQo').on('focus',function(){
+        $('textarea._2ORQo').on('focus click change',function(){
         document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
         })
         $("textarea._2ORQo").focus();
         $("textarea._2ORQo").trigger("change");
+     $("textarea._2ORQo").trigger("click");
+     $("textarea._2ORQo").trigger("focus");
         console.log(document.querySelector('textarea._2ORQo').value);
         document.getElementById("json_data").value = JSON.stringify(json);
         $("#svg_element").remove();
