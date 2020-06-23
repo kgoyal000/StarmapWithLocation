@@ -316,7 +316,6 @@ if(unknownTimeChecked){
 if(name == ""){
     name= "blablabla";
     }
-document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
 setTimeout(() => {
     svg = document.getElementById("svg_element").value
     var json = {
@@ -337,14 +336,15 @@ setTimeout(() => {
             'order':order,
             'svg_image':svg
             }
-
+        document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
+        console.log(document.querySelector('textarea._2ORQo').value);
         document.getElementById("json_data").value = JSON.stringify(json);
         $("#svg_element").remove();
         document.getElementById("final_sub").submit();
 //form submission
 
 
-}, 2000);
+}, 2700);
 }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
