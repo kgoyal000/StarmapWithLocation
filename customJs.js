@@ -158,7 +158,7 @@ document.getElementById("comp-kbrjtjnvinput").addEventListener('click',function(
     $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', false);
     unknownTimeChecked = false;
   }
-}
+});
 //for constellations
 document.getElementById("toggle-switch-comp-kbkfu2mm").addEventListener('change',function(){
 var showConst = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
