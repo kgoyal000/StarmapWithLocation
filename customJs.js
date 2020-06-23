@@ -336,15 +336,6 @@ setTimeout(() => {
             'order':order,
             'svg_image':svg
             }
-        document.getElementsByClassName('_2ORQo')[0].classList.add('_1dGXc');
-    document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
-   
-    document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        $('textarea._2ORQo').on('focus click change',function(){
-        document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
-        })
-               $("textarea._2ORQo").focus();
-        console.log(document.querySelector('textarea._2ORQo').value);
         document.getElementById("json_data").value = JSON.stringify(json);
         $("#svg_element").remove();
         document.getElementById("final_sub").submit();
@@ -355,6 +346,15 @@ setTimeout(() => {
 }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
+    document.getElementsByClassName('_2ORQo')[0].classList.add('_1dGXc');
+    document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
+   
+    document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
+        $('textarea._2ORQo').on('focus click change',function(){
+        document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
+        })
+               $("textarea._2ORQo").focus();
+        console.log(document.querySelector('textarea._2ORQo').value);
     $('#cover-spin').show(0)
 submit_starForm();
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
