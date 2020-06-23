@@ -360,6 +360,7 @@ document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
         document.querySelector('textarea._2ORQo').value = details; 
      })
               $("textarea._2ORQo").focus();
+     $("textarea._2ORQo").click();
         console.log(document.querySelector('textarea._2ORQo').value);
 
     document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
