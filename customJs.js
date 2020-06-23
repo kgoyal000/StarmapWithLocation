@@ -143,7 +143,7 @@ symbols: {
 //});
 
 
-document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unkownTime(this));
+document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unknownTime(this));
 var unknownTimeChecked = false;
 function unknownTime(checkboxElem) {
   if (checkboxElem.checked) {
