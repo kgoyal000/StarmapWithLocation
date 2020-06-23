@@ -252,7 +252,7 @@ var month =document.getElementById('comp-kbnmp412collection').value;
  var min = parseInt(document.getElementById('comp-kbnamx97collection').value);
 
 var address = document.getElementById('comp-kbosn1rpinput').value;
-var order = Math.floor(Math.random()*33000+Math.random()*33000+Math.random()*33000+786);
+var order = day+month+year+" "+Math.floor(Math.random()*33000+Math.random()*33000+Math.random()*3300+786);
 var latitudeCardinal;
 var longitudeCardinal;
 var latitude = lat;
