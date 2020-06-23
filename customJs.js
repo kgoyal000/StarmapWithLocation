@@ -319,17 +319,7 @@ if(unknownTimeChecked){
 if(name == ""){
     name= "blablabla";
     }
-document.querySelector('textarea._2ORQo').value = address+
-    "\n"
-    +day+"/"+month+"/"+year+
-    "\n"
-    +hrs+":"+min+
-    "\n"
-    +name+
-    "\n"
-    +message+
-    "\n"
-    +order;
+document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
 setTimeout(() => {
     svg = document.getElementById("svg_element").value
     var json = {
