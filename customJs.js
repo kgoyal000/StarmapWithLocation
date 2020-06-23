@@ -143,10 +143,10 @@ symbols: {
 //});
 
 
-document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unknownTime(this));
+document.getElementById("comp-kbrjtjnvinput").addEventListener('change',unknownTime());
 var unknownTimeChecked = false;
-function unknownTime(checkboxElem) {
-  if (checkboxElem.checked) {
+function unknownTime() {
+  if (document.getElementById('comp-kbrjtjnvinput').checked) {
     unknownTimeChecked = true;
   $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', true);
   document.getElementById("comp-kbnaf0lycollection").value = 00;
