@@ -150,7 +150,7 @@ document.getElementById("comp-kbrjtjnvinput").addEventListener('click',function(
   if (document.getElementById('comp-kbrjtjnvinput').checked) {
     unknownTimeChecked = true;
   $('#comp-kbnaf0lycollection,#comp-kbnamx97collection').prop('disabled', true);
-  document.getElementById("comp-kbnaf0lycollection").value = 00;
+  document.getElementById("comp-kbnaf0lycollection").value = "00";
   document.getElementById("comp-kbnamx97collection").value = "01";
   $("#hr").val(parseInt(document.getElementById("comp-kbnaf0lycollection").value));
     trigger_change_event("hr");
