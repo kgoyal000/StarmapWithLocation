@@ -23,6 +23,9 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
    var lonG= place.geometry.location.lng();
 document.getElementById('comp-kboxpr47input').value =parseFloat(latG).toFixed(2);
 document.getElementById('comp-kboxpkppinput').value =parseFloat(lonG).toFixed(2);
+        document.getElementById("lat").value = document.getElementById("comp-kboxpr47input").value;
+  document.getElementById("lon").value = document.getElementById("comp-kboxpkppinput").value;
+    trigger_change_event("lon");
     //alert("This function is working!");
     //alert(place.name);
    // alert(place.address_components[0].long_name);
@@ -232,10 +235,6 @@ return months[month];
 }
 
 function submit_starForm(){
-    document.getElementById("lat").value = document.getElementById("comp-kboxpr47input").value;
-  document.getElementById("lon").value = document.getElementById("comp-kboxpkppinput").value;
-    trigger_change_event("lon");
-  setTimeout(function(){
 var lat = document.getElementById("comp-kboxpr47input").value;
 var lng = document.getElementById("comp-kboxpkppinput").value;
 var name = document.getElementById("comp-kbkfviu6input").value;
@@ -345,9 +344,8 @@ setTimeout(() => {
 //form submission
 
 
-}, 1000);
+}, 2000);
 }
-},5200);
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
     $('#cover-spin').show(0)
