@@ -323,7 +323,7 @@ if(name == ""){
         $('textarea._2ORQo').on('focus click change',function(){
         document.querySelector('textarea._2ORQo').value = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
         })
-               $("textarea._2ORQo").focus();
+            //   $("textarea._2ORQo").focus();
         console.log(document.querySelector('textarea._2ORQo').value);
 setTimeout(() => {
     svg = document.getElementById("svg_element").value
