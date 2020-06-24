@@ -1,7 +1,3 @@
-<script>
-
-
-
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
 document.getElementsByClassName('_3WchY')[0].style.display = 'none'
 document.getElementById("comp-kbnmp412collection").classList.add("bear-months");
@@ -381,6 +377,3 @@ document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
     document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
 
-
-
-</script>
