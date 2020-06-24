@@ -271,8 +271,6 @@ if(lng >= 0){
  longitudeCardinal = "W";
  longitude = -1*lng;
 }
- lat = latitude + "˚ " + latitudeCardinal
- lng = longitude + "˚ " + longitudeCardinal
       if ($(window).width() > 720) {
 var woodFrame = document.getElementsByClassName('DropdownBase1877381437--childrenWrapper')[0].innerText;
       }else{
@@ -285,6 +283,9 @@ if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"
 alert("Please fill all fields first");
 $('#cover-spin').hide(0)
 }else{
+    
+ lat = latitude + "˚ " + latitudeCardinal
+ lng = longitude + "˚ " + longitudeCardinal
 $("#download-svg").click();
 
 
