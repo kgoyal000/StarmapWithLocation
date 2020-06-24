@@ -45,19 +45,19 @@ var strokeColor;
 var gridColor;
 var moonColor;
 var lineColor;
-if(document.getElementsByTagName('h1')[2].innerText == "Mystique - Black / Black, with Grid"){
+if(document.getElementsByTagName('h1')[1].innerText == "Mystique - Black / Black, with Grid"){
 color = '#000000';
 fcolor = '#000000';
 textColor='#ffffff';
-}else if(document.getElementsByTagName('h1')[2].innerText == "The Classic - Black / White"){
+}else if(document.getElementsByTagName('h1')[1].innerText == "The Classic - Black / White"){
 color = '#000000';
 fcolor = '#ffffff';
 textColor='#000';
-}else if(document.getElementsByTagName('h1')[2].innerText == "Marine - Navy / White"){
+}else if(document.getElementsByTagName('h1')[1].innerText == "Marine - Navy / White"){
 color = '#4b687e';
 fcolor = '#ffffff';
 textColor='#000';
-}else if(document.getElementsByTagName('h1')[2].innerText == "Boho - Terra Cotta / White"){
+}else if(document.getElementsByTagName('h1')[1].innerText == "Boho - Terra Cotta / White"){
 color = '#d19b81';
 fcolor = '#ffffff';
 textColor='#000';
