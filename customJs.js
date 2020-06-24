@@ -1,3 +1,6 @@
+<script>
+
+
 
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
 document.getElementsByClassName('_3WchY')[0].style.display = 'none'
@@ -46,11 +49,11 @@ var gridColor;
 var moonColor;
 var lineColor;
 if(document.getElementsByTagName('h1')[1].innerText == "Mystique - Black / Black, with Grid"){
-color = '#000000';
-fcolor = '#000000';
+color = '#060808';
+fcolor = '#060808';
 textColor='#ffffff';
 }else if(document.getElementsByTagName('h1')[1].innerText == "The Classic - Black / White"){
-color = '#000000';
+color = '#060808';
 fcolor = '#ffffff';
 textColor='#000';
 }else if(document.getElementsByTagName('h1')[1].innerText == "Marine - Navy / White"){
@@ -68,14 +71,14 @@ textColor='#000';
 }
 
 if( color=='#efc8be' || color == '#d19b81' ){
-starColor = '#000000'
+starColor = '#060808'
 }
 else{
 starColor = '#ffffff'
 }
 
 if( color=='#efc8be' || color == '#d19b81' ){
-gridColor = '#000000'
+gridColor = '#060808'
 }
 else{
 gridColor = '#ffffff'
@@ -85,7 +88,7 @@ gridColor = '#ffffff'
 if( color=='#4b687e' ){
 lineColor = '#949494';
 strokeColor = '#4b687e';
-}else if( color=='#000000' ){
+}else if( color=='#060808' ){
 lineColor = '#444444';
 strokeColor = '#ffffff';
 }else if(color == '#d19b81'){
@@ -377,3 +380,7 @@ document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
     submit_starForm();
     document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
+
+
+
+</script>
