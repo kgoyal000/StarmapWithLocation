@@ -1,3 +1,4 @@
+
 document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].style.display = 'none';
 document.getElementsByClassName('_3WchY')[0].style.display = 'none'
 document.getElementById("comp-kbnmp412collection").classList.add("bear-months");
@@ -53,7 +54,7 @@ color = '#060808';
 fcolor = '#ffffff';
 textColor='#000';
 }else if(document.getElementsByTagName('h1')[1].innerText == "Marine - Navy / White"){
-color = '#4b687e';
+color = '#5e8098';
 fcolor = '#ffffff';
 textColor='#000';
 }else if(document.getElementsByTagName('h1')[1].innerText == "Boho - Terra Cotta / White"){
@@ -81,11 +82,11 @@ gridColor = '#ffffff'
 }
 
 
-if( color=='#4b687e' ){
+if( color=='#5e8098' ){
 lineColor = '#949494';
-strokeColor = '#4b687e';
+strokeColor = '#5e8098';
 }else if( color=='#060808' ){
-lineColor = '#444444';
+lineColor = '#949494';
 strokeColor = '#ffffff';
 }else if(color == '#d19b81'){
 lineColor = '#787878';
