@@ -236,6 +236,21 @@ return months[month];
 
 var details;
 
+  function setNativeValue(element, value) {
+    let lastValue = element.value;
+    element.value = value;
+    let event = new Event("input", { target: element, bubbles: true });
+    // React 15
+    event.simulated = true;
+    // React 16
+    let tracker = element._valueTracker;
+    if (tracker) {
+        tracker.setValue(lastValue);
+    }
+    element.dispatchEvent(event);
+}
+
+
 function submit_starForm(){
 var lat = document.getElementById("comp-kboxpr47input").value;
 var lng = document.getElementById("comp-kboxpkppinput").value;
@@ -283,7 +298,10 @@ if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"
 alert("Please fill all fields first");
 $('#cover-spin').hide(0)
 }else{
-    
+var input = document.querySelector("textarea._2ORQo");
+setNativeValue(input, details);
+console.log(document.querySelector('textarea._2ORQo').value);
+
  lat = latitude + "˚ " + latitudeCardinal
  lng = longitude + "˚ " + longitudeCardinal
 $("#download-svg").click();
@@ -356,23 +374,5 @@ document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
 
     $('#cover-spin').show(0)
     submit_starForm();
-    function setNativeValue(element, value) {
-    let lastValue = element.value;
-    element.value = value;
-    let event = new Event("input", { target: element, bubbles: true });
-    // React 15
-    event.simulated = true;
-    // React 16
-    let tracker = element._valueTracker;
-    if (tracker) {
-        tracker.setValue(lastValue);
-    }
-    element.dispatchEvent(event);
-}
-
-var input = document.querySelector("textarea._2ORQo");
-setNativeValue(input, details);
-console.log(document.querySelector('textarea._2ORQo').value);
-
     document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
 });
