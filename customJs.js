@@ -293,15 +293,11 @@ var woodFrame = document.getElementsByClassName('DropdownBase1877381437--childre
             var woodFrame = "Select";
         }
       }
-
+ var randTime = Math.floor(Math.random() * (11 - 2 + 1) + 2);
 if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"){
 alert("Please fill all fields first");
 $('#cover-spin').hide(0)
 }else{
-var input = document.querySelector("textarea._2ORQo");
-setNativeValue(input, details);
-console.log(document.querySelector('textarea._2ORQo').value);
-
  lat = latitude + "˚ " + latitudeCardinal
  lng = longitude + "˚ " + longitudeCardinal
 $("#download-svg").click();
@@ -341,6 +337,11 @@ if(name == ""){
     document.getElementsByClassName('_2ORQo')[0].classList.add('focus-ring');
    
     details = address+"\n"+day+"/"+month+"/"+year+"\n"+hrs+":"+min+"\n"+name+"\n"+message+"\n"+order;
+    
+var input = document.querySelector("textarea._2ORQo");
+setNativeValue(input, details);
+console.log(document.querySelector('textarea._2ORQo').value);
+
        setTimeout(() => {
     svg = document.getElementById("svg_element").value
     var json = {
@@ -367,7 +368,7 @@ if(name == ""){
 //form submission
 
 
-}, 2700);
+}, randTime * 1000);
 }
 }
 document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
