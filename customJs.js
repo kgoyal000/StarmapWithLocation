@@ -86,7 +86,7 @@ if( color=='#5e8098' ){
 lineColor = '#949494';
 strokeColor = '#5e8098';
 }else if( color=='#060808' ){
-lineColor = '#949494';
+lineColor = '#515151';
 strokeColor = '#ffffff';
 }else if(color == '#d19b81'){
 lineColor = '#787878';
