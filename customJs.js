@@ -170,8 +170,8 @@ trigger_change_event("constellations-lines")
 });
 
 //for Grid
-document.getElementById("toggle-switch-comp-kbkfry6q").addEventListener('change',function(){
-var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
+document.getElementById("toggle-switch-comp-kbv5w0h8").addEventListener('change',function(){
+var showGrid = document.getElementById("toggle-switch-comp-kbv5w0h8").checked;
 document.getElementById("lines-graticule-show").checked = showGrid;
 trigger_change_event("lines-graticule-show");
 });
