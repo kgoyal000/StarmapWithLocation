@@ -35,7 +35,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   
 //Color changes
 //document.getElementById("comp-kbkfxefvlink").addEventListener('click',function(){
-var showGrid = document.getElementById("toggle-switch-comp-kbkfry6q").checked;
+var showGrid = document.getElementById("toggle-switch-comp-kbv5w0h8").checked;
 var showConstellations = document.getElementById("toggle-switch-comp-kbkfu2mm").checked;
 var color;
 var fcolor;
