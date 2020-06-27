@@ -293,7 +293,7 @@ var woodFrame = document.getElementsByClassName('DropdownBase1877381437--childre
             var woodFrame = "Select";
         }
       }
- var randTime = Math.floor(Math.random() * (11 - 2 + 1) + 2);
+ var randTime = Math.floor(Math.random() * (5 - 3 + 1) + 3);
 if(address == "" || lat == "" || lng == "" || order=="" || woodFrame == "Select"){
 alert("Please fill all fields first");
 $('#cover-spin').hide(0)
