@@ -375,6 +375,6 @@ document.getElementById('comp-kbkfxefv').addEventListener('click',function(){
 
     $('#cover-spin').show(0)
     submit_starForm();
-    document.getElementsByClassName('StatesButton928128992--root AddToCartButton3061789056--addToCartButton')[0].click()
+    document.getElementsByClassName('AddToCartButton3061789056--addToCartButton')[0].click()
 });
 
