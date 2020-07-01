@@ -289,7 +289,7 @@ if(lng >= 0){
       if ($(window).width() > 720) {
 var woodFrame = document.getElementsByClassName('DropdownBase1838877040--childrenWrapper')[0].innerText;
       }else{
-        if(document.getElementsByClassName('DropdownNativeSelect534429653--root Button73195782--root Dropdown2876011947--dropdownNativeSelect')[0].value == ""){
+        if(document.getElementsByClassName('DropdownNativeSelect1650023343--root')[0].value == ""){
             var woodFrame = "Select";
         }
       }
