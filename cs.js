@@ -1512,7 +1512,7 @@
       show: true,    // Show stars
       limit: 6,      // Show only stars brighter than limit magnitude
       colors: false,  // Show stars in spectral colors, if not use fill-style
-      style: { fill: "#000000", opacity: 1 }, // Default style for stars
+      style: { fill: "#ffffff", opacity: 1 }, // Default style for stars
       designation: false, // Show star names (Bayer, Flamsteed, Variable star, Gliese or designation, 
                          // i.e. whichever of the previous applies first); may vary with culture setting
       designationType: "desig",  // Which kind of name is displayed as designation (fieldname in starnames.json)
@@ -1563,14 +1563,14 @@
     names: false,   // Show constellation names
     namesType: "desig",   // What kind of name to show (default 3 letter designations) all options: name, desig,
                          // lat, en, ar, cn, cz, ee, fi, fr, de, gr, il, it, jp, kr, in, ir, ru, es, tr
-    nameStyle: { fill:"#cccc99", align: "center", baseline: "middle", opacity:0.7,
+    nameStyle: { fill:"#ffffff", align: "center", baseline: "middle", opacity:0.7,
 		             font: ["12px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif",  // Different fonts for brighter &
 								        "11px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif",  // darker constellations
 												"11px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"]},
     lines: true,   // Show constellation lines
-    lineStyle: { stroke: "#3a3939", width: 1, opacity: 0.65 },
+    lineStyle: { stroke: "#ffffff", width: 1, opacity: 0.65 },
     bounds: false,  // Show constellation boundaries
-    boundStyle: { stroke: "#ccff00", width: 2, opacity: 0.8, dash: [2, 6] }
+    boundStyle: { stroke: "#000000", width: 2, opacity: 0.8, dash: [2, 6] }
     },
     mw: {
       show: false,    // Show Milky Way as filled polygons 
@@ -1589,16 +1589,16 @@
      //mars: { show: false, stroke:"#cc0000", width:1.3, opacity:.7 }
     }, // Background style
     background: { 
-      fill: "#efc8be",
+      fill: "#000000",
     opacity: 1,
-    stroke: "#efc8be", // Outline
+    stroke: "#000000", // Outline
     width: 2.5
     }, 
     horizon: {  //Show horizon marker, if geo-position and date-time is set
       show: false, 
       stroke: "#cccccc", // Line
       width: 1.0, 
-      fill: "#000000", // Area below horizon
+      fill: "#ffffff", // Area below horizon
       opacity: 0.4
     },  
     daylight: {  //Show approximate state of sky at selected time
