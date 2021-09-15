@@ -1,5923 +1,3923 @@
-// Copyright 2015-2020 Olaf Frohn https://github.com/ofrohn, see LICENSE
-!(function() {
-var Celestial = {
-  version: '0.7.25',
-  container: null,
-  data: []
-};
+! function() {
+   var t = {
+      version: "0.7.25",
+      container: null,
+      data: []
+   };
+   var e = .035,
+      a = 1.4,
+      n = 2e3,
+      r = 2500,
+      s = 1500,
+      o = 10,
+      i = 1;
+   var l, c, p, d, u, h, f = {},
+      m = {};
+   if (t.display = function(y) {
+         var g, M, w = t.container,
+            x = [],
+            T = 0,
+            P = !1;
+         st((l = V.set(y).applyDefaults(y)).zoomextend) && (o = l.zoomextend), st(l.zoomlevel) && (i = l.zoomlevel);
+         var I = Q(l.container);
+         if (I) {
+            g = "#" + l.container;
+            var q = window.getComputedStyle(I, null);
+            parseInt(q.width) || l.width || (I.style.width = X(I.parentNode.clientWidth))
+         } else g = "body", I = null;
+         var E = [16, 16],
+            C = Qt(),
+            H = st(l.background.width) ? C + l.background.width : C,
+            B = window.devicePixelRatio || 1,
+            G = Xt(l.projection);
+         if (G) {
+            l.lines.graticule.lat && "outline" === l.lines.graticule.lat.pos[0] && (G.scale -= 2);
+            var U = G.ratio,
+               W = Math.round(C / U),
+               K = Math.round(H / U),
+               et = G.scale * C / 1024,
+               at = l.stars.size,
+               rt = l.dsos.size || at,
+               it = l.stars.exponent,
+               lt = l.dsos.exponent || it,
+               ct = 1,
+               pt = S(l.center),
+               dt = l.datapath;
+            "body" !== g && (Q(l.container).style.height = X(K)), c = t.projection(l.projection).rotate(pt).translate([H / 2, K / 2]).scale(et * i), p = d3.geo.zoom().projection(c).center([H / 2, K / 2]).scaleExtent([et, et * o]).on("zoom.redraw", xt), et *= i;
+            var ut = d3.select(g).selectAll("canvas"),
+               ht = "" !== l.culture && "iau" !== l.culture ? l.culture : "";
+            0 === ut[0].length && (ut = d3.select(g).append("canvas")), ut.style("width", X(H)).style("height", X(K)).attr("width", H * B).attr("height", K * B);
+            var ft = ut.node().getContext("2d");
+            ft.setTransform(B, 0, 0, B, 0, 0);
+            var mt = d3.geo.graticule().minorStep([15, 10]);
+            d = d3.geo.path().projection(c).context(ft), w ? w.selectAll("*").remove() : w = d3.select(g).append("container"), l.interactive ? (ut.call(p), d3.select(g).on("dblclick", (function() {
+               return vt(1.5625), !1
+            }))) : ut.attr("style", "cursor: default!important"), Ot(G.clip), d3.select(window).on("resize", wt), !0 === l.controls && null === Q("celestial-zoomin") && (d3.select(g).append("input").attr("type", "button").attr("id", "celestial-zoomin").attr("value", "+").on("click", (function() {
+               return vt(1.25), !1
+            })), d3.select(g).append("input").attr("type", "button").attr("id", "celestial-zoomout").attr("value", "−").on("click", (function() {
+               return vt(.8), !1
+            }))), u = d3.geo.circle().angle([90]), h = d3.geo.circle().angle([179.9]), Pt(l), null === Q("error") && d3.select("body").append("div").attr("id", "error"), null === Q("loc") ? Gt(l) : !0 === l.location && "zenith" === l.follow && bt({
+               center: t.zenith()
+            }), !0 !== l.location && !0 !== l.formFields.location || (d3.select("#location").style("display", "inline-block"), qt("horizon-show", G.clip), qt("daylight-show", !G.clip)), this.container = w, this.clip = Tt, this.map = d, this.mapProjection = c, this.context = ft, this.metrics = function() {
+               return {
+                  width: C,
+                  height: W,
+                  margin: E,
+                  scale: c.scale()
+               }
+            }, this.setStyle = St, this.setTextStyle = jt;
+            this.setStyleA = It, this.setConstStyle = function(t, e) {
+               var a = R(e);
+               ft.font = a[t]
+            }, this.symbol = Z.symbol, this.dsoSymbol = Ct, this.redraw = xt, this.resize = function(t) {
+               return void 0 !== t && (nt(t, "width") ? l.width = t.width : st(t) && (l.width = t)), wt(!0), l.width
+            }, this.reload = function(e) {
+               var a;
+               e && Object.assign(l, V.set(e)), "center" === l.follow && nt(l, "center") ? a = S(l.center) : "zenith" === l.follow && (a = S(t.zenith())), a && c.rotate(a), w.selectAll("*").remove(), yt()
+            }, this.apply = function(t) {
+               Mt(t)
+            }, this.reproject = function(t) {
+               return kt(t)
+            }, this.rotate = function(t) {
+               return t ? bt(t) : l.center
+            }, this.zoomBy = function(t) {
+               return t ? vt(t) : c.scale() / et
+            }, this.color = function(t) {
+               return t && nt(l.dsos.symbols, t) ? l.dsos.symbols[t].fill : "#000"
+            }, this.starColor = Yt, this.animate = function(t, e) {
+               t && (x = t, T = 0, P = !!e, te())
+            }, this.stop = function(t) {
+               ee(), !0 === t && (x = [])
+            }, this.go = function(t) {
+               x.length < 1 || (t && t < x.length && (T = t), te())
+            }, yt()
+         }
 
-var ANIMDISTANCE = 0.035,  // Rotation animation threshold, ~2deg in radians
-    ANIMSCALE = 1.4,       // Zoom animation threshold, scale factor
-    ANIMINTERVAL_R = 2000, // Rotation duration scale in ms
-    ANIMINTERVAL_P = 2500, // Projection duration in ms
-    ANIMINTERVAL_Z = 1500, // Zoom duration scale in ms
-    zoomextent = 10,       // Default maximum extent of zoom (max/min)
-    zoomlevel = 1;      // Default zoom level, 1 = 100%
+         function yt() {
+            for (var e in Ot(G.clip), w.append("path").datum(mt.outline).attr("class", "outline"), w.append("path").datum(u).attr("class", "horizon"), w.append("path").datum(h).attr("class", "daylight"), "equatorial" === l.transform ? mt.minorStep([15, 10]) : mt.minorStep([10, 10]), l.lines) nt(l.lines, e) && ("graticule" === e ? (w.append("path").datum(mt).attr("class", "graticule"), nt(l.lines.graticule, "lon") && l.lines.graticule.lon.pos.length > 0 && w.selectAll(".gridvalues_lon").data(N("lon", l.lines.graticule.lon.pos)).enter().append("path").attr("class", "graticule_lon"), nt(l.lines.graticule, "lat") && l.lines.graticule.lat.pos.length > 0 && w.selectAll(".gridvalues_lat").data(N("lat", l.lines.graticule.lat.pos)).enter().append("path").attr("class", "graticule_lat")) : w.append("path").datum(d3.geo.circle().angle([90]).origin(z(b[e], j[l.transform]))).attr("class", e));
+            d3.json(dt + "mw.json", (function(t, e) {
+               if (t) return window.alert("Data file could not be loaded or doesn't exist. See readme.md"), console.warn(t);
+               var a = L(e, l.transform);
+               var n = _(a);
+               w.selectAll(".mway").data(a.features).enter().append("path").attr("class", "mw"), w.selectAll(".mwaybg").data(n.features).enter().append("path").attr("class", "mwbg"), xt()
+            })), d3.json(dt + Ft("constellations"), (function(e, a) {
+               if (e) return console.warn(e);
+               var n = L(a, l.transform);
+               w.selectAll(".constnames").data(n.features).enter().append("text").attr("class", "constname"), t.constellations = F(n), xt()
+            })), d3.json(dt + Ft("constellations", "borders"), (function(t, e) {
+               if (t) return console.warn(t);
+               var a = L(e, l.transform);
+               w.selectAll(".bounds").data(a.features).enter().append("path").attr("class", "boundaryline"), xt()
+            })), d3.json(dt + Ft("constellations", "lines"), (function(t, e) {
+               if (t) return console.warn(t);
+               var a = L(e, l.transform);
+               w.selectAll(".lines").data(a.features).enter().append("path").attr("class", "constline"), Ht(), xt()
+            })), d3.json(dt + l.stars.data, (function(t, e) {
+               if (t) return console.warn(t);
+               var a = L(e, l.transform);
+               w.selectAll(".stars").data(a.features).enter().append("path").attr("class", "star"), xt()
+            })), d3.json(dt + Ft("starnames"), (function(t, e) {
+               if (t) return console.warn(t);
+               Object.assign(f, e), xt()
+            })), d3.json(dt + l.dsos.data, (function(t, e) {
+               if (t) return console.warn(t);
+               var a = L(e, l.transform);
+               w.selectAll(".dsos").data(a.features).enter().append("path").attr("class", "dso"), xt()
+            })), d3.json(dt + Ft("dsonames"), (function(t, e) {
+               if (t) return console.warn(t);
+               Object.assign(m, e), xt()
+            })), d3.json(dt + Ft("planets"), (function(t, e) {
+               if (t) return console.warn(t);
+               var a = D(e, l.transform);
+               w.selectAll(".planets").data(a).enter().append("path").attr("class", "planet"), xt()
+            })), t.data.length > 0 && t.data.forEach((function(t) {
+               nt(t, "file") ? d3.json(t.file, t.callback) : setTimeout(t.callback, 0)
+            }), this), l.lang && "" != l.lang && Mt(t.setLanguage(l.lang))
+         }
 
-var cfg, mapProjection, zoom, map, circle, daylight, starnames = {}, dsonames = {};
+         function vt(t) {
+            if (t && 1 !== t) {
+               var e = c.scale(),
+                  a = e * t,
+                  n = p.scaleExtent(),
+                  r = s * Math.sqrt(Math.abs(1 - t));
+               a < n[0] && (a = n[0]), a > n[1] && (a = n[1]);
+               var o = d3.interpolateNumber(e, a);
+               return d3.select({}).transition().duration(r).tween("scale", (function() {
+                  return function(t) {
+                     var e = o(t);
+                     c.scale(e), xt()
+                  }
+               })).transition().duration(0).tween("scale", (function() {
+                  p.scale(a), xt()
+               })), r
+            }
+         }
 
-// Show it all, with the given config, otherwise with default settings
-Celestial.display = function(config) {
-  var parentElement, animationID,
-      container = Celestial.container,
-      animations = [], 
-      current = 0, 
-      repeat = false;
-  
-  //Mash config with default settings
-  cfg = settings.set(config).applyDefaults(config);
-  if (isNumber(cfg.zoomextend)) zoomextent = cfg.zoomextend;
-  if (isNumber(cfg.zoomlevel)) zoomlevel = cfg.zoomlevel;
+         function Mt(t) {
+            l = V.set(t), xt()
+         }
 
-  var parent = $(cfg.container);
-  if (parent) { 
-    parentElement = "#" + cfg.container;
-    var st = window.getComputedStyle(parent, null);
-    if (!parseInt(st.width) && !cfg.width) parent.style.width = px(parent.parentNode.clientWidth); 
-  } else { 
-    parentElement = "body"; 
-    parent = null; 
-  }
-   
-  var margin = [16, 16],
-      width = getWidth(),
-      canvaswidth = isNumber(cfg.background.width) ? width + cfg.background.width : width,
-      pixelRatio = window.devicePixelRatio || 1,
-      projectionSetting = getProjection(cfg.projection);
+         function bt(t) {
+            var r = l.center,
+               s = c.rotate(),
+               o = c.scale(),
+               i = n,
+               p = !1,
+               d, u, h, f = l.orientationfixed;
+            tt(s[1], 1) === -tt(t.center[1], 1) && (p = !0), l = l.set(t);
+            var m = tt(d3.geo.distance(r, l.center), 2);
+            var y = d3.geo.distance([r[2], 0], [l.center[2], 0]);
+            return m < e && y < e ? (pt = S(l.center), c.rotate(pt), xt()) : (u = o > et * a ? d3.interpolateNumber(o, et) : function() {
+               return o
+            }, h = 0 === y ? function() {
+               return s[2]
+            } : gt(r[2], l.center[2]), m > 3.14 && (l.center[0] -= .01), l.orientationfixed = !1, d = 0 === m ? function() {
+               return l.center
+            } : d3.geo.interpolate(r, l.center), i = 0 !== m ? i * m : i * y, d3.select({}).transition().duration(i).tween("center", (function() {
+               return function(t) {
+                  var e = S(d(t));
+                  e[2] = h(t);
+                  var a = u(t < .5 ? t : 1 - t);
+                  p && (e[1] = s[1]), c.scale(a), c.rotate(e), xt()
+               }
+            })).transition().duration(0).tween("center", (function() {
+               l.orientationfixed = f, pt = S(l.center), c.rotate(pt), xt()
+            }))), i
+         }
 
-  if (!projectionSetting) return;
+         function wt(t) {
+            C = Qt(), (l.width !== C || t) && (W = C / U, et = G.scale * C / 1024, ut.style("width", X(C)).style("height", X(W)).attr("width", C * B).attr("height", W * B), p.scaleExtent([et, et * o]).scale(et * i), c.translate([H / 2, K / 2]).scale(et * i), I && (I.style.height = X(W)), et *= i, xt())
+         }
 
-  if (cfg.lines.graticule.lat && cfg.lines.graticule.lat.pos[0] === "outline") projectionSetting.scale -= 2;
-        
-  var ratio = projectionSetting.ratio,
-      height = Math.round(width / ratio),
-      canvasheight = Math.round(canvaswidth / ratio),
-      scale = projectionSetting.scale * width/1024,
-      starbase = cfg.stars.size, 
-      dsobase = cfg.dsos.size || starbase,
-      starexp = cfg.stars.exponent,
-      dsoexp = cfg.dsos.exponent || starexp, //Object size base & exponent
-      adapt = 1,
-      rotation = getAngles(cfg.center),
-      path = cfg.datapath;
-  
-      
-  if (parentElement !== "body") $(cfg.container).style.height = px(canvasheight);
-  
-  mapProjection = Celestial.projection(cfg.projection).rotate(rotation).translate([canvaswidth/2, canvasheight/2]).scale(scale * zoomlevel);
-    
-  zoom = d3.geo.zoom().projection(mapProjection).center([canvaswidth/2, canvasheight/2]).scaleExtent([scale, scale * zoomextent]).on("zoom.redraw", redraw);
-  // Set initial zoom level
-  scale *= zoomlevel;
+         function kt(e) {
+            var a = Xt(e.projection);
+            if (a) {
+               var n = c.rotate(),
+                  s = c.center(),
+                  u = c.scale(),
+                  h = p.scaleExtent(),
+                  f = [],
+                  m = t.projection(l.projection).center(s).translate([H / 2, K / 2]).scale([h[0]]),
+                  y = r,
+                  g = 0,
+                  M = null,
+                  b = d3.interpolateNumber(U, a.ratio);
+               G.clip != a.clip && (y = 0), Ot(a.clip);
+               var w = t.projection(e.projection).center(s).translate([H / 2, H / a.ratio / 2]).scale([a.scale * C / 1024]);
+               var k = l.adaptable;
+               return u > h[0] ? (g = vt(.1), setTimeout(kt, g, e), g + y) : ((l.location || l.formFields.location) && (qt("horizon-show", a.clip), qt("daylight-show", !a.clip)), c = v(m, w), l.adaptable = !1, d3.select({}).transition().duration(y).tween("projection", (function() {
+                  return function(t) {
+                     c.alpha(t).rotate(n), d.projection(c), Ot(a.clip), U = b(t), W = C / U, ut.style("width", X(C)).style("height", X(W)).attr("width", C * B).attr("height", W * B), I && (I.style.height = X(W)), xt()
+                  }
+               })).transition().duration(0).tween("projection", (function() {
+                  U = (G = a).ratio, W = C / G.ratio, et = G.scale * C / 1024, ut.style("width", X(C)).style("height", X(W)).attr("width", C * B).attr("height", W * B), I && (I.style.height = X(W)), l.projection = e.projection, c = t.projection(e.projection).rotate(n).translate([H / 2, K / 2]).scale(et * i), d.projection(c), Ot(G.clip), p.projection(c).scaleExtent([et, et * o]).scale(et * i), l.adaptable = k, et *= i, xt()
+               })), y)
+            }
+         }
 
-  var canvas = d3.select(parentElement).selectAll("canvas"),
-      culture = (cfg.culture !== "" && cfg.culture !== "iau") ? cfg.culture : "";
-  
-  if (canvas[0].length === 0) canvas = d3.select(parentElement).append("canvas");
-  //canvas.attr("width", width).attr("height", height);
-  canvas.style("width", px(canvaswidth)).style("height", px(canvasheight)).attr("width", canvaswidth * pixelRatio).attr("height", canvasheight * pixelRatio);
-  var context = canvas.node().getContext("2d");  
-  context.setTransform(pixelRatio,0,0,pixelRatio,0,0);
+         function xt() {
+            var e = c.rotate();
+            for (var a in ft.setTransform(B, 0, 0, B, 0, 0), l.adaptable && (ct = Math.sqrt(c.scale() / et)), ct || (ct = 1), at = l.stars.size, it = l.stars.exponent, rt = l.dsos.size || at, lt = l.dsos.exponent, l.orientationfixed && l.center.length > 2 && (e[2] = l.center[2], c.rotate(e)), l.center = [-e[0], -e[1], e[2]], _t(l.center, l.transform), Zt(), zt(), l.mw.show && (w.selectAll(".mw").each((function(t) {
+                  St(l.mw.style), d(t), ft.fill()
+               })), "supergalactic" !== l.transform && l.background.opacity > .95 && w.selectAll(".mwbg").each((function(t) {
+                  St(l.background), d(t), ft.fill()
+               }))), l.lines) nt(l.lines, a) && !0 === l.lines[a].show && (St(l.lines[a]), w.selectAll("." + a).attr("d", d), ft.stroke());
+            if (nt(l.lines.graticule, "lon") && (jt(l.lines.graticule.lon), w.selectAll(".graticule_lon").each((function(t, e) {
+                  if (Tt(t.geometry.coordinates)) {
+                     var a = c(t.geometry.coordinates);
+                     Kt(a, t.properties.orientation), ft.fillText(t.properties.value, a[0], a[1])
+                  }
+               }))), nt(l.lines.graticule, "lat") && (jt(l.lines.graticule.lat), w.selectAll(".graticule_lat").each((function(t, e) {
+                  if (Tt(t.geometry.coordinates)) {
+                     var a = c(t.geometry.coordinates);
+                     Kt(a, t.properties.orientation), ft.fillText(t.properties.value, a[0], a[1])
+                  }
+               }))), l.constellations.bounds && (w.selectAll(".boundaryline").each((function(e) {
+                  if (St(l.constellations.boundStyle), t.constellation) {
+                     var a = new RegExp("\\b" + t.constellation + "\\b"); - 1 !== e.ids.search(a) && (ft.lineWidth *= 1.5, ft.globalAlpha = 1, ft.setLineDash([]))
+                  }
+                  d(e), ft.stroke()
+               })), ft.setLineDash([])), l.constellations.lines && w.selectAll(".constline").each((function(t) {
+                  It(t.properties.rank, l.constellations.lineStyle), d(t), ft.stroke()
+               })), zt(!0), l.constellations.names && w.selectAll(".constname").each((function(t) {
+                  if (Tt(t.geometry.coordinates)) {
+                     It(t.properties.rank, l.constellations.nameStyle);
+                     var e = c(t.geometry.coordinates);
+                     ft.fillText(Jt(t), e[0], e[1])
+                  }
+               })), l.stars.show && (St(l.stars.style), w.selectAll(".star").each((function(t) {
+                  if (Tt(t.geometry.coordinates) && t.properties.mag <= l.stars.limit) {
+                     var e = c(t.geometry.coordinates),
+                        a = Rt(t);
+                     ft.fillStyle = Yt(t), ft.beginPath(), ft.arc(e[0], e[1], a, 0, 2 * Math.PI), ft.closePath(), ft.fill(), l.stars.designation && t.properties.mag <= l.stars.designationLimit * ct && (jt(l.stars.designationStyle), ft.fillText(Wt(t.id), e[0] + a, e[1])), l.stars.propername && t.properties.mag <= l.stars.propernameLimit * ct && (jt(l.stars.propernameStyle), ft.fillText(Vt(t.id), e[0] - a, e[1]))
+                  }
+               }))), l.dsos.show && w.selectAll(".dso").each((function(t) {
+                  if (Tt(t.geometry.coordinates) && Et(t.properties, l.dsos.limit)) {
+                     var e = c(t.geometry.coordinates),
+                        a = t.properties.type;
+                     !0 === l.dsos.colors ? St(l.dsos.symbols[a]) : St(l.dsos.style);
+                     var n = Ct(t, e);
+                     nt(l.dsos.symbols[a], "stroke") ? ft.stroke() : ft.fill(), l.dsos.names && Et(t.properties, l.dsos.nameLimit * ct) && (jt(l.dsos.nameStyle), !0 === l.dsos.colors && (ft.fillStyle = l.dsos.symbols[a].fill), ft.fillText(Ut(t), e[0] + n, e[1] - n))
+                  }
+               })), (l.location || l.formFields.location) && l.planets.show && t.origin) {
+               var n = t.date(),
+                  r = t.origin(n).spherical();
+               w.selectAll(".planet").each((function(t) {
+                  var e = t.id(),
+                     a = 12 * ct,
+                     s = t(n).equatorial(r),
+                     o = z(s.ephemeris.pos, j[l.transform]);
+                  if (Tt(o)) {
+                     var i = c(o),
+                        p = l.planets.symbols[e];
+                     if ("letter" === l.planets.symbolType ? (jt(l.planets.symbolStyle), ft.fillStyle = p.fill, ft.fillText(p.letter, i[0], i[1])) : "lun" === e ? (nt(p, "size") && st(p.size) && (a = p.size * ct), ft.fillStyle = p.fill, Z.symbol().type("crescent").size(a * a).age(s.ephemeris.age).position(i)(ft)) : "disk" === l.planets.symbolType ? (a = nt(p, "size") && st(p.size) ? p.size * ct : $t(s.ephemeris), ft.fillStyle = p.fill, Z.symbol().type("circle").size(a * a).position(i)(ft), ft.fill()) : "symbol" === l.planets.symbolType && (jt(l.planets.symbolStyle), ft.fillStyle = p.fill, ft.fillText(p[l.planets.symbolType], i[0], i[1])), l.planets.names) {
+                        var d = s[l.planets.namesType];
+                        jt(l.planets.nameStyle), ft.fillStyle = p.fill, ft.fillText(d, i[0] - a / 2, i[1] + a / 2)
+                     }
+                  }
+               }))
+            }
+            if (t.data.length > 0 && t.data.forEach((function(t) {
+                  t.redraw()
+               })), (l.location || l.formFields.location) && l.daylight.show && G.clip) {
+               var s = O("sol");
+               if (s) {
+                  var o = t.zenith(),
+                     i = s.ephemeris.pos,
+                     p = d3.geo.distance(o, i),
+                     f = c(i);
+                  h.origin(i), At(p, f), w.selectAll(".daylight").datum(h).attr("d", d), ft.fill(), ft.fillStyle = "#fff", Tt(i) && (ft.beginPath(), ft.arc(f[0], f[1], 6, 0, 2 * Math.PI), ft.closePath(), ft.fill())
+               }
+            }(l.location || l.formFields.location) && l.horizon.show && !G.clip && (u.origin(t.nadir()), St(l.horizon), w.selectAll(".horizon").datum(u).attr("d", d), ft.fill(), l.horizon.stroke && ft.stroke()), l.controls && Dt(c.scale()), A && t.runCallback()
+         }
 
-  var graticule = d3.geo.graticule().minorStep([15,10]);
-  
-  map = d3.geo.path().projection(mapProjection).context(context);
-   
-  //parent div with id #celestial-map or body
-  if (container) container.selectAll("*").remove();
-  else container = d3.select(parentElement).append("container");
+         function zt(t) {
+            var e = c.rotate(),
+               a = Xt(l.projection);
+            c.rotate([0, 0]), St(l.background), w.selectAll(".outline").attr("d", d), !0 === t ? (ft.globalAlpha = 1, ft.stroke()) : ft.fill(), c.rotate(e)
+         }
 
-  if (cfg.interactive) {
-    canvas.call(zoom);
-    d3.select(parentElement).on('dblclick', function () { zoomBy(1.5625); return false; });
-  } else {
-    canvas.attr("style", "cursor: default!important");
-  }
+         function Tt(t) {
+            return G.clip && d3.geo.distance(l.center, t) > k ? 0 : 1
+         }
 
-  setClip(projectionSetting.clip);
+         function St(t) {
+            ft.fillStyle = t.fill || null, ft.strokeStyle = t.stroke || null, ft.lineWidth = t.width || null, ft.globalAlpha = null !== t.opacity ? t.opacity : 1, ft.font = t.font || null, nt(t, "dash") ? ft.setLineDash(t.dash) : ft.setLineDash([]), ft.beginPath()
+         }
 
-  d3.select(window).on('resize', resize);
+         function jt(t) {
+            ft.fillStyle = t.fill, ft.textAlign = t.align || "left", ft.textBaseline = t.baseline || "bottom", ft.globalAlpha = null !== t.opacity ? t.opacity : 1, ft.font = t.font
+         }
 
-  if (cfg.controls === true && $("celestial-zoomin") === null) {
-    d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomin").attr("value", "\u002b").on("click", function () { zoomBy(1.25); return false; });
-    d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomout").attr("value", "\u2212").on("click", function () { zoomBy(0.8); return false; });
-  }
-  
-  circle = d3.geo.circle().angle([90]);  
-  daylight = d3.geo.circle().angle([179.9]);
+         function It(t, e) {
+            t = t || 1, ft.fillStyle = ot(e.fill) ? e.fill[t - 1] : null, ft.strokeStyle = ot(e.stroke) ? e.stroke[t - 1] : null, ft.lineWidth = ot(e.width) ? e.width[t - 1] : null, ft.globalAlpha = ot(e.opacity) ? e.opacity[t - 1] : 1, ft.font = ot(e.font) ? e.font[t - 1] : null, ft.textAlign = e.align || "left", ft.textBaseline = e.baseline || "bottom", ft.beginPath()
+         }
 
-  form(cfg);
-  
-  if ($("error") === null) d3.select("body").append("div").attr("id", "error");
+         function At(t, e) {
+            var a, n, r, s, o = 1.36,
+               i = 1.885;
+            if (t > i) return ft.fillStyle = "transparent", ft.globalAlpha = 0, void 0;
+            t <= o ? (n = "#daf1fa", r = "#93d7f0", s = "#57c0e8", a = -(o - t) / 10) : (a = (t - o) / (i - o), n = d3.interpolateLab("#daf1fa", "#e8c866")(a), r = d3.interpolateLab("#93c7d0", "#ff854a")(a), s = d3.interpolateLab("#57b0c8", "#6caae2")(a));
+            var l = ft.createRadialGradient(e[0], e[1], 0, e[0], e[1], 300);
+            l.addColorStop(0, n), l.addColorStop(.2 + .4 * a, r), l.addColorStop(1, s), ft.fillStyle = l, ft.globalAlpha = .9 * (1 - Lt(a, 1.4))
+         }
 
-  if ($("loc") === null) geo(cfg);
-  else if (cfg.location === true && cfg.follow === "zenith") rotate({center: Celestial.zenith()});
+         function Lt(t, e) {
+            return (Math.pow(Math.E, t * e) - 1) / (Math.pow(Math.E, e) - 1)
+         }
 
-  if (cfg.location === true || cfg.formFields.location === true) {
-    d3.select("#location").style("display", "inline-block");
-    fldEnable("horizon-show", projectionSetting.clip);
-    fldEnable("daylight-show", !projectionSetting.clip);
-  }
+         function Dt(t) {
+            var e = Q("celestial-zoomin"),
+               a = Q("celestial-zoomout"),
+               n = G.scale * C / 1024;
+            e && a && (e.disabled = t >= n * o * .99, a.disabled = t <= n)
+         }
 
-  function load() {
-    //Background
-    setClip(projectionSetting.clip);
-    container.append("path").datum(graticule.outline).attr("class", "outline"); 
-    container.append("path").datum(circle).attr("class", "horizon");
-    container.append("path").datum(daylight).attr("class", "daylight");
-    //Celestial planes
-    if (cfg.transform === "equatorial") graticule.minorStep([15,10]);
-    else  graticule.minorStep([10,10]);
-    for (var key in cfg.lines) {
-      if (!has(cfg.lines, key)) continue;
-      if (key === "graticule") {
-        container.append("path").datum(graticule).attr("class", "graticule"); 
-        if (has(cfg.lines.graticule, "lon") && cfg.lines.graticule.lon.pos.length > 0) 
-          container.selectAll(".gridvalues_lon")
-            .data(getGridValues("lon", cfg.lines.graticule.lon.pos))
-            .enter().append("path")
-            .attr("class", "graticule_lon"); 
-        if (has(cfg.lines.graticule, "lat") && cfg.lines.graticule.lat.pos.length > 0) 
-          container.selectAll(".gridvalues_lat")
-            .data(getGridValues("lat", cfg.lines.graticule.lat.pos))
-            .enter().append("path")
-            .attr("class", "graticule_lat"); 
-      } else {
-        container.append("path")
-          .datum(d3.geo.circle().angle([90]).origin(transformDeg(poles[key], euler[cfg.transform])) )
-          .attr("class", key);
+         function Ot(t) {
+            t ? c.clipAngle(90) : c.clipAngle(null)
+         }
+
+         function Ft(t, e, a) {
+            var n;
+            return t + (e = e ? "." + e : "") + (nt($[t], ht) ? "." + ht : "") + (a = a ? "." + a : ".json")
+         }
+
+         function Et(t, e) {
+            return 999 === t.mag && Math.sqrt(parseInt(t.dim)) > e || 999 !== t.mag && t.mag <= e
+         }
+
+         function Ct(t, e) {
+            var a = t.properties;
+            var n = Bt(a) || 9,
+               r = Nt(a.type);
+            return Z.symbol().type(r).size(n).position(e)(ft), Math.sqrt(n) / 2
+         }
+
+         function Nt(t) {
+            return t && nt(l.dsos.symbols, t) ? l.dsos.symbols[t].shape : "circle"
+         }
+
+         function Bt(t) {
+            return t.mag && 999 !== t.mag ? Math.pow(2 * rt * ct - t.mag, lt) : Math.pow(parseInt(t.dim) * rt * ct / 7, .5)
+         }
+
+         function Ut(t) {
+            var e = l.dsos.namesType,
+               a = t.id;
+            return "desig" !== e && nt(m, a) && nt(m[a], e) ? m[a][e] : t.properties.desig
+         }
+
+         function Wt(t) {
+            return nt(f, t) ? f[t][l.stars.designationType] : ""
+         }
+
+         function Vt(t) {
+            var e = l.stars.propernameType;
+            return nt(f, t) ? nt(f[t], e) ? f[t][e] : f[t].name : ""
+         }
+
+         function Rt(t) {
+            var e = t.properties.mag;
+            if (null === e) return .1;
+            var a = at * ct * Math.exp(it * (e + 2));
+            return Math.max(a, .1)
+         }
+
+         function Yt(t) {
+            var e = t.properties.bv;
+            return !l.stars.colors || isNaN(e) ? l.stars.style.fill : Y(e)
+         }
+
+         function Jt(t) {
+            return t.properties[l.constellations.namesType]
+         }
+
+         function $t(t) {
+            var e = t.mag;
+            if (null === e) return 2;
+            var a = 4 * ct * Math.exp(-.05 * (e + 2));
+            return Math.max(a, 2)
+         }
+
+         function Kt(t, e) {
+            var a = e.split(""),
+               n = "center",
+               r = "middle";
+            for (var s = a.length - 1; s >= 0; s--) switch (a[s]) {
+               case "N":
+                  r = "bottom";
+                  break;
+               case "S":
+                  r = "top";
+                  break;
+               case "E":
+                  n = "left", t[0] += 2;
+                  break;
+               case "W":
+                  n = "right", t[0] -= 2;
+                  break
+            }
+            return ft.textAlign = n, ft.textBaseline = r, t
+         }
+
+         function Zt() {
+            ft.clearRect(0, 0, H + E[0], K + E[1])
+         }
+
+         function Qt() {
+            var t = 0;
+            return t = st(l.width) && l.width > 0 ? l.width : I ? I.getBoundingClientRect().width - 2 * E[0] : window.getBoundingClientRect().width - 2 * E[0]
+         }
+
+         function Xt(t) {
+            if (nt(J, t)) {
+               var e = J[t];
+               return nt(e, "ratio") || (e.ratio = 2), e
+            }
+         }
+
+         function te() {
+            if (x && !(x.length < 1)) {
+               var t, e = x[T];
+               switch (e.param) {
+                  case "projection":
+                     t = kt({
+                        projection: e.value
+                     });
+                     break;
+                  case "center":
+                     t = bt({
+                        center: e.value
+                     });
+                     break;
+                  case "zoom":
+                     t = vt(e.value)
+               }
+               e.callback && setTimeout(e.callback, t), T++, !0 === P && T === x.length && (T = 0), t = 0 === e.duration || e.duration < t ? t : e.duration, T < x.length && (M = setTimeout(te, t))
+            }
+         }
+
+         function ee() {
+            clearTimeout(M)
+         }
+      }, "object" == typeof module && module.exports) {
+      var y = require("./lib/d3.js"),
+         g = require("./lib/d3.geo.projection.js");
+      module.exports = {
+         Celestial: function() {
+            return t
+         },
+         d3: function() {
+            return y
+         },
+         "d3.geo.projection": function() {
+            return g
+         }
       }
-    }
+   }
 
-    //Milky way outline
-    d3.json(path + "mw.json", function(error, json) {
-      if (error) { 
-        window.alert("Data file could not be loaded or doesn't exist. See readme.md");
-        return console.warn(error);  
+   function v(t, e) {
+      var a = d3.geo.projection(o).scale(1),
+         n = a.center,
+         r = a.translate,
+         s;
+
+      function o(a, n) {
+         var r = t([a *= 180 / Math.PI, n *= 180 / Math.PI]),
+            o = e([a, n]);
+         return [(1 - s) * r[0] + s * o[0], (s - 1) * r[1] - s * o[1]]
       }
+      return a.alpha = function(o) {
+         if (!arguments.length) return s;
+         s = +o;
+         var i = t.center(),
+            l = e.center(),
+            c = t.translate(),
+            p = e.translate();
+         return n([(1 - s) * i[0] + s * l[0], (1 - s) * i[1] + s * l[1]]), r([(1 - s) * c[0] + s * p[0], (1 - s) * c[1] + s * p[1]]), a
+      }, delete a.translate, delete a.center, a.alpha(0)
+   }
+   t.projection = function(t) {
+      var e, a, n;
+      if (!nt(J, t)) throw new Error("Projection not supported: " + t);
+      return e = J[t], a = null !== e.arg ? d3.geo[t].raw(e.arg) : d3.geo[t].raw, (n = function(t, e) {
+         var n;
+         return a(-t, e)
+      }).invert = function(t, e) {
+         try {
+            var n = a.invert(t, e);
+            return n[0] = n && -n[0], n
+         } catch (t) {
+            console.log(t)
+         }
+      }, d3.geo.projection(n)
+   };
+   var M = {
+      equatorial: [0, 0, 0],
+      ecliptic: [0, 0, 23.4393],
+      galactic: [93.5949, 28.9362, -58.5988],
+      supergalactic: [137.31, 59.5283, 57.7303]
+   };
+   var b = {
+      equatorial: [0, 90],
+      ecliptic: [-90, 66.5607],
+      galactic: [-167.1405, 27.1283],
+      supergalactic: [-76.2458, 15.7089]
+   };
+   t.eulerAngles = function() {
+      return M
+   }, t.poles = function() {
+      return b
+   };
+   var w = 2 * Math.PI,
+      k = Math.PI / 2,
+      x = Math.PI / 180;
 
-      var mw = getData(json, cfg.transform);
-      var mw_back = getMwbackground(mw);
+   function z(t, e) {
+      var a;
+      return T(t.map((function(t) {
+         return t * x
+      })), e).map((function(t) {
+         return t / x
+      }))
+   }
 
-      container.selectAll(".mway")
-         .data(mw.features)
-         .enter().append("path")
-         .attr("class", "mw");
-      container.selectAll(".mwaybg")
-         .data(mw_back.features)
-         .enter().append("path")
-         .attr("class", "mwbg");
-      redraw();
-    }); 
+   function T(t, e) {
+      var a, n, r, s, o, i, l, c, p, d, u = 1e-5;
+      return e ? ((i = t[0]) < 0 && (i += w), l = t[1], i -= e[0], s = e[1], o = e[2], a = Math.sin(l) * Math.sin(s) - Math.cos(l) * Math.cos(s) * Math.cos(i), Math.abs(a) < u && (a = -Math.cos(l + s) + Math.cos(l) * Math.cos(s) * (1 - Math.cos(i))), n = -Math.cos(l) * Math.sin(i), (p = o + (c = 0 !== a || 0 !== n ? Math.atan2(n, a) : i - Math.PI)) > Math.PI && (p -= w), i % Math.PI == 0 ? ((d = l + Math.cos(i) * s) > k && (d = Math.PI - d), d < -k && (d = -Math.PI - d)) : (r = Math.sin(l) * Math.cos(s) + Math.cos(l) * Math.sin(s) * Math.cos(i), Math.abs(r) > .99 ? (d = Math.abs(Math.acos(Math.sqrt(a * a + n * n))), r < 0 && (d *= -1)) : d = Math.asin(r)), [p, d]) : t
+   }
 
-    //Constellation names or designation
-    d3.json(path + filename("constellations"), function(error, json) {
-      if (error) return console.warn(error);
-      
-      var con = getData(json, cfg.transform);
-      container.selectAll(".constnames")
-         .data(con.features)
-         .enter().append("text")
-         .attr("class", "constname");
-         
-      Celestial.constellations = getConstellationList(con);
-      redraw();
-    });
-
-    //Constellation boundaries
-    d3.json(path + filename("constellations", "borders"), function(error, json) {
-      if (error) return console.warn(error);
-      
-      //var cb = getData(topojson.feature(json, json.objects.constellations_bounds), cfg.transform);
-      var cb = getData(json, cfg.transform);
-      
-      container.selectAll(".bounds")
-         .data(cb.features)
-         .enter().append("path")
-         .attr("class", "boundaryline");
-      redraw();
-    });
-
-    //Constellation lines
-    d3.json(path + filename("constellations", "lines"), function(error, json) {
-      if (error) return console.warn(error);
-
-      var conl = getData(json, cfg.transform);
-
-      container.selectAll(".lines")
-         .data(conl.features)
-         .enter().append("path")
-         .attr("class", "constline");
-
-      listConstellations();
-      redraw();
-    });
-    
-    //Stars
-    d3.json(path + cfg.stars.data, function(error, json) {
-      if (error) return console.warn(error);
-
-      var st = getData(json, cfg.transform);
-
-      container.selectAll(".stars")
-         .data(st.features)
-         .enter().append("path")
-         .attr("class", "star");
-      redraw();
-
-    });
-
-    //Star names
-    d3.json(path + filename("starnames"), function(error, json) {
-      if (error) return console.warn(error);
-      Object.assign(starnames, json);
-      redraw();
-    });
-
-    //Deep space objects
-    d3.json(path + cfg.dsos.data, function(error, json) {
-      if (error) return console.warn(error);
-      
-      var ds = getData(json, cfg.transform);
-
-      container.selectAll(".dsos")
-         .data(ds.features)
-         .enter().append("path")
-         .attr("class", "dso" );
-      redraw();
-    });
-
-    //DSO names
-    d3.json(path + filename("dsonames"), function(error, json) {
-      if (error) return console.warn(error);
-      Object.assign(dsonames, json);
-      redraw();
-    });
-
-    //Planets, Sun & Moon
-    d3.json(path + filename("planets"), function(error, json) {
-      if (error) return console.warn(error);
-      
-      var pl = getPlanets(json, cfg.transform);
-
-      container.selectAll(".planets")
-         .data(pl)
-         .enter().append("path")
-         .attr("class", "planet");
-      redraw();
-    });
-
-    if (Celestial.data.length > 0) { 
-      Celestial.data.forEach( function(d) {
-        if (has(d, "file")) d3.json(d.file, d.callback);
-        else setTimeout(d.callback, 0);
-      }, this);
-    }
-  
-    if (cfg.lang && cfg.lang != "") apply(Celestial.setLanguage(cfg.lang));
-    //redraw();
-  }
-  
-  // Zoom by factor; >1 larger <1 smaller 
-  function zoomBy(factor) {
-    if (!factor || factor === 1) return;
-    var sc0 = mapProjection.scale(),
-        sc1 = sc0 * factor,
-        ext = zoom.scaleExtent(),
-        interval = ANIMINTERVAL_Z * Math.sqrt(Math.abs(1-factor));
-        
-    if (sc1 < ext[0]) sc1 = ext[0];
-    if (sc1 > ext[1]) sc1 = ext[1];
-    var zTween = d3.interpolateNumber(sc0, sc1);
-    d3.select({}).transition().duration(interval).tween("scale", function () {
-        return function(t) {
-          var z = zTween(t);
-          mapProjection.scale(z); 
-          redraw(); 
-        };   
-    }).transition().duration(0).tween("scale", function () {
-      zoom.scale(sc1); 
-      redraw(); 
-    });
-    return interval;
-  }  
-  
-  function apply(config) {
-    cfg = settings.set(config); 
-    redraw();
-  }
-
-
-  function rotate(config) {
-    var cFrom = cfg.center, 
-        rot = mapProjection.rotate(),
-        sc = mapProjection.scale(),
-        interval = ANIMINTERVAL_R,
-        keep = false, 
-        cTween, zTween, oTween,
-        oof = cfg.orientationfixed;
-    
-    if (Round(rot[1], 1) === -Round(config.center[1], 1)) keep = true; //keep lat fixed if equal
-    cfg = cfg.set(config);
-    var d = Round(d3.geo.distance(cFrom, cfg.center), 2);
-    var o = d3.geo.distance([cFrom[2],0], [cfg.center[2],0]);
-    if (d < ANIMDISTANCE && o < ANIMDISTANCE) {  
-      rotation = getAngles(cfg.center);
-      mapProjection.rotate(rotation);
-      redraw();
-    } else {
-      // Zoom interpolator
-      if (sc > scale * ANIMSCALE) zTween = d3.interpolateNumber(sc, scale);
-      else zTween = function () { return sc; };
-      // Orientation interpolator
-      if (o === 0) oTween = function () { return rot[2]; };
-      else oTween = interpolateAngle(cFrom[2], cfg.center[2]);
-      if (d > 3.14) cfg.center[0] -= 0.01; //180deg turn doesn't work well
-      cfg.orientationfixed = false;  
-      // Rotation interpolator
-      if (d === 0) cTween = function () { return cfg.center; };
-      else cTween = d3.geo.interpolate(cFrom, cfg.center);
-      interval = (d !== 0) ? interval * d : interval * o; // duration scaled by ang. distance
-      d3.select({}).transition().duration(interval).tween("center", function () {
-        return function(t) {
-          var c = getAngles(cTween(t));
-          c[2] = oTween(t);
-          var z = t < 0.5 ? zTween(t) : zTween(1-t);
-          if (keep) c[1] = rot[1]; 
-          mapProjection.scale(z);
-          mapProjection.rotate(c);
-          redraw();
-        };
-      }).transition().duration(0).tween("center", function () {
-        cfg.orientationfixed = oof;
-        rotation = getAngles(cfg.center);
-        mapProjection.rotate(rotation);
-        redraw();
-      });
-    }
-    return interval;
-  }
-  
-  function resize(set) {
-    width = getWidth();
-    if (cfg.width === width && !set) return;
-    height = width/ratio;
-    scale = projectionSetting.scale * width/1024;
-    //canvas.attr("width", width).attr("height", height);
-    canvas.style("width", px(width)).style("height", px(height)).attr("width", width * pixelRatio).attr("height", height * pixelRatio);
-    zoom.scaleExtent([scale, scale * zoomextent]).scale(scale * zoomlevel);
-    mapProjection.translate([canvaswidth/2, canvasheight/2]).scale(scale * zoomlevel);
-    if (parent) parent.style.height = px(height);
-    scale *= zoomlevel;
-    redraw();
-  }
-
-  function reproject(config) {
-    var prj = getProjection(config.projection);
-    if (!prj) return;
-    
-    var rot = mapProjection.rotate(), ctr = mapProjection.center(), sc = mapProjection.scale(), ext = zoom.scaleExtent(), clip = [],
-        prjFrom = Celestial.projection(cfg.projection).center(ctr).translate([canvaswidth/2, canvasheight/2]).scale([ext[0]]),
-        interval = ANIMINTERVAL_P, 
-        delay = 0, clipTween = null,
-        rTween = d3.interpolateNumber(ratio, prj.ratio);
-
-    if (projectionSetting.clip != prj.clip) interval = 0; // Different clip = no transition
-    /*if (projectionSetting.clip !== prj.clip) {
-      clipTween = d3.interpolateNumber(projectionSetting.clip ? 90 : 180, prj.clip ? 90 : 180); // Clipangle from - to
-    } else*/ setClip(prj.clip);
-    
-    var prjTo = Celestial.projection(config.projection).center(ctr).translate([canvaswidth/2, canvaswidth/prj.ratio/2]).scale([prj.scale * width/1024]);
-    var bAdapt = cfg.adaptable;
-
-    if (sc > ext[0]) {
-      delay = zoomBy(0.1);
-      setTimeout(reproject, delay, config);
-      return delay + interval;
-    }
-    
-    if (cfg.location || cfg.formFields.location) { 
-      fldEnable("horizon-show", prj.clip);
-      fldEnable("daylight-show", !prj.clip);
-    }
-    
-    mapProjection = projectionTween(prjFrom, prjTo);
-    cfg.adaptable = false;
-
-    d3.select({}).transition().duration(interval).tween("projection", function () {
-      return function(_) {
-        mapProjection.alpha(_).rotate(rot);
-        map.projection(mapProjection);
-        /*if (clipTween) mapProjection.clipAngle(clipTween(_));
-        else*/setClip(prj.clip);
-        ratio = rTween(_);
-        height = width/ratio;
-        //canvas.attr("width", width).attr("height", height);
-        canvas.style("width", px(width)).style("height", px(height)).attr("width", width * pixelRatio).attr("height",  height * pixelRatio);
-        if (parent) parent.style.height = px(height);
-        redraw();
-      };
-    }).transition().duration(0).tween("projection", function () {
-      projectionSetting = prj;
-      ratio = projectionSetting.ratio;
-      height = width / projectionSetting.ratio;
-      scale = projectionSetting.scale * width/1024;
-      //canvas.attr("width", width).attr("height", height);
-      canvas.style("width", px(width)).style("height", px(height)).attr("width", width * pixelRatio).attr("height", height * pixelRatio);
-      if (parent) parent.style.height = px(height);
-      cfg.projection = config.projection;
-      mapProjection = Celestial.projection(config.projection).rotate(rot).translate([canvaswidth/2, canvasheight/2]).scale(scale * zoomlevel);
-      map.projection(mapProjection);
-      setClip(projectionSetting.clip); 
-      zoom.projection(mapProjection).scaleExtent([scale, scale * zoomextent]).scale(scale * zoomlevel);
-      cfg.adaptable = bAdapt;
-      scale *= zoomlevel;
-      redraw();
-    });
-    return interval;
-  }
-
-  
-  function redraw() {  
-    var rot = mapProjection.rotate();
-    
-    context.setTransform(pixelRatio,0,0,pixelRatio,0,0);
-    if (cfg.adaptable) adapt = Math.sqrt(mapProjection.scale()/scale);
-    if (!adapt) adapt = 1;
-    starbase = cfg.stars.size;
-    starexp = cfg.stars.exponent;
-    dsobase = cfg.dsos.size || starbase;
-    dsoexp = cfg.dsos.exponent;
-    
-    if (cfg.orientationfixed && cfg.center.length > 2) {
-      rot[2] = cfg.center[2]; 
-      mapProjection.rotate(rot);
-    }
-    cfg.center = [-rot[0], -rot[1], rot[2]];
-    
-    setCenter(cfg.center, cfg.transform);
-    clear();
-    
-    drawOutline();
-    
-    //Draw all types of objects on the canvas
-    if (cfg.mw.show) { 
-      container.selectAll(".mw").each(function(d) { setStyle(cfg.mw.style); map(d); context.fill(); });
-      // paint mw-outside in background color
-      if (cfg.transform !== "supergalactic" && cfg.background.opacity === 1)
-        container.selectAll(".mwbg").each(function(d) { setStyle(cfg.background); map(d); context.fill(); });
-    }
-    
-    for (var key in cfg.lines) {
-      if (!has(cfg.lines, key)) continue;
-      if (cfg.lines[key].show !== true) continue;
-      setStyle(cfg.lines[key]);
-      container.selectAll("." + key).attr("d", map);  
-      context.stroke(); 
-    }
-
-    if (has(cfg.lines.graticule, "lon")) {
-      setTextStyle(cfg.lines.graticule.lon);
-      container.selectAll(".graticule_lon").each(function(d, i) { 
-        if (clip(d.geometry.coordinates)) {
-          var pt = mapProjection(d.geometry.coordinates);
-          gridOrientation(pt, d.properties.orientation);
-          context.fillText(d.properties.value, pt[0], pt[1]); 
-        }
-      });
-    }
-    
-    if (has(cfg.lines.graticule, "lat")) {
-      setTextStyle(cfg.lines.graticule.lat);
-      container.selectAll(".graticule_lat").each(function(d, i) { 
-        if (clip(d.geometry.coordinates)) {
-          var pt = mapProjection(d.geometry.coordinates);
-          gridOrientation(pt, d.properties.orientation);
-          context.fillText(d.properties.value, pt[0], pt[1]); 
-        }
-      });
-    }
-    
-    if (cfg.constellations.bounds) { 
-      container.selectAll(".boundaryline").each(function(d) { 
-        setStyle(cfg.constellations.boundStyle); 
-        if (Celestial.constellation) {
-          var re = new RegExp("\\b" + Celestial.constellation + "\\b");
-          if (d.ids.search(re) !== -1) {
-            context.lineWidth *= 1.5;
-            context.globalAlpha = 1;
-            context.setLineDash([]);
-          }
-        }
-        map(d); 
-        context.stroke(); 
-      });
-      context.setLineDash([]);
-    }
-
-    if (cfg.constellations.lines) { 
-      container.selectAll(".constline").each(function(d) { 
-        setStyleA(d.properties.rank, cfg.constellations.lineStyle); 
-        map(d); 
-        context.stroke(); 
-      });
-    }
-    
-    drawOutline(true);    
-
-    if (cfg.constellations.names) { 
-      //setTextStyle(cfg.constellations.nameStyle);
-      container.selectAll(".constname").each( function(d) { 
-        if (clip(d.geometry.coordinates)) {
-          setStyleA(d.properties.rank, cfg.constellations.nameStyle);
-          var pt = mapProjection(d.geometry.coordinates);
-          context.fillText(constName(d), pt[0], pt[1]); 
-        }
-      });
-    }
-      
-
-    if (cfg.stars.show) { 
-      setStyle(cfg.stars.style);
-      container.selectAll(".star").each(function(d) {
-        if (clip(d.geometry.coordinates) && d.properties.mag <= cfg.stars.limit) {
-          var pt = mapProjection(d.geometry.coordinates),
-              r = starSize(d);
-          context.fillStyle = starColor(d); 
-          context.beginPath();
-          context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
-          context.closePath();
-          context.fill();
-          if (cfg.stars.designation && d.properties.mag <= cfg.stars.designationLimit*adapt) {
-            setTextStyle(cfg.stars.designationStyle);
-            context.fillText(starDesignation(d.id), pt[0]+r, pt[1]);
-          }
-          if (cfg.stars.propername && d.properties.mag <= cfg.stars.propernameLimit*adapt) {
-            setTextStyle(cfg.stars.propernameStyle);
-            context.fillText(starPropername(d.id), pt[0]-r, pt[1]);
-          }
-        }
-      });
-    }
-    
-    if (cfg.dsos.show) { 
-      container.selectAll(".dso").each(function(d) {
-        if (clip(d.geometry.coordinates) && dsoDisplay(d.properties, cfg.dsos.limit)) {
-          var pt = mapProjection(d.geometry.coordinates),
-              type = d.properties.type;
-          if (cfg.dsos.colors === true) setStyle(cfg.dsos.symbols[type]);
-          else setStyle(cfg.dsos.style);
-          var r = dsoSymbol(d, pt);
-          if (has(cfg.dsos.symbols[type], "stroke")) context.stroke();
-          else context.fill();
-          
-          if (cfg.dsos.names && dsoDisplay(d.properties, cfg.dsos.nameLimit*adapt)) {
-            setTextStyle(cfg.dsos.nameStyle);
-            if (cfg.dsos.colors === true) context.fillStyle = cfg.dsos.symbols[type].fill;
-            context.fillText(dsoName(d), pt[0]+r, pt[1]-r);      
-          }
-        }
-      });
-    }
-
-    if ((cfg.location || cfg.formFields.location) && cfg.planets.show && Celestial.origin) { 
-      var dt = Celestial.date(),
-          o = Celestial.origin(dt).spherical();
-      container.selectAll(".planet").each(function(d) {
-        var id = d.id(), r = 12 * adapt,
-            p = d(dt).equatorial(o),
-            pos = transformDeg(p.ephemeris.pos, euler[cfg.transform]);  //transform; 
-        if (clip(pos)) {
-          var pt = mapProjection(pos),
-              sym = cfg.planets.symbols[id];
-          if (cfg.planets.symbolType === "letter") {
-            setTextStyle(cfg.planets.symbolStyle);
-            context.fillStyle = sym.fill;
-            context.fillText(sym.letter, pt[0], pt[1]);
-          } else if (id === "lun") {
-            if (has(sym, "size") && isNumber(sym.size)) r = sym.size * adapt;
-            context.fillStyle = sym.fill;
-            Canvas.symbol().type("crescent").size(r*r).age(p.ephemeris.age).position(pt)(context);
-          } else if (cfg.planets.symbolType === "disk") {
-            r = has(sym, "size") && isNumber(sym.size) ? sym.size * adapt : planetSize(p.ephemeris);
-            context.fillStyle = sym.fill;
-            Canvas.symbol().type("circle").size(r*r).position(pt)(context);
-            context.fill();
-          } else if (cfg.planets.symbolType === "symbol") {
-            setTextStyle(cfg.planets.symbolStyle);
-            context.fillStyle = sym.fill;
-            context.fillText(sym[cfg.planets.symbolType], pt[0], pt[1]);            
-          }
-          //name
-          if (cfg.planets.names) {
-            var name = p[cfg.planets.namesType];
-            setTextStyle(cfg.planets.nameStyle);
-            //context.direction = "ltr" || "rtl" ar il ir
-            context.fillStyle = sym.fill;
-            context.fillText(name, pt[0] - r/2, pt[1] + r/2);                        
-          }
-        }
-      });
-    }
-    
-    if (Celestial.data.length > 0) { 
-      Celestial.data.forEach( function(d) {
-        d.redraw();
-      });
-    }
-    
-    if ((cfg.location || cfg.formFields.location) && cfg.daylight.show && projectionSetting.clip) {
-      var sol = getPlanet("sol");
-      if (sol) {
-        var up = Celestial.zenith(),
-            solpos = sol.ephemeris.pos,
-            dist = d3.geo.distance(up, solpos),
-            pt = mapProjection(solpos);
-
-        daylight.origin(solpos);
-        setSkyStyle(dist, pt);
-        container.selectAll(".daylight").datum(daylight).attr("d", map);
-        context.fill();    
-        context.fillStyle = "#fff"; 
-        if (clip(solpos)) {
-          context.beginPath();
-          context.arc(pt[0], pt[1], 6, 0, 2 * Math.PI);
-          context.closePath();
-          context.fill();
-        }
+   function S(t) {
+      if (null === t || t.length <= 0) return [0, 0, 0];
+      var e = M.equatorial;
+      return t[2] || (t[2] = 0), [e[0] - t[0], e[1] - t[1], e[2] + t[2]]
+   }
+   var j = {
+      ecliptic: [-90, 23.4393, 90],
+      "inverse ecliptic": [90, 23.4393, -90],
+      galactic: [-167.1405, 62.8717, 122.9319],
+      "inverse galactic": [122.9319, 62.8717, -167.1405],
+      supergalactic: [283.7542, 74.2911, 26.4504],
+      "inverse supergalactic": [26.4504, 74.2911, 283.7542],
+      init: function() {
+         for (var t in this) this[t].constructor == Array && (this[t] = this[t].map((function(t) {
+            return t * x
+         })))
+      },
+      add: function(t, e) {
+         if (e && t && 3 === e.length && !this.hasOwnProperty(t)) return this[t] = e.map((function(t) {
+            return t * x
+         })), this[t]
       }
-    }
-
-    if ((cfg.location || cfg.formFields.location) && cfg.horizon.show && !projectionSetting.clip) {
-      circle.origin(Celestial.nadir());
-      setStyle(cfg.horizon);
-      container.selectAll(".horizon").datum(circle).attr("d", map);  
-      context.fill(); 
-      if (cfg.horizon.stroke) context.stroke(); 
-    }
-
-    if (cfg.controls) { 
-      zoomState(mapProjection.scale());
-    }
-    
-    if (hasCallback) { 
-      Celestial.runCallback();
-    }
-    
-    //Celestial.updateForm();
-
-  }
-    
-
-  function drawOutline(stroke) {
-    var rot = mapProjection.rotate(),
-        prj = getProjection(cfg.projection);
-    
-    mapProjection.rotate([0,0]);
-    setStyle(cfg.background);
-    container.selectAll(".outline").attr("d", map);
-    if (stroke === true) {
-      context.globalAlpha = 1;      
-      context.stroke(); 
-    } else {
-      context.fill();
-    }
-    mapProjection.rotate(rot);
-  }
-
-  // Helper functions -------------------------------------------------
-  
-  function clip(coords) {
-    return projectionSetting.clip && d3.geo.distance(cfg.center, coords) > halfπ ? 0 : 1;
-  }
-
-  function setStyle(s) {
-    context.fillStyle = s.fill || null;
-    context.strokeStyle = s.stroke || null;
-    context.lineWidth = s.width || null;
-    context.globalAlpha = s.opacity !== null ? s.opacity : 1;  
-    context.font = s.font || null;
-    if (has(s, "dash")) context.setLineDash(s.dash); else context.setLineDash([]);
-    context.beginPath();
-  }
-
-  function setTextStyle(s) {
-    context.fillStyle = s.fill;
-    context.textAlign = s.align || "left";
-    context.textBaseline = s.baseline || "bottom";
-    context.globalAlpha = s.opacity !== null ? s.opacity : 1;  
-    context.font = s.font;
-  }
-
-  function setStyleA(rank, s) {
-    rank = rank || 1;
-    context.fillStyle = isArray(s.fill) ? s.fill[rank-1] : null;
-    context.strokeStyle = isArray(s.stroke) ? s.stroke[rank-1] : null;
-    context.lineWidth = isArray(s.width) ? s.width[rank-1] : null;
-    context.globalAlpha = isArray(s.opacity) ? s.opacity[rank-1] : 1;  
-    context.font = isArray(s.font) ? s.font[rank-1] : null;
-    context.textAlign = s.align || "left";
-    context.textBaseline = s.baseline || "bottom";
-    context.beginPath();
-  }
-
-  function setSkyStyle(dist, pt) {
-    var factor, color1, color2, color3,
-        upper = 1.36, 
-        lower = 1.885;
-    
-    if (dist > lower) {
-      context.fillStyle = "transparent"; 
-      context.globalAlpha = 0;
-      return;
-    }
-    
-    if (dist <= upper) { 
-      color1 = "#daf1fa";
-      color2 = "#93d7f0"; 
-      color3 = "#57c0e8"; 
-      factor = -(upper-dist) / 10; 
-    } else {
-      factor = (dist - upper) / (lower - upper);
-      color1 = d3.interpolateLab("#daf1fa", "#e8c866")(factor);
-      color2 = d3.interpolateLab("#93c7d0", "#ff854a")(factor);
-      color3 = d3.interpolateLab("#57b0c8", "#6caae2")(factor);
-    }
-    var grad = context.createRadialGradient(pt[0],pt[1],0, pt[0],pt[1],300);
-    grad.addColorStop(0, color1);
-    grad.addColorStop(0.2+0.4*factor, color2);
-    grad.addColorStop(1, color3);
-    context.fillStyle = grad;
-    context.globalAlpha = 0.9 * (1 - skyTransparency(factor, 1.4));
-  }
-  
-  function skyTransparency(t, a) {
-    return (Math.pow(Math.E, t*a) - 1) / (Math.pow(Math.E, a) - 1);
-  }
-  
-  function zoomState(sc) {
-    var czi = $("celestial-zoomin"),
-        czo = $("celestial-zoomout"),
-        defscale = projectionSetting.scale * width/1024;
-    if (!czi || !czo) return;
-    czi.disabled = sc >= defscale * zoomextent * 0.99;
-    czo.disabled = sc <= defscale; 
-  }
-  
-  function setClip(setit) {
-    if (setit) { mapProjection.clipAngle(90); } 
-    else { mapProjection.clipAngle(null); }        
-  }
-  
-  function filename(what, sub, ext) {
-    var cult = (has(formats[what], culture)) ? "." + culture : "";
-    ext = ext ? "." + ext : ".json";
-    sub = sub ? "." + sub : "";
-    return what + sub + cult + ext;
-  }
-  
-  function dsoDisplay(prop, limit) {
-    return prop.mag === 999 && Math.sqrt(parseInt(prop.dim)) > limit ||
-           prop.mag !== 999 && prop.mag <= limit;
-  }
-  
-  function dsoSymbol(d, pt) {
-    var prop = d.properties;
-    var size = dsoSize(prop) || 9,
-        type = dsoShape(prop.type);
-    Canvas.symbol().type(type).size(size).position(pt)(context);
-    return Math.sqrt(size)/2;
-  }
-
-  function dsoShape(type) {
-    if (!type || !has(cfg.dsos.symbols, type)) return "circle"; 
-    else return cfg.dsos.symbols[type].shape; 
-  }
-
-  function dsoSize(prop) {
-    if (!prop.mag || prop.mag === 999) return Math.pow(parseInt(prop.dim) * dsobase * adapt / 7, 0.5); 
-    return Math.pow(2 * dsobase * adapt - prop.mag, dsoexp);
-  }
- 
-
-  function dsoName(d) {
-    //return d.properties[cfg.dsos.namesType]; 
-    var lang = cfg.dsos.namesType, id = d.id;
-    if (lang === "desig" || !has(dsonames, id)) return d.properties.desig;
-    return has(dsonames[id], lang) ? dsonames[id][lang] : d.properties.desig; 
-  }
-  
-  /* Star designation  */
-  function starDesignation(id) {
-    if (!has(starnames, id)) return "";
-    return starnames[id][cfg.stars.designationType]; 
-  }
-
-  function starPropername(id) {
-    var lang = cfg.stars.propernameType;
-    if (!has(starnames, id)) return "";
-    return has(starnames[id], lang) ? starnames[id][lang] : starnames[id].name; 
-  }
-  
-  function starSize(d) {
-    var mag = d.properties.mag;
-    if (mag === null) return 0.1; 
-    var r = starbase * adapt * Math.exp(starexp * (mag+2));
-    return Math.max(r, 0.1);
-  }
-
-  
-  function starColor(d) {
-    var bv = d.properties.bv;
-    if (!cfg.stars.colors || isNaN(bv)) {return cfg.stars.style.fill; }
-    return bvcolor(bv);
-  }
-  
-  function constName(d) { 
-    return d.properties[cfg.constellations.namesType]; 
-  }
-
- function planetSize(d) {
-    var mag = d.mag;
-    if (mag === null) return 2; 
-    var r = 4 * adapt * Math.exp(-0.05 * (mag+2));
-    return Math.max(r, 2);
-  }
- 
-  function gridOrientation(pos, orient) {
-    var o = orient.split(""), h = "center", v = "middle"; 
-    for (var i = o.length-1; i >= 0; i--) {
-      switch(o[i]) {
-        case "N": v = "bottom"; break;
-        case "S": v = "top"; break;
-        case "E": h = "left"; pos[0] += 2; break;
-        case "W": h = "right";  pos[0] -= 2; break;
-      }
-    }
-    context.textAlign = h;
-    context.textBaseline = v;
-    return pos;
-  }
-  
-  function clear() {
-    context.clearRect(0, 0, canvaswidth + margin[0], canvasheight + margin[1]);
-  }
-  
-  function getWidth() {
-    var w = 0;
-    if (isNumber(cfg.width) && cfg.width > 0) w = cfg.width;
-    else if (parent) w = parent.getBoundingClientRect().width - margin[0] *2;
-    else w = window.getBoundingClientRect().width - margin[0]*2;
-    //if (isNumber(cfg.background.width)) w -= cfg.background.width;
-    return w;
-  }
-  
-  function getProjection(p) {
-    if (!has(projections, p)) return;
-    var res = projections[p];
-    if (!has(res, "ratio")) res.ratio = 2;  // Default w/h ratio 2:1    
-    return res;
-  }
- 
-  
-  function animate() {
-    if (!animations || animations.length < 1) return;
-
-    var d, a = animations[current];
-    
-    switch (a.param) {
-      case "projection": d = reproject({projection:a.value}); break;
-      case "center": d = rotate({center:a.value}); break;
-      case "zoom": d = zoomBy(a.value);
-    }
-    if (a.callback) setTimeout(a.callback, d);
-    current++;
-    if (repeat === true && current === animations.length) current = 0;
-    d = a.duration === 0 || a.duration < d ? d : a.duration;
-    if (current < animations.length) animationID = setTimeout(animate, d);
-  }
-  
-  function stop() {
-    clearTimeout(animationID);
-    //current = 0;
-    //repeat = false;
-  }
-
-  
-  // Exported objects and functions for adding data
-  this.container = container;
-  this.clip = clip;
-  this.map = map;
-  this.mapProjection = mapProjection;
-  this.context = context;
-  this.metrics = function() {
-    return {"width": width, "height": height, "margin": margin, "scale": mapProjection.scale()};
-  };
-  this.setStyle = setStyle;
-  this.setTextStyle = setTextStyle;
-  this.setStyleA = setStyleA;
-  this.setConstStyle = function(rank, font) { 
-    var f = arrayfy(font);
-    context.font = f[rank];    
-  };
-  this.symbol = Canvas.symbol;
-  this.dsoSymbol = dsoSymbol;
-  this.redraw = redraw; 
-  this.resize = function(config) { 
-    if (config !== undefined) {  
-      if (has(config, "width")) cfg.width = config.width; 
-      else if (isNumber(config)) cfg.width = config;
-    }
-    resize(true); 
-    return cfg.width;
-  }; 
-  this.reload = function(config) { 
-    var ctr;
-    //if (!config || !has(config, "transform")) return;
-    //cfg.transform = config.transform; 
-    if (config) Object.assign(cfg, settings.set(config));
-    if (cfg.follow === "center" && has(cfg, "center")) {
-      ctr = getAngles(cfg.center);
-    } else if (cfg.follow === "zenith") {
-      ctr = getAngles(Celestial.zenith());
-    } 
-    if (ctr) mapProjection.rotate(ctr);
-    container.selectAll("*").remove(); 
-    load(); 
-  }; 
-  this.apply = function(config) { apply(config); }; 
-  this.reproject = function(config) { return reproject(config); }; 
-  this.rotate = function(config) { if (!config) return cfg.center; return rotate(config); }; 
-  this.zoomBy = function(factor) { if (!factor) return mapProjection.scale()/scale; return zoomBy(factor); };
-  this.color = function(type) {
-    if (!type) return "#000";
-    if (has(cfg.dsos.symbols, type)) return cfg.dsos.symbols[type].fill;
-    return "#000";
-  };
-  this.starColor = starColor;
-  this.animate = function(anims, dorepeat) { 
-    if (!anims) return; 
-    animations = anims; 
-    current = 0; 
-    repeat = dorepeat ? true : false; 
-    animate(); 
-  };
-  this.stop  = function(wipe) {
-    stop();
-    if (wipe === true) animations = [];
-  };
-  this.go = function(index) {
-    if (animations.length < 1) return;
-    if (index && index < animations.length) current = index;
-    animate(); 
-  };
-
-  /* obsolete
-  if (!has(this, "date"))
-    this.date = function() { console.log("Celestial.date() needs config.location = true to work." ); };
-  */
-  load();
-};
- 
-//Export entire object if invoked by require
-if (typeof module === "object" && module.exports) {
-  var d3js = require('./lib/d3.js'),
-      d3_geo_projection = require('./lib/d3.geo.projection.js');
-  module.exports = {
-    Celestial: function() { return Celestial; },
-    d3: function() { return d3js; },
-    "d3.geo.projection": function() { return d3_geo_projection; }
-  };
-}
-
-//Flipped projection generated on the fly
-Celestial.projection = function(projection) {
-  var p, raw, forward;
-  
-  if (!has(projections, projection)) { throw new Error("Projection not supported: " + projection); }
-  p = projections[projection];    
-
-  if (p.arg !== null) {
-    raw = d3.geo[projection].raw(p.arg);
-  } else {
-    raw = d3.geo[projection].raw;  
-  }
-  
-  forward = function(λ, φ) {
-    var coords = raw(-λ, φ);
-    return coords;
-  };
-
-  forward.invert = function(x, y) {
-    try {
-      var coords = raw.invert(x, y);
-      coords[0] = coords && -coords[0];
-      return coords;
-    } catch(e) { console.log(e); }
-  };
-
-  return d3.geo.projection(forward);
-};
-
-
-function projectionTween(a, b) {
-  var prj = d3.geo.projection(raw).scale(1),
-      center = prj.center,
-      translate = prj.translate,
-      α;
-
-  function raw(λ, φ) {
-    var pa = a([λ *= 180 / Math.PI, φ *= 180 / Math.PI]), pb = b([λ, φ]);
-    return [(1 - α) * pa[0] + α * pb[0], (α - 1) * pa[1] - α * pb[1]];
-  }
-
-  prj.alpha = function(_) {
-    if (!arguments.length) return α;
-    α = +_;
-    var ca = a.center(), cb = b.center(),
-        ta = a.translate(), tb = b.translate();
-    
-    center([(1 - α) * ca[0] + α * cb[0], (1 - α) * ca[1] + α * cb[1]]);
-    translate([(1 - α) * ta[0] + α * tb[0], (1 - α) * ta[1] + α * tb[1]]);
-    return prj;
-  };
-
-  delete prj.translate;
-  delete prj.center;
-  return prj.alpha(0);
-}
-
-var eulerAngles = {
-  "equatorial": [0.0, 0.0, 0.0],
-  "ecliptic": [0.0, 0.0, 23.4393],
-  "galactic": [93.5949, 28.9362, -58.5988],
-  "supergalactic": [137.3100, 59.5283, 57.7303]
-//  "mars": [97.5,23.5,29]
-};
-
-var poles = {
-  "equatorial": [0.0, 90.0],
-  "ecliptic": [-90.0, 66.5607],
-  "galactic": [-167.1405, 27.1283],
-  "supergalactic": [-76.2458, 15.7089]
-//  "mars": [-42.3186, 52.8865]
-};
-
-Celestial.eulerAngles = function () { return eulerAngles; };
-Celestial.poles = function () { return poles; };
-
-var τ = Math.PI*2,
-    halfπ = Math.PI/2,
-    deg2rad = Math.PI/180;
-
-
-//Transform equatorial into any coordinates, degrees
-function transformDeg(c, euler) {
-  var res = transform( c.map( function(d) { return d * deg2rad; } ), euler);
-  return res.map( function(d) { return d / deg2rad; } );
-}
-
-//Transform equatorial into any coordinates, radians
-function transform(c, euler) {
-  var x, y, z, β, γ, λ, φ, dψ, ψ, θ,
-      ε = 1.0e-5;
-
-  if (!euler) return c; 
-
-  λ = c[0];  // celestial longitude 0..2pi
-  if (λ < 0) λ += τ; 
-  φ = c[1];  // celestial latitude  -pi/2..pi/2
-  
-  λ -= euler[0];  // celestial longitude - celestial coordinates of the native pole
-  β = euler[1];  // inclination between the poles (colatitude)
-  γ = euler[2];  // native coordinates of the celestial pole
-  
-  x = Math.sin(φ) * Math.sin(β) - Math.cos(φ) * Math.cos(β) * Math.cos(λ);
-  if (Math.abs(x) < ε) {
-    x = -Math.cos(φ + β) + Math.cos(φ) * Math.cos(β) * (1 - Math.cos(λ));
-  }
-  y = -Math.cos(φ) * Math.sin(λ);
-  
-  if (x !== 0 || y !== 0) {
-    dψ = Math.atan2(y, x);
-  } else {
-    dψ = λ - Math.PI;
-  }
-  ψ = (γ + dψ); 
-  if (ψ > Math.PI) ψ -= τ; 
-  
-  if (λ % Math.PI === 0) {
-    θ = φ + Math.cos(λ) * β;
-    if (θ > halfπ) θ = Math.PI - θ; 
-    if (θ < -halfπ) θ = -Math.PI - θ; 
-  } else {
-    z = Math.sin(φ) * Math.cos(β) + Math.cos(φ) * Math.sin(β) * Math.cos(λ);
-    if (Math.abs(z) > 0.99) {
-      θ = Math.abs(Math.acos(Math.sqrt(x*x+y*y)));
-      if (z < 0) θ *= -1; 
-    } else {
-      θ = Math.asin(z);
-    }
-  }
-  
-  return [ψ, θ];
-}
-
-  
-function getAngles(coords) {
-  if (coords === null || coords.length <= 0) return [0,0,0];
-  var rot = eulerAngles.equatorial; 
-  if (!coords[2]) coords[2] = 0;
-  return [rot[0] - coords[0], rot[1] - coords[1], rot[2] + coords[2]];
-}
-
-
-var euler = {
-  "ecliptic": [-90.0, 23.4393, 90.0],
-  "inverse ecliptic": [90.0, 23.4393, -90.0],
-  "galactic": [-167.1405, 62.8717, 122.9319], 
-  "inverse galactic": [122.9319, 62.8717, -167.1405],
-  "supergalactic": [283.7542, 74.2911, 26.4504],
-  "inverse supergalactic": [26.4504, 74.2911, 283.7542],
-  "init": function () {
-    for (var key in this) {
-      if (this[key].constructor == Array) { 
-        this[key] = this[key].map( function(val) { return val * deg2rad; } );
-      }
-    }
-  },
-  "add": function(name, ang) {
-    if (!ang || !name || ang.length !== 3 || this.hasOwnProperty(name)) return; 
-    this[name] = ang.map( function(val) { return val * deg2rad; } );
-    return this[name];
-  }
-};
-
-euler.init();
-Celestial.euler = function () { return euler; };
-
-var horizontal = function(dt, pos, loc) {
-  //dt: datetime, pos: celestial coordinates [lat,lng], loc: location [lat,lng]  
-  var ha = getMST(dt, loc[1]) - pos[0];
-  if (ha < 0) ha = ha + 360;
-  
-  ha  = ha * deg2rad;
-  var dec = pos[1] * deg2rad;
-  var lat = loc[0] * deg2rad;
-
-  var alt = Math.asin(Math.sin(dec) * Math.sin(lat) + Math.cos(dec) * Math.cos(lat) * Math.cos(ha));
-  var az = Math.acos((Math.sin(dec) - Math.sin(alt) * Math.sin(lat)) / (Math.cos(alt) * Math.cos(lat)));
-
-  if (Math.sin(ha) > 0) az = Math.PI * 2 - az;
-  
-  return [alt / deg2rad, az / deg2rad, 0];
-};
-
-horizontal.inverse = function(dt, hor, loc) {
-  
-  var alt = hor[0] * deg2rad;
-  var az = hor[1] * deg2rad;
-  var lat = loc[0] * deg2rad;
-   
-  var dec = Math.asin((Math.sin(alt) * Math.sin(lat)) + (Math.cos(alt) * Math.cos(lat) * Math.cos(az)));
-  var ha = ((Math.sin(alt) - (Math.sin(dec) * Math.sin(lat))) / (Math.cos(dec) * Math.cos(lat))).toFixed(6);
-  
-  ha = Math.acos(ha);
-  ha  = ha / deg2rad;
-  
-  var ra = getMST(dt, loc[1]) - ha;
-  //if (ra < 0) ra = ra + 360;
-    
-  return [ra, dec / deg2rad, 0];
-};
-
-function getMST(dt, lng)
-{
-    var yr = dt.getUTCFullYear();
-    var mo = dt.getUTCMonth() + 1;
-    var dy = dt.getUTCDate();
-    var h = dt.getUTCHours();
-    var m = dt.getUTCMinutes();
-    var s = dt.getUTCSeconds();
-
-    if ((mo == 1)||(mo == 2)) {
-        yr  = yr - 1;
-        mo = mo + 12;
-    }
-
-    var a = Math.floor(yr / 100);
-    var b = 2 - a + Math.floor(a / 4);
-    var c = Math.floor(365.25 * yr);
-    var d = Math.floor(30.6001 * (mo + 1));
-
-    // days since J2000.0
-    var jd = b + c + d - 730550.5 + dy + (h + m/60.0 + s/3600.0)/24.0;
-    
-    // julian centuries since J2000.0
-    var jt = jd/36525.0;
-
-    // the mean sidereal time in degrees
-    var mst = 280.46061837 + 360.98564736629*jd + 0.000387933*jt*jt - jt*jt*jt/38710000 + lng;
-
-    // in degrees modulo 360.0
-    if (mst > 0.0) 
-        while (mst > 360.0) mst = mst - 360.0;
-    else
-        while (mst < 0.0)   mst = mst + 360.0;
-        
-    return mst;
-}
-
-Celestial.horizontal = horizontal;
-Celestial.ha = function(dt, lng, ra) {
-  var ha = getMST(dt, lng) - ra;
-  if (ha < 180) ha = ha + 360;
-  return ha;
-};
-//Add more JSON data to the map
-var hasCallback = false;
-
-Celestial.add = function(dat) {
-  var res = {};
-  //dat: {file: path, type:'json|raw', callback: func(), redraw: func()} 
-  //or {file:file, size:null, shape:null, color:null}  TBI
-  //  with size,shape,color: "prop=val:result;.." || function(prop) { .. return res; } 
-  if (!has(dat, "type")) return console.log("Missing type");
-  
-  if ((dat.type === "dso" || dat.type === "json") && (!has(dat, "file") || !has(dat, "callback"))) return console.log("Can't add data file");
-  if ((dat.type === "line" || dat.type === "raw") && !has(dat, "callback")) return console.log("Can't add data");
-  
-  if (has(dat, "file")) res.file = dat.file;
-  res.type = dat.type;
-  if (has(dat, "callback")) res.callback = dat.callback;
-  if (has(dat, "redraw")) res.redraw = dat.redraw;
-  if (has(dat, "save")) res.save = dat.save;
-  Celestial.data.push(res);
-};
-
-Celestial.remove = function(i) {
-  if (i !== null && i < Celestial.data.length) {
-    return Celestial.data.splice(i,1);
-  }
-};
-
-Celestial.clear = function() {
-  Celestial.data = [];
-};
-
-Celestial.addCallback = function(dat) {
-  Celestial.callback = dat;
-  hasCallback = (dat !== null);
-};
-
-Celestial.runCallback = function(dat) {
-  hasCallback = false; // avoid recursion
-  Celestial.callback();
-  hasCallback = true;
-};
-//load data and transform coordinates
-
-
-function getPoint(coords, trans) {
-  return transformDeg(coords, euler[trans]);
-}
- 
-function getData(d, trans) {
-  if (trans === "equatorial") return d;
-
-  var leo = euler[trans],
-      f = d.features;
-
-  for (var i=0; i<f.length; i++)
-    f[i].geometry.coordinates = translate(f[i], leo);
-  
-  return d;
-}
-
-function getPlanets(d) {
-  var res = [];
-  
-  for (var key in d) {
-    if (!has(d, key)) continue;
-    if (cfg.planets.which.indexOf(key) === -1) continue;
-    var dat = Kepler().id(key);
-    if (has(d[key], "parent")) dat.parentBody(d[key].parent);
-    dat.elements(d[key].elements[0]).params(d[key]);
-    if (key === "ter") 
-      Celestial.origin = dat;
-    else res.push(dat);
-  }
-  //res.push(Kepler().id("sol"));
-  //res.push(Kepler().id("lun"));
-  return res;
-}
-
-
-function getPlanet(id, dt) {
-  dt = dt || Celestial.date();
-  if (!Celestial.origin) return;
-
-  var o = Celestial.origin(dt).spherical(), res;
-     
-  Celestial.container.selectAll(".planet").each(function(d) {
-    if (id === d.id()) {
-      res = d(dt).equatorial(o);
-    }
-  });
-  return res;
-}
-
-function getConstellationList(d) {
-  var res = {},
-      f = d.features;
-      
-  for (var i=0; i<f.length; i++) {
-    res[f[i].id] = {
-      center: f[i].properties.display.slice(0,2),
-      scale: f[i].properties.display[2]
-    };
-  }
-  return res;
-}
-
-function getMwbackground(d) {
-  // geoJson object to darken the mw-outside, prevent greying of whole map in some orientations 
-  var res = {'type': 'FeatureCollection', 'features': [ {'type': 'Feature', 
-              'geometry': { 'type': 'MultiPolygon', 'coordinates' : [] }
-            }]};
-
-  // reverse the polygons, inside -> outside
-  var l1 = d.features[0].geometry.coordinates[0];
-  res.features[0].geometry.coordinates[0] = [];
-  for (var i=0; i<l1.length; i++) {
-    res.features[0].geometry.coordinates[0][i] = l1[i].slice().reverse();
-  }
-
-  return res;
-}
-
-function getTimezones() {
-  
-}
-
-function translate(d, leo) {
-  var res = [];
-  switch (d.geometry.type) {
-    case "Point": res = transformDeg(d.geometry.coordinates, leo); break;
-    case "LineString": res.push(transLine(d.geometry.coordinates, leo)); break;
-    case "MultiLineString": res = transMultiLine(d.geometry.coordinates, leo); break;
-    case "Polygon": res.push(transLine(d.geometry.coordinates[0], leo)); break;
-    case "MultiPolygon": res.push(transMultiLine(d.geometry.coordinates[0], leo)); break;
-  }
-  
-  return res;
-}
-
-function getGridValues(type, loc) {
-  var lines = [];
-  if (!loc) return [];
-  if (!isArray(loc)) loc = [loc];
-  //center, outline, values
-  for (var i=0; i < loc.length; i++) {
-    switch (loc[i]) {
-      case "center": 
-        if (type === "lat")
-          lines = lines.concat(getLine(type, cfg.center[0], "N"));
-        else
-          lines = lines.concat(getLine(type, cfg.center[1], "S")); 
-        break;
-      case "outline": 
-        if (type === "lon") { 
-          lines = lines.concat(getLine(type, cfg.center[1]-89.99, "S"));
-          lines = lines.concat(getLine(type, cfg.center[1]+89.99, "N"));
-        } else {
-					// TODO: hemi
-          lines = lines.concat(getLine(type, cfg.center[0]-179.99, "E"));
-          lines = lines.concat(getLine(type, cfg.center[0]+179.99, "W"));
-        }
-        break;
-      default: if (isNumber(loc[i])) {
-        if (type === "lat")
-          lines = lines.concat(getLine(type, loc[i], "N"));
-        else
-          lines = lines.concat(getLine(type, loc[i], "S")); 
-        break;        
-      }
-    }
-  }
-  //return [{coordinates, value, orientation}, ...]
-  return jsonGridValues(lines);
-}
-
-function jsonGridValues(lines) {
-  var res = [];
-  for (var i=0; i < lines.length; i++) {
-    var f = {type: "Feature", "id":i, properties: {}, geometry:{type:"Point"}};
-    f.properties.value = lines[i].value;
-    f.properties.orientation = lines[i].orientation;
-    f.geometry.coordinates = lines[i].coordinates;
-    res.push(f);
-  }
-  return res;
-}
-
-function getLine(type, loc, orient) {
-  var min, max, step, val, coord,
-      tp = type,
-      res = [],
-      lr = loc;
-  if (cfg.transform === "equatorial" && tp === "lon") tp = "ra";
-  
-  if (tp === "ra") {
-    min = 0; max = 23; step = 1;
-  } else if (tp === "lon") {
-    min = 0; max = 350; step = 10;    
-  } else {
-    min = -80; max = 80; step = 10;    
-  }
-  for (var i=min; i<=max; i+=step) {
-    var o = orient;
-    if (tp === "lat") {
-      coord = [lr, i];
-      val = i.toString() + "\u00b0";
-      if (i < 0) o += "S"; else o += "N";
-    } else if (tp === "ra") {
-      coord = [i * 15, lr];
-      val = i.toString() + "\u02b0";
-    } else {
-      coord = [i, lr];
-      val = i.toString() + "\u00b0";
-    }
-  
-    res.push({coordinates: coord, value: val, orientation: o});
-  }
-  return res;
-}
-
-function transLine(c, leo) {
-  var line = [];
-  
-  for (var i=0; i<c.length; i++)
-    line.push(transformDeg(c[i], leo));
-  
-  return line;
-}
-
-function transMultiLine(c, leo) {
-  var lines = [];
-  
-  for (var i=0; i<c.length; i++)
-    lines.push(transLine(c[i], leo));
-  
-  return lines;
-}
-
-Celestial.getData = getData;
-Celestial.getPoint = getPoint;
-Celestial.getPlanet = getPlanet;
-
-// Central configuration object
-var globalConfig = {};
-
-//Defaults
-var settings = { 
-  width: 0,     // Default width; height is determined by projection
-  projection: "aitoff",  // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs, bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1, eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut, ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill, homolosine, kavrayskiy7, lagrange, larrivee, laskowski, loximuthal, mercator, miller, mollweide, mtFlatPolarParabolic, mtFlatPolarQuartic, mtFlatPolarSinusoidal, naturalEarth, nellHammer, orthographic, patterson, polyconic, rectangularPolyconic, robinson, sinusoidal, stereographic, times, twoPointEquidistant, vanDerGrinten, vanDerGrinten2, vanDerGrinten3, vanDerGrinten4, wagner4, wagner6, wagner7, wiechel, winkel3
-  transform: "equatorial", // Coordinate transformation: equatorial (default), ecliptic, galactic, supergalactic
-  center: null,       // Initial center coordinates in equatorial transformation [hours, degrees, degrees], 
-                      // otherwise [degrees, degrees, degrees], 3rd parameter is orientation, null = default center
-  geopos: null,       // optional initial geographic position [lat,lon] in degrees, overrides center
-  follow: "zenith",   // on which coordinates to center the map, default: zenith, if location enabled, otherwise center
-  orientationfixed: true,  // Keep orientation angle the same as center[2]
-  zoomlevel: null,    // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
-  zoomextend: 10,     // maximum zoom level
-  adaptable: true,    // Sizes are increased with higher zoom-levels
-  interactive: true,  // Enable zooming and rotation with mousewheel and dragging
-  form: false,        // Display settings form
-  location: false,    // Display location settings, deprecated, use formFields
-  // Set visiblity for each group of fields of the form
-  formFields: {"location": true, "general": true, "stars": true, "dsos": true, "constellations": true, "lines": true, "other": true, download: false},
-  advanced: true,     // Display fewer form fields if false
-  daterange: [],      // Calender date range; null: displaydate-+10; [n<100]: displaydate-+n; [yr]: yr-+10; 
-                      // [yr, n<100]: [yr-n, yr+n]; [yr0, yr1]
-  settimezone: true,  // Automatcally set time zone when geolocation changes
-  timezoneid: "AEFXZPQ3FDPF", // Account ID for TimeZoneDB service, please get your own
-  controls: true,     // Display zoom controls
-  lang: "",           // Global language override for names, any name setting that has the chosen language available
-                      // Default: desig or empty string for designations, other languages as used anywhere else
-  culture: "",        // Constellation lines, default "iau"
-  container: "celestial-map",   // ID of parent element, e.g. div
-  datapath: "data/",  // Path/URL to data files, empty = subfolder 'data'
-  stars: {
-    show: true,    // Show stars
-    limit: 6,      // Show only stars brighter than limit magnitude
-    colors: true,  // Show stars in spectral colors, if not use fill-style
-    style: { fill: "#ffffff", opacity: 1 }, // Default style for stars
-    designation: true, // Show star names (Bayer, Flamsteed, Variable star, Gliese or designation, 
-                       // i.e. whichever of the previous applies first); may vary with culture setting
-    designationType: "desig",  // Which kind of name is displayed as designation (fieldname in starnames.json)
-    designationStyle: { fill: "#ddddbb", font: "11px 'Palatino Linotype', Georgia, Times, 'Times Roman', serif", align: "left", baseline: "top" },
-    designationLimit: 2.5,  // Show only names for stars brighter than nameLimit
-    propername: false,   // Show proper name (if present)
-    propernameType: "name", // Field in starnames.json that contains proper name; may vary with culture setting
-    propernameStyle: { fill: "#ddddbb", font: "13px 'Palatino Linotype', Georgia, Times, 'Times Roman', serif", align: "right", baseline: "bottom" },
-    propernameLimit: 1.5,  // Show proper names for stars brighter than propernameLimit
-    size: 7,       // Scale size (radius) of star circle in pixels
-    exponent: -0.28, // Scale exponent for star size, larger = more linear
-    data: "stars.6.json" // Data source for stellar data
-  },
-  dsos: {
-    show: true,    // Show Deep Space Objects 
-    limit: 6,      // Show only DSOs brighter than limit magnitude
-    colors: true,  // Show DSOs in symbol colors if true, use style setting below if false
-    style: { fill: "#cccccc", stroke: "#cccccc", width: 2, opacity: 1 }, // Default style for dsos
-    names: true,   // Show DSO names
-    namesType: "desig",  // Type of displayed name: desig, name, or 15 different language codes from dsonames.json
-    nameStyle: { fill: "#cccccc", font: "11px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, serif", align: "left", baseline: "bottom" },
-    nameLimit: 4,  // Show only names for DSOs brighter than nameLimit
-    size: 6,    // Optional seperate scale size for DSOs, null = stars.size
-    exponent: 1.4, // Scale exponent for DSO size, larger = more non-linear
-    data: "dsos.bright.json",  // Data source for DSOs
-    symbols: {  // DSO symbol styles
-      gg: {shape: "circle", fill: "#ff0000"},                                 // Galaxy cluster
-      g:  {shape: "ellipse", fill: "#ff0000"},                                // Generic galaxy
-      s:  {shape: "ellipse", fill: "#ff0000"},                                // Spiral galaxy
-      s0: {shape: "ellipse", fill: "#ff0000"},                                // Lenticular galaxy
-      sd: {shape: "ellipse", fill: "#ff0000"},                                // Dwarf galaxy
-      e:  {shape: "ellipse", fill: "#ff0000"},                                // Elliptical galaxy
-      i:  {shape: "ellipse", fill: "#ff0000"},                                // Irregular galaxy
-      oc: {shape: "circle", fill: "#ff9900", stroke: "#ff9900", width: 2},    // Open cluster
-      gc: {shape: "circle", fill: "#ff9900"},                                 // Globular cluster
-      en: {shape: "square", fill: "#ff00cc"},                                 // Emission nebula
-      bn: {shape: "square", fill: "#ff00cc"},                                 // Generic bright nebula
-      sfr:{shape: "square", fill: "#cc00ff"},                                 // Star forming region
-      rn: {shape: "square", fill: "#0000ff"},                                 // Reflection nebula
-      pn: {shape: "diamond", fill: "#00cccc"},                                // Planetary nebula 
-      snr:{shape: "diamond", fill: "#ff00cc"},                                // Supernova remnant
-      dn: {shape: "square", fill: "#999999", stroke: "#999999", width: 2},    // Dark nebula 
-      pos:{shape: "marker", fill: "#cccccc", stroke: "#cccccc", width: 1.5}   // Generic marker
-    }
-  },
-  constellations: {
-    show: true,    // Show constellations 
-    names: true,   // Show constellation names 
-    namesType: "desig",   // What kind of name to show (default 3 letter designations) all options: name, desig, 
-                         // lat, en, ar, cn, cz, ee, fi, fr, de, gr, il, it, jp, kr, in, ir, ru, es, tr 
-    nameStyle: { fill:"#cccc99", align: "center", baseline: "middle", opacity:0.8, 
-                 font: ["14px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, sans-serif",  // Different fonts for brighter &
-                        "12px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, sans-serif",  // darker constellations
-                        "11px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, sans-serif"]},
-    lines: true,   // Show constellation lines 
-    lineStyle: { stroke: "#cccccc", width: 1.5, opacity: 0.6 },
-    bounds: false,  // Show constellation boundaries 
-    boundStyle: { stroke: "#ccff00", width: 0.5, opacity: 0.8, dash: [4,4] }
-  },
-  mw: {
-    show: true,    // Show Milky Way as filled polygons 
-    style: { fill: "#ffffff", opacity: "0.15" } // style for each MW-layer (5 on top of each other)
-  },
-  lines: {
-    graticule: { show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines 
-			// grid values: "outline", "center", or [lat,...] specific position
-      lon: {pos: [], fill: "#eee", font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"}, 
-			// grid values: "outline", "center", or [lon,...] specific position
-		  lat: {pos: [], fill: "#eee", font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"}},
-    equatorial: { show: true, stroke: "#aaaaaa", width: 1.3, opacity: 0.7 },    // Show equatorial plane 
-    ecliptic: { show: true, stroke: "#66cc66", width: 1.3, opacity: 0.7 },      // Show ecliptic plane 
-    galactic: { show: false, stroke: "#cc6666", width: 1.3, opacity: 0.7 },     // Show galactic plane 
-    supergalactic: { show: false, stroke: "#cc66cc", width: 1.3, opacity: 0.7 } // Show supergalactic plane 
-   //mars: { show: false, stroke:"#cc0000", width:1.3, opacity:.7 }
-  }, // Background style
-  background: { 
-    fill: "#000000", 
-    opacity: 1, 
-    stroke: "#000000", // Outline
-    width: 1.5 
-  }, 
-  horizon: {  //Show horizon marker, if geo-position and date-time is set
-    show: false, 
-    stroke: "#cccccc", // Line
-    width: 1.0, 
-    fill: "#000000", // Area below horizon
-    opacity: 0.4
-  },  
-  daylight: {  //Show approximate state of sky at selected time
-    show: false
-  },
-  planets: {  //Show planet locations, if date-time is set
-    show: false, 
-    // 3-letter designations of all solar system objects that should be displayed
-    which: ["sol", "mer", "ven", "ter", "lun", "mar", "jup", "sat", "ura", "nep", "cer", "plu"],
-    // Symbols as unicode codepoints, letter abbreviations and colors to be displayed
-    symbols: {
-      "sol": {symbol: "\u2609", letter:"Su", fill: "#ffff00", size: 12},
-      "mer": {symbol: "\u263f", letter:"Me", fill: "#cccccc"},
-      "ven": {symbol: "\u2640", letter:"V", fill: "#eeeecc"},
-      "ter": {symbol: "\u2295", letter:"T", fill: "#00ccff"},
-      "lun": {symbol: "\u25cf", letter:"L", fill: "#ffffff", size: 12},
-      "mar": {symbol: "\u2642", letter:"Ma", fill: "#ff6600"},
-      "cer": {symbol: "\u26b3", letter:"C", fill: "#cccccc"},
-      "ves": {symbol: "\u26b6", letter:"Ma", fill: "#cccccc"},
-      "jup": {symbol: "\u2643", letter:"J", fill: "#ffaa33"},
-      "sat": {symbol: "\u2644", letter:"Sa", fill: "#ffdd66"},
-      "ura": {symbol: "\u2645", letter:"U", fill: "#66ccff"},
-      "nep": {symbol: "\u2646", letter:"N", fill: "#6666ff"},
-      "plu": {symbol: "\u2647", letter:"P", fill: "#aaaaaa"},
-      "eri": {symbol: "\u26aa", letter:"E", fill: "#eeeeee"}
-    },
-    // Style options for planetary symbols
-    symbolStyle: { fill: "#cccccc", opacity:1, font: "bold 17px 'DejaVu Sans Mono', 'Arial Unicode MS', sans-serif", align: "center", baseline: "middle" },
-    symbolType: "symbol",  // Type of planetary symbol to be displayed: 'symbol', 'letter' or 'disk'
-    names: false,  // Show name next to symbol
-    // Style options for planetary names
-    nameStyle: { fill: "#cccccc", font: "14px 'Lucida Sans Unicode', 'DejaVu Sans', sans-serif", align: "right", baseline: "top" },
-    namesType: "en"  // Language in which the name is displayed, options desig, ar, cn, en, fr, de, gr, il, in, it, jp, lat, ru, es
-  },
-  set: function(cfg) {  // Override defaults with values of cfg
-    var prop, key, config = {}, res = {};
-    if (Object.entries(globalConfig).length === 0) Object.assign(config, this);
-    else Object.assign(config, globalConfig);
-    if (!cfg) return config; 
-    for (prop in config) {
-      if (!has(config, prop)) continue; 
-      //if (typeof(config[prop]) === 'function'); 
-      if (!has(cfg, prop) || cfg[prop] === null) { 
-        res[prop] = config[prop]; 
-      } else if (config[prop] === null || config[prop].constructor != Object ) {
-        res[prop] = cfg[prop];
-      } else {
-        res[prop] = {};
-        for (key in config[prop]) {
-          if (has(cfg[prop], key)) {
-            res[prop][key] = cfg[prop][key];
-          } else {
-            res[prop][key] = config[prop][key];
-          }            
-        }
-      }
-    }
-    Object.assign(globalConfig, res);
-    return res;
-  },
-  applyDefaults: function(cfg) {
-    var res = {};
-    Object.assign(res, globalConfig);
-    // Nothing works without these
-    res.stars.size = res.stars.size || 7;  
-    res.stars.exponent = res.stars.exponent || -0.28;
-    if (!res.center || res.center.length <= 0) res.center = [0,0,0];
-    res.datapath = res.datapath || "";
-    res.datapath = res.datapath.replace(/([^\/]$)/, "$1\/");
-    if (!res.transform || res.transform === "") res.transform = "equatorial";
-    // If no recognized language/culture settings, assume defaults
-    //if (!res.lang || res.lang.search(/^de|es$/) === -1) res.lang = "name";
-    //Set all poss. names to cfg.lang if not english
-    if (!res.culture || res.culture.search(/^cn$/) === -1) res.culture = "iau";
-    // Adapt legacy name parameters
-    if (has(cfg, "stars")) {
-      // names -> designation
-      if (has(cfg.stars, "names")) res.stars.designation = cfg.stars.names;
-      if (has(cfg.stars, "namelimit")) res.stars.designationLimit = cfg.stars.namelimit;
-      if (has(cfg.stars, "namestyle")) Object.assign(res.stars.designationStyle, cfg.stars.namestyle);    
-      // proper -> propername
-      if (has(cfg.stars, "proper")) res.stars.propername = cfg.stars.proper;
-      if (has(cfg.stars, "propernamelimit")) res.stars.propernameLimit = cfg.stars.propernamelimit;
-      if (has(cfg.stars, "propernamestyle")) Object.assign(res.stars.propernameStyle, cfg.stars.propernamestyle);
-    }
-    if (!res.stars.designationType || res.stars.designationType === "") res.stars.designationType = "desig";
-    if (!has(formats.starnames[res.culture].designation, res.stars.designationType)) res.designationType = "desig";
-    if (!res.stars.propernameType || res.stars.propernameType === "") res.stars.propernameType = "name";
-    if (!has(formats.starnames[res.culture].propername, res.stars.propernameType)) res.propernameType = "name";
-
-    if (has(cfg, "dsos")) {
-      // names, desig -> namesType
-      //if (has(cfg.dsos, "names") && cfg.dsos.names === true) res.dsos.namesType = "name";
-      if (has(cfg.dsos, "desig") && cfg.dsos.desig === true) res.dsos.namesType = "desig";
-      if (has(cfg.dsos, "namelimit")) res.dsos.nameLimit = cfg.dsos.namelimit;
-      if (has(cfg.dsos, "namestyle")) Object.assign(res.dsos.nameStyle, cfg.dsos.namestyle);    
-    }
-    if (!res.dsos.namesType || res.dsos.namesType === "") res.dsos.namesType = "desig";
-    
-    if (has(cfg, "constellations")) {
-      // names, desig -> namesType
-      if (has(cfg.constellations, "show") && cfg.constellations.show === true) res.constellations.names = true;
-      //if (has(cfg.constellations, "names") && cfg.constellations.names === true) res.constellations.namesType = "name";
-      if (has(cfg.constellations, "desig") && cfg.constellations.desig === true) res.constellations.namesType = "desig";
-      if (res.constellations.namesType === "latin") res.constellations.namesType = "la";
-      if (res.constellations.namesType === "iau") res.constellations.namesType = "name";
-      if (has(cfg.constellations, "namestyle")) Object.assign(res.constellations.nameStyle, cfg.constellations.namestyle);
-      if (has(cfg.constellations, "linestyle")) Object.assign(res.constellations.lineStyle, cfg.constellations.linestyle);
-      if (has(cfg.constellations, "boundstyle")) Object.assign(res.constellations.boundStyle, cfg.constellations.boundstyle);
-    }
-    if (!res.constellations.namesType || res.constellations.namesType === "") res.constellations.namesType = "desig";
-    if (!has(formats.constellations[res.culture].names, res.constellations.namesType)) res.constellations.namesType = "name";
-
-    if (has(cfg, "planets")) {
-      if (has(cfg.planets, "style")) Object.assign(res.planets.style, cfg.planets.symbolStyle);      
-    }
-    if (!res.planets.symbolType || res.planets.symbolType === "") res.planets.symbolType = "symbol";
-    if (!res.planets.namesType || res.planets.namesType === "") res.planets.namesType = "desig";
-    if (!has(formats.planets[res.culture].names, res.planets.namesType)) res.planets.namesType = "desig";
-    //Expand all parameters that can be arrays into arrays, no need to test it later
-    res.constellations.nameStyle.font = arrayfy(res.constellations.nameStyle.font);
-    res.constellations.nameStyle.opacity = arrayfy(res.constellations.nameStyle.opacity);
-    res.constellations.nameStyle.fill = arrayfy(res.constellations.nameStyle.fill);
-    res.constellations.lineStyle.width = arrayfy(res.constellations.lineStyle.width);
-    res.constellations.lineStyle.opacity = arrayfy(res.constellations.lineStyle.opacity);
-    res.constellations.lineStyle.stroke = arrayfy(res.constellations.lineStyle.stroke);
-
-    Object.assign(globalConfig, res);
-    return res; 
-  }
-};
-
-function arrayfy(o) {
-  var res;
-  if (!isArray(o)) return [o, o, o];  //It saves some work later, OK?
-  if (o.length === 1) return [o[0], o[0], o[0]];
-  if (o.length === 2) return [o[0], o[1], o[1]];
-  if (o.length >= 3) return o;
-}
-
-Celestial.settings = function () { return settings; };
-
-//b-v color index to rgb color value scale
-var bvcolor = 
-  d3.scale.quantize().domain([3.347, -0.335]) //main sequence <= 1.7
-    .range([ '#ff4700', '#ff4b00', '#ff4f00', '#ff5300', '#ff5600', '#ff5900', '#ff5b00', '#ff5d00', '#ff6000', '#ff6300', '#ff6500', '#ff6700', '#ff6900', '#ff6b00', '#ff6d00', '#ff7000', '#ff7300', '#ff7500', '#ff7800', '#ff7a00', '#ff7c00', '#ff7e00', '#ff8100', '#ff8300', '#ff8506', '#ff870a', '#ff8912', '#ff8b1a', '#ff8e21', '#ff9127', '#ff932c', '#ff9631', '#ff9836', '#ff9a3c', '#ff9d3f', '#ffa148', '#ffa34b', '#ffa54f', '#ffa753', '#ffa957', '#ffab5a', '#ffad5e', '#ffb165', '#ffb269', '#ffb46b', '#ffb872', '#ffb975', '#ffbb78', '#ffbe7e', '#ffc184', '#ffc489', '#ffc78f', '#ffc892', '#ffc994', '#ffcc99', '#ffce9f', '#ffd1a3', '#ffd3a8', '#ffd5ad', '#ffd7b1', '#ffd9b6', '#ffdbba', '#ffddbe', '#ffdfc2', '#ffe1c6', '#ffe3ca', '#ffe4ce', '#ffe8d5', '#ffe9d9', '#ffebdc', '#ffece0', '#ffefe6', '#fff0e9', '#fff2ec', '#fff4f2', '#fff5f5', '#fff6f8', '#fff9fd', '#fef9ff', '#f9f6ff', '#f6f4ff', '#f3f2ff', '#eff0ff', '#ebeeff', '#e9edff', '#e6ebff', '#e3e9ff', '#e0e7ff', '#dee6ff', '#dce5ff', '#d9e3ff', '#d7e2ff', '#d3e0ff', '#c9d9ff', '#bfd3ff', '#b7ceff', '#afc9ff', '#a9c5ff', '#a4c2ff', '#9fbfff', '#9bbcff']);
- 
-/* Default parameters for each supported projection
-     arg: constructor argument, if any 
-     scale: scale parameter so that they all have ~equal width, normalized to 1024 pixels
-     ratio: width/height ratio, 2.0 if none
-     clip: projection clipped to 90 degrees from center, otherwise to antimeridian
-*/
-var projections = {
-  "airy": {n:"Airy’s Minimum Error", arg:Math.PI/2, scale:360, ratio:1.0, clip:true},
-  "aitoff": {n:"Aitoff", arg:null, scale:162},
-  "armadillo": {n:"Armadillo", arg:0, scale:250}, 
-  "august": {n:"August", arg:null, scale:94, ratio:1.4},
-  "azimuthalEqualArea": {n:"Azimuthal Equal Area", arg:null, scale:340, ratio:1.0, clip:true},
-  "azimuthalEquidistant": {n:"Azimuthal Equidistant", arg:null, scale:320, ratio:1.0, clip:true},
-  "baker": {n:"Baker Dinomic", arg:null, scale:160, ratio:1.4},
-  "berghaus": {n:"Berghaus Star", arg:0, scale:320, ratio:1.0, clip:true},
-  "boggs": {n:"Boggs Eumorphic", arg:null, scale:170},
-  "bonne": {n:"Bonne", arg:Math.PI/2.5, scale:225, ratio:0.88},
-  "bromley": {n:"Bromley", arg:null, scale:162},
-//  "butterfly": {n:"Butterfly", arg:null, scale:31, ratio:1.1, clip:true},
-  "cassini": {n:"Cassini", arg:null, scale:325, ratio:1.0, clip:true},
-  "collignon": {n:"Collignon", arg:null, scale:100, ratio:2.6},
-  "craig": {n:"Craig Retroazimuthal", arg:0, scale:310, ratio:1.5, clip:true},
-  "craster": {n:"Craster Parabolic", arg:null, scale:160},
-  "cylindricalEqualArea": {n:"Cylindrical Equal Area", arg:Math.PI/6, scale:190, ratio:2.3},
-  "cylindricalStereographic": {n:"Cylindrical Stereographic", arg:Math.PI/4, scale:230, ratio:1.3},
-  "eckert1": {n:"Eckert I", arg:null, scale:175},
-  "eckert2": {n:"Eckert II", arg:null, scale:175},
-  "eckert3": {n:"Eckert III", arg:null, scale:190},
-  "eckert4": {n:"Eckert IV", arg:null, scale:190},
-  "eckert5": {n:"Eckert V", arg:null, scale:182},
-  "eckert6": {n:"Eckert VI", arg:null, scale:182},
-  "eisenlohr": {n:"Eisenlohr", arg:null, scale:102},
-  "equirectangular": {n:"Equirectangular", arg:null, scale:165},
-  "fahey": {n:"Fahey", arg:null, scale:196, ratio:1.4},
-  "mtFlatPolarParabolic": {n:"Flat Polar Parabolic", arg:null, scale:175},
-  "mtFlatPolarQuartic": {n:"Flat Polar Quartic", arg:null, scale:230, ratio:1.65},
-  "mtFlatPolarSinusoidal": {n:"Flat Polar Sinusoidal", arg:null, scale:175, ratio:1.9},
-  "foucaut": {n:"Foucaut", arg:null, scale:142},
-  "ginzburg4": {n:"Ginzburg IV", arg:null, scale:180, ratio:1.7},
-  "ginzburg5": {n:"Ginzburg V", arg:null, scale:196, ratio:1.55},
-  "ginzburg6": {n:"Ginzburg VI", arg:null, scale:190, ratio:1.4},
-  "ginzburg8": {n:"Ginzburg VIII", arg:null, scale:205, ratio:1.3},
-  "ginzburg9": {n:"Ginzburg IX", arg:null, scale:190, ratio:1.4},
-  //"guyou": {n:"Guyou", arg:null, scale:160, ratio:2, clip:true},
-  //"bonne": {n:"Heart", arg:Math.PI/2.5, scale:225, ratio:0.88},
-  "homolosine": {n:"Goode Homolosine", arg:null, scale:160, ratio:2.2},
-  "hammer": {n:"Hammer", arg:2, scale:180},
-  "hatano": {n:"Hatano", arg:null, scale:186},
-  "healpix": {n:"HEALPix", arg:1, scale:320, ratio:1.2},
-  "hill": {n:"Hill Eucyclic", arg:2, scale:190, ratio:1.1},
-  "kavrayskiy7": {n:"Kavrayskiy VII", arg:null, scale:185, ratio:1.75},
-  "lagrange": {n:"Lagrange", arg:Math.PI/4, scale:88, ratio:1.6, clip:false},
-  "larrivee": {n:"l'Arrivée", arg:null, scale:160, ratio:1.25},
-  "laskowski": {n:"Laskowski Tri-Optimal", arg:null, scale:165, ratio:1.7},
-  "loximuthal": {n:"Loximuthal", arg:Math.PI/4, scale:175, ratio:1.8},
-  "mercator": {n:"Mercator", arg:null, scale:160, ratio:1.3},
-  "miller": {n:"Miller", arg:null, scale:160, ratio:1.5},
-  "mollweide": {n:"Mollweide", arg:null, scale:180},
-  "naturalEarth": {n:"Natural Earth", arg:null, scale:185, ratio:1.85},
-  "nellHammer": {n:"Nell Hammer", arg:null, scale:160, ratio:2.6},
-  "orthographic": {n:"Orthographic", arg:null, scale:480, ratio:1.0, clip:true},
-  "patterson": {n:"Patterson Cylindrical", arg:null, scale:160, ratio:1.75},
-  "polyconic": {n:"Polyconic", arg:null, scale:160, ratio:1.3},
-  "quincuncial": {n:"Quincuncial", arg:null, scale:160, ratio:1.3},
-  "rectangularPolyconic": {n:"Rectangular Polyconic", arg:0, scale:160, ratio:1.65},
-  "robinson": {n:"Robinson", arg:null, scale:160},
-  "sinusoidal": {n:"Sinusoidal", arg:null, scale:160, ratio:2},
-  "stereographic": {n:"Stereographic", arg:null, scale:500, ratio:1.0, clip:true},
-  "times": {n:"Times", arg:null, scale:210, ratio:1.4}, 
-  "twoPointEquidistant": {n:"Two-Point Equidistant", arg:Math.PI/2, scale:320, ratio:1.15, clip:true},
-  "vanDerGrinten": {n:"van Der Grinten", arg:null, scale:160, ratio:1.0}, 
-  "vanDerGrinten2": {n:"van Der Grinten II", arg:null, scale:160, ratio:1.0},
-  "vanDerGrinten3": {n:"van Der Grinten III", arg:null, scale:160, ratio:1.0},
-  "vanDerGrinten4": {n:"van Der Grinten IV", arg:null, scale:160, ratio:1.6},
-  "wagner4": {n:"Wagner IV", arg:null, scale:185},
-  "wagner6": {n:"Wagner VI", arg:null, scale:160},
-  "wagner7": {n:"Wagner VII", arg:null, scale:190, ratio:1.8},
-  "wiechel": {n:"Wiechel", arg:null, scale:360, ratio:1.0, clip:true},
-  "winkel3": {n:"Winkel Tripel", arg:null, scale:196, ratio:1.7}
-};
-
-Celestial.projections = function () { return projections; };
-
-var formats = {
-  "starnames": {
-    // "name":"","bayer":"","flam":"","var":"","gl":"","hd":"","c":"","desig":""
-    "iau": {
-      "designation": {
-        "desig": "Designation",     
-        "bayer": "Bayer",
-        "flam": "Flamsteed",
-        "var": "Variable",
-        "gl": "Gliese",
-        "hd": "Draper",
-        "hip": "Hipparcos"},
-      "propername": {
-        "name": "IAU Name",
-        "ar": "Arabic", 
-        "zh": "Chinese",
-        "en": "English",
-        "fi": "Finnish", 
-        "fr": "French", 
-        "de": "German",
-        "el": "Greek", 
-        //"he": "Hebrew",
-        "hi": "Hindi", 
-        "it": "Italian", 
-        "ja": "Japanese", 
-        "ko": "Korean", 
-        "la": "Latin",
-        "fa": "Persian", 
-        "ru": "Russian", 
-        "es": "Spanish",
-        "tr": "Turkish"}
-    },
-    "cn": {
-      "propername": {
-        "name": "Proper name",
-        "en": "English",
-        "pinyin": "Pinyin"},
-      "designation": { 
-        "desig": "IAU Designation"}
-    }
-  },
-  "constellations": {
-    "iau": {
-      "names": {
-        "desig": "Designation",
-        "name": "IAU Name",
-        "ar": "Arabic", 
-        "zh": "Chinese",
-        "cz": "Czech", 
-        "en": "English",
-        "ee": "Estonian", 
-        "fi": "Finnish", 
-        "fr": "French", 
-        "de": "German",
-        "el": "Greek", 
-        "he": "Hebrew",
-        "hi": "Hindi", 
-        "it": "Italian", 
-        "ja": "Japanese", 
-        "ko": "Korean", 
-        "la": "Latin",
-        "fa": "Persian", 
-        "ru": "Russian", 
-        "es": "Spanish",
-        "tr": "Turkish"}
-    },
-    "cn": {
-      "names": {
-        "name": "Proper name",
-        "en": "English",
-        "pinyin": "Pinyin"}
-    }             
-  },
-  "planets": {
-    "iau": {
-      "symbol": {
-        "symbol": "\u263e Symbol",
-        "letter": "\u216c Letter",
-        "disk": "\u25cf Disk"},
-      "names": {
-        "desig": "Designation",
-        "ar": "Arabic",
-        "zh": "Chinese",
-        "en": "English",
-        "fr": "French",
-        "de": "German",
-        "el": "Greek",
-        "he": "Hebrew",
-        "hi": "Hindi",
-        "it": "Italian",
-        "ja": "Japanese",
-        "ko": "Korean", 
-        "la": "Latin",
-        "fa": "Persian", 
-        "ru": "Russian",
-        "es": "Spanish"}
-    },
-    "cn": {
-      "symbol": {
-        "symbol": "\u263e Symbol",
-        "letter": "\u216c Letter",
-        "disk": "\u25cf Disk"},
-      "names": {
-        "desig": "Designation",
-        "name": "Chinese",
-        "pinyin": "Pinyin",
-        "en": "English"}
-    }
-  },
-  "dsonames": {
-    "iau": {
-      "names": {
-        "desig": "Designation",
-        "name": "English",
-        "ar": "Arabic", 
-        "zh": "Chinese",
-        "fi": "Finnish", 
-        "fr": "French", 
-        "de": "German",
-        "el": "Greek", 
-        //"he": "Hebrew",
-        "hi": "Hindi", 
-        "it": "Italian", 
-        "ja": "Japanese", 
-        "ko": "Korean", 
-        "la": "Latin",
-        "fa": "Persian", 
-        "ru": "Russian", 
-        "es": "Spanish",
-        "tr": "Turkish"}
-    },
-    "cn": {
-      "names": {
-        "desig": "Designation",
-        "name": "Chinese",
-        "pinyin": "Pinyin",
-        "en": "English"}
-    }
-  }
-};
-
-var formats_all = {
-  "iau": Object.keys(formats.constellations.iau.names).concat(Object.keys(formats.planets.iau.names)).filter( function(value, index, self) { return self.indexOf(value) === index; } ),
-  "cn":  Object.keys(formats.constellations.cn.names).concat(Object.keys(formats.starnames.cn.propername)).filter( function(value, index, self) { return self.indexOf(value) === index; } )
-};
-var Canvas = {}; 
-
-Canvas.symbol = function () {
-  // parameters and default values
-  var type = d3.functor("circle"), 
-      size = d3.functor(64), 
-      age = d3.functor(Math.PI), //crescent shape 0..2Pi
-      color = d3.functor("#fff"),  
-      text = d3.functor(""),  
-      padding = d3.functor([2,2]),  
-      pos;
-  
-  function canvas_symbol(context) {
-    draw_symbol[type()](context);
-  }
-  
-  var draw_symbol = {
-    "circle": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2;
-      ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI);
-      ctx.closePath();
-      return r;
-    },
-    "square": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/1.7;
-      ctx.moveTo(pos[0]-r, pos[1]-r);
-      ctx.lineTo(pos[0]+r, pos[1]-r);
-      ctx.lineTo(pos[0]+r, pos[1]+r);
-      ctx.lineTo(pos[0]-r, pos[1]+r);
-      ctx.closePath();
-      return r;
-    },
-    "diamond": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/1.5;
-      ctx.moveTo(pos[0], pos[1]-r);
-      ctx.lineTo(pos[0]+r, pos[1]);
-      ctx.lineTo(pos[0], pos[1]+r);
-      ctx.lineTo(pos[0]-r, pos[1]);
-      ctx.closePath();
-      return r;
-    },
-    "triangle": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/Math.sqrt(3);
-      ctx.moveTo(pos[0], pos[1]-r);
-      ctx.lineTo(pos[0]+r, pos[1]+r);
-      ctx.lineTo(pos[0]-r, pos[1]+r);
-      ctx.closePath();
-      return r;
-    },
-    "ellipse": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2;
-      ctx.save();
-      ctx.translate(pos[0], pos[1]);
-      ctx.scale(1.6, 0.8); 
-      ctx.beginPath();
-      ctx.arc(0, 0, r, 0, 2 * Math.PI); 
-      ctx.closePath();
-      ctx.restore();      
-      return r;
-    },
-    "marker": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2;
-      ctx.moveTo(pos[0], pos[1]-r);
-      ctx.lineTo(pos[0], pos[1]+r);
-      ctx.moveTo(pos[0]-r, pos[1]);
-      ctx.lineTo(pos[0]+r, pos[1]);
-      ctx.closePath();
-      return r;
-    },
-    "cross-circle": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2;
-      ctx.moveTo(pos[0], pos[1]-s);
-      ctx.lineTo(pos[0], pos[1]+s);
-      ctx.moveTo(pos[0]-s, pos[1]);
-      ctx.lineTo(pos[0]+s, pos[1]);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(pos[0], pos[1]);
-      ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI);    
-      ctx.closePath();
-      return r;
-    },
-    "stroke-circle": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2;
-      ctx.moveTo(pos[0], pos[1]-s);
-      ctx.lineTo(pos[0], pos[1]+s);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(pos[0], pos[1]);
-      ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI);    
-      ctx.closePath();
-      return r;
-    }, 
-    "crescent": function(ctx) {
-      var s = Math.sqrt(size()), 
-          r = s/2,
-          ag = age(),
-          ph = 0.5 * (1 - Math.cos(ag)),
-          e = 1.6 * Math.abs(ph - 0.5) + 0.01,
-          dir = ag > Math.PI,
-          termdir = Math.abs(ph) > 0.5 ? dir : !dir,
-          moonFill = ctx.fillStyle,
-          darkFill = ph < 0.157 ? "#669" : "#557";
-      ctx.save();
-      ctx.fillStyle = darkFill;
-      ctx.beginPath();
-      ctx.moveTo(pos[0], pos[1]);
-      ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI);    
-      ctx.closePath();
-      ctx.fill();
-      ctx.fillStyle = moonFill;
-      ctx.beginPath();
-      ctx.moveTo(pos[0], pos[1]);
-      ctx.arc(pos[0], pos[1], r, -Math.PI/2, Math.PI/2, dir); 
-      ctx.scale(e, 1);
-      ctx.arc(pos[0]/e, pos[1], r, Math.PI/2, -Math.PI/2, termdir); 
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-      
-      return r;
-    } 
-  };
-
-  
-  canvas_symbol.type = function(_) {
-    if (!arguments.length) return type; 
-    type = d3.functor(_);
-    return canvas_symbol;
-  };
-  canvas_symbol.size = function(_) {
-    if (!arguments.length) return size; 
-    size = d3.functor(_);
-    return canvas_symbol;
-  };
-  canvas_symbol.age = function(_) {
-    if (!arguments.length) return age; 
-    age = d3.functor(_);
-    return canvas_symbol;
-  };
-  canvas_symbol.text = function(_) {
-    if (!arguments.length) return text; 
-    text = d3.functor(_);
-    return canvas_symbol;
-  };
-  canvas_symbol.position = function(_) {
-    if (!arguments.length) return; 
-    pos = _;
-    return canvas_symbol;
-  };
-
-  return canvas_symbol;
-};
-
-Celestial.Canvas = Canvas;
-
-
-/*var color = "#fff", angle = 0, align = "center", baseline = "middle", font = "10px sans-serif", padding = [0,0], aPos, sText;
-
-canvas.text = function () {
-
-  function txt(ctx){
-    ctx.fillStyle = color;
-    ctx.textAlign = align;
-    ctx.textBaseline = baseline;
-    
-    //var pt = projection(d.geometry.coordinates);
-    if (angle) {
-      canvas.save();     
-      canvas.translate(aPos[0], aPos[1]);
-      canvas.rotate(angle); 
-      canvas.fillText(sText, 0, 0);
-      canvas.restore();     
-    } else
-      canvas.fillText(sText, aPos[0], aPos[1]);
-  }
-  
-  txt.angle = function(x) {
-    if (!arguments.length) return angle * 180 / Math.PI;
-    color = x  * Math.PI / 180;
-    return txt;
-  };  
-  txt.color = function(s) {
-    if (!arguments.length) return color;
-    color = s;
-    return txt;
-  };  
-  txt.align = function(s) {
-    if (!arguments.length) return align;
-    align = s;
-    return txt;
-  };
-  txt.baseline = function(s) {
-    if (!arguments.length) return baseline;
-    baseline = s;
-    return txt;
-  };
-  txt.padding = function(a) {
-    if (!arguments.length) return padding;
-    padding = a;
-    return txt;
-  };
-  txt.text = function(s) {
-    if (!arguments.length) return sText;
-    sText = s;
-    return txt;
-  };
-  txt.font = function(s) {
-    if (!arguments.length) return font;
-    font = s;
-    return txt;
-  };
-  txt.style = function(o) {
-    if (!arguments.length) return;
-    if (o.fill) color = o.fill;
-    if (o.font) font = o.font;
-    return txt;
-  }; 
-  
-}
-
-  function ctxPath(d) {
-    var pt;
-    //d.map( function(axe, i) {
-    context.beginPath();
-    for (var i = 0; i < d.length; i++) {
-      pt = projection(d[i]);
-      if (i === 0)
-        context.moveTo(pt[0], pt[1]);
+   };
+   j.init(), t.euler = function() {
+      return j
+   };
+   var P = function(t, e, a) {
+      var n = I(t, a[1]) - e[0];
+      n < 0 && (n += 360), n *= x;
+      var r = e[1] * x;
+      var s = a[0] * x;
+      var o = Math.asin(Math.sin(r) * Math.sin(s) + Math.cos(r) * Math.cos(s) * Math.cos(n));
+      var i = Math.acos((Math.sin(r) - Math.sin(o) * Math.sin(s)) / (Math.cos(o) * Math.cos(s)));
+      return Math.sin(n) > 0 && (i = 2 * Math.PI - i), [o / x, i / x, 0]
+   };
+
+   function I(t, e) {
+      var a = t.getUTCFullYear();
+      var n = t.getUTCMonth() + 1;
+      var r = t.getUTCDate();
+      var s = t.getUTCHours();
+      var o = t.getUTCMinutes();
+      var i = t.getUTCSeconds();
+      1 != n && 2 != n || (a -= 1, n += 12);
+      var l = Math.floor(a / 100);
+      var c;
+      var p;
+      var d;
+      var u = 2 - l + Math.floor(l / 4) + Math.floor(365.25 * a) + Math.floor(30.6001 * (n + 1)) - 730550.5 + r + (s + o / 60 + i / 3600) / 24;
+      var h = u / 36525;
+      var f = 280.46061837 + 360.98564736629 * u + 387933e-9 * h * h - h * h * h / 3871e4 + e;
+      if (f > 0)
+         while (f > 360) f -= 360;
       else
-        context.lineTo(pt[0], pt[1]);
-    }
-    context.fill();
-  }
-  
-
-  function ctxText(d, ang) {
-    var pt = projection(d.geometry.coordinates);
-    if (ang) {
-      canvas.save();     
-      canvas.translate(pt[0], pt[1]);
-      canvas.rotate(Math.PI/2); 
-      canvas.fillText(txt, 0, 0);
-      canvas.restore();     
-    } else
-      canvas.fillText(d.properties.txt, pt[0], pt[1]);
-  }
-  
-
-*/
-function $(id) { return document.getElementById(id); }
-function px(n) { return n + "px"; } 
-function Round(x, dg) { return(Math.round(Math.pow(10,dg)*x)/Math.pow(10,dg)); }
-function sign(x) { return x ? x < 0 ? -1 : 1 : 0; }
-function pad(n) { return n < 10 ? '0' + n : n; }
-
-
-function has(o, key) { return o !== null && hasOwnProperty.call(o, key); }
-function when(o, key, val) { return o !== null && hasOwnProperty.call(o, key) ? o[key] : val; }
-function isNumber(n) { return n !== null && !isNaN(parseFloat(n)) && isFinite(n); }
-function isArray(o) { return o !== null && Object.prototype.toString.call(o) === "[object Array]"; }
-function isObject(o) { var type = typeof o;  return type === 'function' || type === 'object' && !!o; }
-function isFunction(o) { return typeof o == 'function' || false; }
-function isValidDate(d) { return d && d instanceof Date && !isNaN(d); }
-function fileExists(url) {
-  var http = new XMLHttpRequest();
-  http.open('HEAD', url, false);
-  http.send();
-  return http.status != 404;
-}
-
-function findPos(o) {
-  var l = 0, t = 0;
-  if (o.offsetParent) {
-    do {
-      l += o.offsetLeft;
-      t += o.offsetTop;
-    } while ((o = o.offsetParent) !== null);
-  }
-  return [l, t];
-}
-
-function hasParent(t, id){
-  while(t.parentNode){
-    if(t.id === id) return true;
-    t = t.parentNode;
-  }
-  return false;
-}
-
-function attach(node, event, func) {
-  if (node.addEventListener) node.addEventListener(event, func, false);
-  else node.attachEvent("on" + event, func); 
-}
-
-function stopPropagation(e) {
-  if (typeof e.stopPropagation != "undefined") e.stopPropagation();
-  else e.cancelBubble = true;
-}
-
-function dateDiff(dt1, dt2, type) {
-  var diff = dt2.valueOf() - dt1.valueOf(),
-      tp = type || "d";
-  switch (tp) {
-    case 'y': case 'yr': diff /= 31556926080; break;
-    case 'm': case 'mo': diff /= 2629800000; break;
-    case 'd': case 'dy': diff /= 86400000; break;
-    case 'h': case 'hr': diff /= 3600000; break;
-    case 'n': case 'mn': diff /= 60000; break;
-    case 's': case 'sec': diff /= 1000; break;
-    case 'ms': break;    
-  }
-  return Math.floor(diff);
-}
-
-function dateParse(s) {
-  if (!s) return; 
-  var t = s.split(".");
-  if (t.length < 1) return; 
-  t = t[0].split("-");
-  t[0] = t[0].replace(/\D/g, "");
-  if (!t[0]) return; 
-  t[1] = t[1] ? t[1].replace(/\D/g, "") : "1";
-  t[2] = t[2] ? t[2].replace(/\D/g, "") : "1";
-  //Fraction -> h:m:s
-  return new Date(Date.UTC(t[0], t[1]-1, t[2]));
-}
-
-
-function interpolateAngle(a1, a2, t) {
-  a1 = (a1*deg2rad +τ) % τ;
-  a2 = (a2*deg2rad + τ) % τ;
-  if (Math.abs(a1 - a2) > Math.PI) {
-    if (a1 > a2) a1 = a1 - τ;
-    else if (a2 > a1) a2 = a2 - τ;
-  }
-  return d3.interpolateNumber(a1/deg2rad, a2/deg2rad);
-}
-
-var Trig = {
-  sinh: function (val) { return (Math.pow(Math.E, val)-Math.pow(Math.E, -val))/2; },
-  cosh: function (val) { return (Math.pow(Math.E, val)+Math.pow(Math.E, -val))/2; },
-  tanh: function (val) { return 2.0 / (1.0 + Math.exp(-2.0 * val)) - 1.0; },
-  asinh: function (val) { return Math.log(val + Math.sqrt(val * val + 1)); },
-  acosh: function (val) { return Math.log(val + Math.sqrt(val * val - 1)); },
-  normalize0: function(val) {  return ((val + Math.PI*3) % (Math.PI*2)) - Math.PI; },
-  normalize: function(val) {  return ((val + Math.PI*2) % (Math.PI*2)); },  
-  cartesian: function(p) {
-    var ϕ = p[0], θ = halfπ - p[1], r = p[2];
-    return {"x": r * Math.sin(θ) * Math.cos(ϕ), "y": r * Math.sin(θ) * Math.sin(ϕ), "z": r * Math.cos(θ)};
-  },
-  spherical: function(p) {
-    var r = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z),
-        θ = Math.atan(p.y / p.x),
-        ϕ = Math.acos(p.z / r);
-    return  [θ / deg2rad, ϕ / deg2rad, r];
-  },
-  distance: function(p1, p2) {
-    return Math.acos(Math.sin(p1[1])*Math.sin(p2[1]) + Math.cos(p1[1])*Math.cos(p2[1])*Math.cos(p1[0]-p2[0]));
-  }
-};
-
-var epsilon = 1e-6, 
-    halfPi =  Math.PI / 2, 
-    quarterPi =  Math.PI / 4, 
-    tau =  Math.PI * 2;
-    
-function cartesian(spherical) {
-  var lambda = spherical[0], phi = spherical[1], cosPhi = Math.cos(phi);
-  return [cosPhi * Math.cos(lambda), cosPhi * Math.sin(lambda), Math.sin(phi)];
-}
-
-function cartesianCross(a, b) {
-  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-}
-
-function cartesianNormalizeInPlace(d) {
-  var l = Math.sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
-  d[0] /= l; d[1] /= l; d[2] /= l;
-}
-
-function longitude(point) {
-  if (Math.abs(point[0]) <= Math.PI)
-    return point[0];
-  else
-    return sign(point[0]) * ((Math.abs(point[0]) +  Math.PI) % tau -  Math.PI);
-}
-
-function poligonContains(polygon, point) {
-  var lambda = longitude(point),
-      phi = point[1],
-      sinPhi = Math.sin(phi),
-      normal = [Math.sin(lambda), -Math.cos(lambda), 0],
-      angle = 0,
-      winding = 0,
-      sum = 0;
-
-  if (sinPhi === 1) phi = halfPi + epsilon;
-  else if (sinPhi === -1) phi = -halfPi - epsilon;
-
-  for (var i = 0, n = polygon.length; i < n; ++i) {
-    if (!(m = (ring = polygon[i]).length)) continue;
-    var ring,
-        m,
-        point0 = ring[m - 1],
-        lambda0 = longitude(point0),
-        phi0 = point0[1] / 2 + quarterPi,
-        sinPhi0 = Math.sin(phi0),
-        cosPhi0 = Math.cos(phi0),
-        point1, cosPhi1, sinPhi1, lambda1;
-
-    for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
-      point1 = ring[j];
-      lambda1 = longitude(point1);
-      var phi1 = point1[1] / 2 + quarterPi;
-      sinPhi1 = Math.sin(phi1);
-      cosPhi1 = Math.cos(phi1);
-      var delta = lambda1 - lambda0,
-          sign = delta >= 0 ? 1 : -1,
-          absDelta = sign * delta,
-          antimeridian = absDelta > Math.PI,
-          k = sinPhi0 * sinPhi1;
-
-      sum += Math.atan2(k * sign * Math.sin(absDelta), cosPhi0 * cosPhi1 + k * Math.cos(absDelta));
-      angle += antimeridian ? delta + sign * tau : delta;
-
-      if ((antimeridian ^ lambda0) >= (lambda ^ lambda1) >= lambda) {
-        var arc = cartesianCross(cartesian(point0), cartesian(point1));
-        cartesianNormalizeInPlace(arc);
-        var intersection = cartesianCross(normal, arc);
-        cartesianNormalizeInPlace(intersection);
-        var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * Math.asin(intersection[2]);
-        if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
-          winding += antimeridian ^ delta >= 0 ? 1 : -1;
-        }
-      }
-    }
-  }
-
-  return (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
-}
-
-//display settings form in div with id "celestial-form"
-function form(cfg) {
-  var config = settings.set(cfg); 
-
-  var prj = Celestial.projections(), leo = Celestial.eulerAngles();
-  var div = d3.select("#celestial-form");
-  //if div doesn't exist, create it
-  if (div.size() < 1) {
-    var container = (config.container || "celestial-map");
-    div = d3.select("#" + container).select(function() { return this.parentNode; }).append("div").attr("id", "celestial-form");
-  }
-  var ctrl = div.append("div").attr("class", "ctrl");
-  var frm = ctrl.append("form").attr("id", "params").attr("name", "params").attr("method", "get").attr("action" ,"#");
-  
-  //Map parameters    
-  var col = frm.append("div").attr("class", "col").attr("id", "general");
-  
-  col.append("label").attr("title", "Map width in pixel, 0 indicates full width").attr("for", "width").html("Width ");
-  col.append("input").attr("type", "number").attr("maxlength", "4").attr("max", "20000").attr("min", "0").attr("title", "Map width").attr("id", "width").attr("value", config.width).on("change", resize);
-  col.append("span").html("px");
-
-  col.append("label").attr("title", "Map projection, (hemi) indicates hemispherical projection").attr("for", "projection").html("Projection");
-  var sel = col.append("select").attr("id", "projection").on("change", reproject);
-  var selected = 0;
-  var list = Object.keys(prj).map( function (key, i) { 
-    var n = prj[key].clip && prj[key].clip === true ? prj[key].n + " (hemi)" : prj[key].n; 
-    if (key === config.projection) selected = i;
-    return {o:key, n:n};
-  });
-  sel.selectAll('option').data(list).enter().append('option')
-     .attr("value", function (d) { return d.o; })
-     .text(function (d) { return d.n; });
-  sel.property("selectedIndex", selected);
-  
-  selected = 0;
-  col.append("label").attr("title", "Coordinate space in which the map is displayed").attr("for", "transform").html("Coordinates");
-  sel = col.append("select").attr("id", "transform").on("change", reload);
-  list = Object.keys(leo).map(function (key, i) {
-    if (key === config.transform) selected = i;    
-    return {o:key, n:key.replace(/^([a-z])/, function(s, m) { return m.toUpperCase(); } )}; 
-  });
-  sel.selectAll("option").data(list).enter().append('option')
-     .attr("value", function (d) { return d.o; })
-     .text(function (d) { return d.n; });
-  sel.property("selectedIndex", selected);
-
-  col.append("br");
-  col.append("label").attr("title", "Center coordinates long/lat in selected coordinate space").attr("for", "centerx").html("Center");
-  col.append("input").attr("type", "number").attr("id", "centerx").attr("title", "Center right ascension/longitude").attr("max", "24").attr("min", "0").attr("step", "0.1").on("change", turn);
-  col.append("span").attr("id", "cxunit").html("h");
-  //addList("centerx", "ra");
-  
-  col.append("input").attr("type", "number").attr("id", "centery").attr("title", "Center declination/latitude").attr("max", "90").attr("min", "-90").attr("step", "0.1").on("change", turn);
-  col.append("span").html("\u00b0");
-
-  col.append("label").attr("title", "Orientation").attr("for", "centerz").html("Orientation");
-  col.append("input").attr("type", "number").attr("id", "centerz").attr("title", "Center orientation").attr("max", "180").attr("min", "-180").attr("step", "0.1").on("change", turn);
-  col.append("span").html("\u00b0");
-
-  col.append("label").attr("for", "orientationfixed").attr("class", "advanced").html("Fixed");
-  col.append("input").attr("type", "checkbox").attr("id", "orientationfixed").attr("class", "advanced").property("checked", config.orientationfixed).on("change", apply);    
-
-  col.append("label").attr("title", "Center and zoom in on this constellation").attr("for", "constellation").html("Show");
-  col.append("select").attr("id", "constellation").on("change", showConstellation);
-  
-  setCenter(config.center, config.transform);
-
-  // Stars 
-  col = frm.append("div").attr("class", "col").attr("id", "stars");
-  
-  col.append("label").attr("class", "header").attr("for", "stars-show").html("Stars");
-  col.append("input").attr("type", "checkbox").attr("id", "stars-show").property("checked", config.stars.show).on("change", apply);
-  
-  col.append("label").attr("for", "stars-limit").html("down to magnitude");
-  col.append("input").attr("type", "number").attr("id", "stars-limit").attr("title", "Star display limit (magnitude)").attr("value", config.stars.limit).attr("max", "6").attr("min", "-1").attr("step", "0.1").on("change", apply);
-  
-  col.append("label").attr("for", "stars-colors").html("with spectral colors");
-  col.append("input").attr("type", "checkbox").attr("id", "stars-colors").property("checked", config.stars.colors).on("change", apply);
-  
-  col.append("label").attr("for", "stars-color").html("or default color ");
-  col.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "stars-style-fill").attr("title", "Star color").property("value", config.stars.style.fill).on("change", apply);
-
-  col.append("br");
-  
-  var names = formats.starnames[config.culture] || formats.starnames.iau;
-  
-  for (var fld in names) {
-    if (!has(names, fld)) continue;
-    var keys = Object.keys(names[fld]);
-    if (keys.length > 1) {
-      //Select List
-      col.append("label").attr("for", "stars-" + fld).html("Show");
-      
-      selected = 0;
-      col.append("label").attr("title", "Type of star name").attr("id", "label-propername").attr("for", "stars-" + fld + "Type").html(function () { return fld === "propername" ? "proper names" : ""; });
-      sel = col.append("select").attr("id", "stars-" + fld + "Type").attr("class", function () { return fld === "propername" ? "advanced" : ""; }).on("change", apply);
-      list = keys.map(function (key, i) {
-        if (key === config.stars[fld + "Type"]) selected = i;
-        return {o:key, n:names[fld][key]}; 
-      });
-      sel.selectAll("option").data(list).enter().append('option')
-         .attr("value", function (d) { return d.o; })
-         .text(function (d) { return d.n; });
-      sel.property("selectedIndex", selected);
-
-      col.append("input").attr("type", "checkbox").attr("id", "stars-" + fld).property("checked", config.stars[fld]).on("change", apply);
-    } else if (keys.length === 1) {
-      //Simple field
-    col.append("label").attr("for", "stars-" + fld).html(" " + names[fld][keys[0]]);
-      col.append("input").attr("type", "checkbox").attr("id", "stars-" + fld).property("checked", config.stars[fld]).on("change", apply);
-    }    
-    col.append("label").attr("for", "stars-" + fld + "Limit").html("down to mag");
-    col.append("input").attr("type", "number").attr("id", "stars-" + fld + "Limit").attr("title", "Star name display limit (magnitude)").attr("value", config.stars[fld + "Limit"]).attr("max", "6").attr("min", "-1").attr("step", "0.1").on("change", apply);
-  
-  }
-
-  col.append("br");
-
-  col.append("label").attr("for", "stars-size").attr("class", "advanced").html("Stellar disk size: base");
-  col.append("input").attr("type", "number").attr("id", "stars-size").attr("class", "advanced").attr("title", "Size of the displayed star disk; base").attr("value", config.stars.size).attr("max", "100").attr("min", "0").attr("step", "0.1").on("change", apply);
-
-  col.append("label").attr("for", "stars-exponent").attr("class", "advanced").html(" * e ^ (exponent");
-  col.append("input").attr("type", "number").attr("id", "stars-exponent").attr("class", "advanced").attr("title", "Size of the displayed star disk; exponent").attr("value", config.stars.exponent).attr("max", "3").attr("min", "-1").attr("step", "0.01").on("change", apply);
-  col.append("span").attr("class", "advanced").text(" * (magnitude + 2))  [* adaptation]");
-  
-  enable($("stars-show"));
-  
-  // DSOs 
-  col = frm.append("div").attr("class", "col").attr("id", "dsos");
-  
-  col.append("label").attr("class", "header").attr("title", "Deep Space Objects").attr("for", "dsos-show").html("DSOs");
-  col.append("input").attr("type", "checkbox").attr("id", "dsos-show").property("checked", config.dsos.show).on("change", apply);
-  
-  col.append("label").attr("for", "dsos-limit").html("down to mag");
-  col.append("input").attr("type", "number").attr("id", "dsos-limit").attr("title", "DSO display limit (magnitude)").attr("value", config.dsos.limit).attr("max", "6").attr("min", "0").attr("step", "0.1").on("change", apply);
-
-
-  col.append("label").attr("for", "dsos-colors").html("with symbol colors");
-  col.append("input").attr("type", "checkbox").attr("id", "dsos-colors").property("checked", config.dsos.colors).on("change", apply);
-  
-  col.append("label").attr("for", "dsos-color").html("or default color ");
-  col.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "dsos-style-fill").attr("title", "DSO color").property("value", config.dsos.style.fill).on("change", apply);
-
-  col.append("br");
-  
-  names = formats.dsonames[config.culture] || formats.dsonames.iau;
-  
-  for (fld in names) {
-    if (!has(names, fld)) continue;
-    var dsoKeys = Object.keys(names[fld]);
-    col.append("label").attr("for", "dsos-" + fld).html("Show");
-      
-    selected = 0;
-    col.append("label").attr("title", "Type of DSO name").attr("for", "dsos-" + fld + "Type").attr("class", "advanced").html("");
-    sel = col.append("select").attr("id", "dsos-" + fld + "Type").attr("class", "advanced").on("change", apply);
-    list = dsoKeys.map(function (key, i) {
-      if (key === config.stars[fld + "Type"]) selected = i;    
-      return {o:key, n:names[fld][key]}; 
-    });
-    sel.selectAll("option").data(list).enter().append('option')
-       .attr("value", function (d) { return d.o; })
-       .text(function (d) { return d.n; });
-    sel.property("selectedIndex", selected);
-
-    col.append("label").attr("for", "dsos-" + fld).html("names");
-    col.append("input").attr("type", "checkbox").attr("id", "dsos-" + fld).property("checked", config.dsos[fld]).on("change", apply);
-  }    
-    
-  col.append("label").attr("for", "dsos-nameLimit").html("down to mag");
-  col.append("input").attr("type", "number").attr("id", "dsos-nameLimit").attr("title", "DSO name display limit (magnitude)").attr("value", config.dsos.nameLimit).attr("max", "6").attr("min", "0").attr("step", "0.1").on("change", apply);
-  col.append("br");
-
-  col.append("label").attr("for", "dsos-size").attr("class", "advanced").html("DSO symbol size: (base");
-  col.append("input").attr("type", "number").attr("id", "dsos-size").attr("class", "advanced").attr("title", "Size of the displayed symbol: base").attr("value", config.dsos.size).attr("max", "100").attr("min", "0").attr("step", "0.1").on("change", apply);
-
-  col.append("label").attr("for", "dsos-exponent").attr("class", "advanced").html(" * 2 [* adaptation] - magnitude) ^ exponent");
-  col.append("input").attr("type", "number").attr("id", "dsos-exponent").attr("class", "advanced").attr("title", "Size of the displayed symbol; exponent").attr("value", config.dsos.exponent).attr("max", "3").attr("min", "-1").attr("step", "0.01").on("change", apply);
-
-  enable($("dsos-show"));
-
-  // Constellations 
-  col = frm.append("div").attr("class", "col").attr("id", "constellations");
-  col.append("label").attr("class", "header").html("Constellations");
-  //col.append("input").attr("type", "checkbox").attr("id", "constellations-show").property("checked", config.constellations.show).on("change", apply);
-  
-  
-  names = formats.constellations[config.culture] || formats.constellations.iau;
-  
-  for (fld in names) {
-    if (!has(names, fld)) continue;
-    var nameKeys = Object.keys(names[fld]);
-    if (nameKeys.length > 1) {
-      //Select List
-      col.append("label").attr("for", "constellations-" + fld).html("Show");
-      
-      selected = 0;
-      col.append("label").attr("title", "Language of constellation names").attr("for", "constellations-" + fld + "Type").attr("class", "advanced").html("");
-      sel = col.append("select").attr("id", "constellations-" + fld + "Type").attr("class", "advanced").on("change", apply);
-      list = nameKeys.map(function (key, i) {
-        if (key === config.constellations[fld + "Type"]) selected = i;    
-        return {o:key, n:names[fld][key]}; 
-      });
-      sel.selectAll("option").data(list).enter().append('option')
-         .attr("value", function (d) { return d.o; })
-         .text(function (d) { return d.n; });
-      sel.property("selectedIndex", selected);
-
-      col.append("label").attr("for", "constellations-" + fld).html("names");
-      col.append("input").attr("type", "checkbox").attr("id", "constellations-" + fld).property("checked", config.constellations[fld]).on("change", apply);
-    } else if (nameKeys.length === 1) {
-      //Simple field
-      col.append("label").attr("for", "constellations-" + fld).attr("class", "advanced").html(" " + names[fld][nameKeys[0]]);
-      col.append("input").attr("type", "checkbox").attr("id", "constellations-" + fld).attr("class", "advanced").property("checked", config.constellations[fld]).on("change", apply);      
-    }      
-  }
-  col.append("label").attr("for", "constellations-lines").html(" lines");
-  col.append("input").attr("type", "checkbox").attr("id", "constellations-lines").property("checked", config.constellations.lines).on("change", apply);
-  
-  col.append("label").attr("for", "constellations-bounds").html(" boundaries");
-  col.append("input").attr("type", "checkbox").attr("id", "constellations-bounds").property("checked", config.constellations.bounds).on("change", apply);
-
-  enable($("constellations-names"));
-
-  // graticules & planes 
-  col = frm.append("div").attr("class", "col").attr("id", "lines");
-  col.append("label").attr("class", "header").html("Lines");
-  
-  col.append("label").attr("title", "Latitude/longitude grid lines").attr("for", "lines-graticule").html("Graticule");
-  col.append("input").attr("type", "checkbox").attr("id", "lines-graticule-show").property("checked", config.lines.graticule.show).on("change", apply);
-  
-  col.append("label").attr("for", "lines-equatorial").html("Equator");
-  col.append("input").attr("type", "checkbox").attr("id", "lines-equatorial-show").property("checked", config.lines.equatorial.show).on("change", apply);
-  
-  col.append("label").attr("for", "lines-ecliptic").html("Ecliptic");
-  col.append("input").attr("type", "checkbox").attr("id", "lines-ecliptic-show").property("checked", config.lines.ecliptic.show).on("change", apply);
-  
-  col.append("label").attr("for", "lines-galactic").html("Galactic plane");
-  col.append("input").attr("type", "checkbox").attr("id", "lines-galactic-show").property("checked", config.lines.galactic.show).on("change", apply);
-  
-  col.append("label").attr("for", "lines-supergalactic").html("Supergalactic plane");
-  col.append("input").attr("type", "checkbox").attr("id", "lines-supergalactic-show").property("checked", config.lines.supergalactic.show).on("change", apply);
-
-  // Other
-  col = frm.append("div").attr("class", "col").attr("id", "other");
-  col.append("label").attr("class", "header").html("Other");
-  
-  col.append("label").attr("for", "mw-show").html("Milky Way");
-  col.append("input").attr("type", "checkbox").attr("id", "mw-show").property("checked", config.mw.show).on("change", apply);
-  
-  col.append("label").attr("for", "mw-style-fill").attr("class", "advanced").html(" color");
-  col.append("input").attr("type", "color").attr("id", "mw-style-fill").attr("class", "advanced").attr("title", "Milky Way color").attr("value", config.mw.style.fill).on("change", apply);
-
-  col.append("label").attr("for", "mw-style-opacity").attr("class", "advanced").html(" opacity");
-  col.append("input").attr("type", "number").attr("id", "mw-style-opacity").attr("class", "advanced").attr("title", "Transparency of each Milky Way layer").attr("value", config.mw.style.opacity).attr("max", "1").attr("min", "0").attr("step", "0.01").on("change", apply);
-  
-  col.append("label").attr("for", "advanced").html("Advanced options");
-  col.append("input").attr("type", "checkbox").attr("id", "advanced").property("checked", config.advanced).on("change", apply);
-  
-  col.append("br");
-  
-  col.append("label").attr("for", "background-fill").html("Background color");
-  col.append("input").attr("type", "color").attr("id", "background-fill").attr("title", "Background color").attr("value", config.background.fill).on("change", apply);
-
-  col.append("label").attr("for", "background-opacity").attr("class", "advanced").html("opacity");
-  col.append("input").attr("type", "number").attr("id", "background-opacity").attr("class", "advanced").attr("title", "Background opacity").attr("value", config.background.opacity).attr("max", "1").attr("min", "0").attr("step", "0.01").on("change", apply);
-  
-  col.append("label").attr("title", "Star/DSO sizes are increased with higher zoom-levels").attr("for", "adaptable").attr("class", "advanced").html("Adaptable object sizes");
-  col.append("input").attr("type", "checkbox").attr("id", "adaptable").attr("class", "advanced").property("checked", config.adaptable).on("change", apply);
-  
-  // General language setting
-  var langKeys = formats_all[config.culture];
-
-  selected = 0;
-  col.append("label").attr("title", "General language setting").attr("for", "lang").html("Object names ");
-  sel = col.append("select").attr("id", "lang").on("change", apply);
-  list = langKeys.map(function (key, i) {
-    if (key === config.lang) selected = i;    
-    return {o:key, n:formats.constellations[config.culture].names[key]}; 
-  });
-  list = [{o:"---", n:"(Select language)"}].concat(list);
-  sel.selectAll("option").data(list).enter().append('option')
-     .attr("value", function (d) { return d.o; })
-     .text(function (d) { return d.n; });
-  sel.property("selectedIndex", selected);
-   
-  col = frm.append("div").attr("class", "col").attr("id", "download");
-  col.append("label").attr("class", "header").html("Download");
-
-  col.append("input").attr("type", "button").attr("id", "download-png").attr("value", "PNG Image").on("click", function() {
-    var a = d3.select("body").append("a").node(), 
-        canvas = document.querySelector("#" + config.container + ' canvas');
-    a.download = getFilename(".png");
-    a.rel = "noopener";
-    a.href = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-    a.click();
-    d3.select(a).remove();
-  });
-
-  col.append("input").attr("type", "button").attr("id", "download-svg").attr("value", "SVG File").on("click", function() {
-    exportSVG(getFilename(".svg")); 
-    return false;
-  });
-
-  setLimits();
-  setUnit(config.transform);
-  setVisibility(cfg);
-  showAdvanced(config.advanced);
-  
-  function resize() {
-    var src = this,
-        w = src.value;
-    if (testNumber(src) === false) return; 
-    config.width = w;
-    Celestial.resize({width:w});
-  }
-  
-  function reload() {
-    var src = this,
-        trans = src.value,
-        cx = setUnit(trans, config.transform); 
-    if (cx !== null) config.center[0] = cx; 
-    config.transform = trans;
-    settings.set(config);
-    Celestial.reload(config);
-  }  
-  
-  function reproject() {
-    var src = this;
-    if (!src) return;
-    config.projection = src.value; 
-    settings.set(config);
-    Celestial.reproject(config);
-  }
-  
-  function turn() {
-    if (testNumber(this) === false) return;   
-    if (getCenter() === false) return;
-    Celestial.rotate(config);
-  }
-
-  function getCenter() {
-    var cx = $("centerx"), cy = $("centery"), cz = $("centerz"),
-        rot = [];
-
-    if (!cx || !cy) return;
-
-    if (config.transform !== "equatorial") config.center[0] = parseFloat(cx.value); 
-    else { 
-      var vx = parseFloat(cx.value);
-      config.center[0] = vx > 12 ? vx * 15 - 360 : vx * 15;
-    }
-    config.center[1] = parseFloat(cy.value); 
-    
-    var vz = parseFloat(cz.value); 
-    config.center[2] = isNaN(vz) ? 0 : vz;
-    
-    return cx.value !== "" && cy.value !== "";
-  }
-    
-  function getFilename(ext) {
-    var dateFormat = d3.time.format("%Y%m%dT%H%M%S%Z"),
-        filename = "d3-celestial",
-        dt = Celestial.date();
-    if (dt) filename += dateFormat(dt);
-    return filename + ext;
-  }
-    
-  function showConstellation() {
-    var id = this.value;
-    if (!id) return;
-    showCon(id);
-  }
-
-  function showCon(id) {
-    var z, anims = [],
-        config = globalConfig;
-    if (id === "---") { 
-      Celestial.constellation = null;
-      z = Celestial.zoomBy();
-      if (z !== 1) anims.push({param:"zoom", value:1/z, duration:0});
-      Celestial.animate(anims, false);    
-      //Celestial.redraw();
-      return;
-    }
-    if (!isObject(Celestial.constellations) || !has(Celestial.constellations, id)) return;
-    
-    var con = Celestial.constellations[id];
-    //transform according to settings
-    var center = transformDeg(con.center, euler[config.transform]);
-    config.center = center;
-    setCenter(config.center, config.transform);
-    //config.lines.graticule.lat.pos = [Round(con.center[0])];
-    //config.lines.graticule.lon.pos = [Round(con.center[1])];
-    //Celestial.apply(config);
-
-    //if zoomed, zoom out
-    z = Celestial.zoomBy();
-    if (z !== 1) anims.push({param:"zoom", value:1/z, duration:0});
-    //rotate
-    anims.push({param:"center", value:center, duration:0});
-    //and zoom in
-    var sc = 1 + (360/con.scale); // > 10 ? 10 : con.scale;
-    anims.push({param:"zoom", value:sc, duration:0});
-    Celestial.constellation = id;
-    //Object.assign(globalConfig, config);   
-    Celestial.animate(anims, false);    
-  }
-  
-  function apply() {
-    var value, src = this;
-    //Get current configuration
-    Object.assign(config, settings.set());
-
-    switch (src.type) {
-      case "checkbox": value = src.checked; enable(src); break;
-      case "number": if (testNumber(src) === false) return; 
-                     value = parseFloat(src.value); break;
-      case "color": if (testColor(src) === false) return; 
-                    value = src.value; break;
-      case "text": if (src.id.search(/fill$/) === -1) return;
-                   if (testColor(src) === false) return; 
-                   value = src.value; break;
-      case "select-one": value = src.value; break;
-    }
-    if (value === null) return;
-    set(src.id, value);
-    if (src.id === "dsos-style-fill") {
-      set("dsos-style-stroke", value);
-      set("dsos-nameStyle-fill", value);
-    } else if (src.id === "constellations-namesType") {
-      listConstellations();
-    } else if (src.id === "lang") {
-      setLanguage(value);
-    } else if (src.id === "advanced") {
-      showAdvanced(value);
-    }
-
-    getCenter();
-    Object.assign(globalConfig, config);
-    Celestial.apply(config);
-  }
-
-  function set(prop, val) {
-    var a = prop.split("-");
-    switch (a.length) {
-      case 1: config[a[0]] = val; break;
-      case 2: config[a[0]][a[1]] = val; break;
-      case 3: config[a[0]][a[1]][a[2]] = val; break;
-      default: return;
-    }   
-  }
-  
-  
-  function setLanguage(lang) {
-    Object.assign(config, globalConfig);
-    config.lang = lang;
-    var keys = ["constellations", "planets"]; 
-    for (var i=0; i < keys.length; i++) {
-      if (has(formats[keys[i]][config.culture].names, lang)) config[keys[i]].namesType = lang;
-      else if (has(formats[keys[i]][config.culture].names, "desig")) config[keys[i]].namesType = "desig";
-      else config[keys[i]].namesType = "name";
-    }
-    if (has(formats.dsonames[config.culture].names, lang)) config.dsos.namesType = lang;
-    else config.dsos.namesType = "desig";
-    if (has(formats.starnames[config.culture].propername, lang)) config.stars.propernameType = lang;
-    else config.stars.propernameType = "desig";
-    //update cont. list
-    Object.assign(globalConfig, config);
-    update();
-    listConstellations();
-    return config;
-  }
-  
-    
-  function update() {
-    // Update all form fields
-    d3.selectAll("#celestial-form input, #celestial-form select").each( function(d, i) {
-      if (this === undefined) return;
-      var id = this.id;
-
-      // geopos -> lat, lon
-      if (id === "lat" || id === "lon") {
-        if (isArray(config.geopos)) this.value = id === "lat" ? config.geopos[0] : config.geopos[1];
-      // center -> centerx, centery     
-      } else if (id.search(/center/) !== -1) {
-        if (isArray(config.center)) {
-          switch (id) { 
-            case "centerx": this.value = config.center[0]; break;
-            case "centery": this.value = config.center[1]; break;
-            case "centerz": this.value = config.center[2] || 0; break;
-          }
-        }
-      } else if (id === "datetime" || id === "hr" || id === "min" || id === "sec" || id === "tz") {
-        return;//skip, timezone?
-      } else if (this.type !== "button") {
-        var value = get(id);      
-        switch (this.type) {
-          case "checkbox": this.checked = value; enable(id); break;
-          case "number": if (testNumber(this) === false) break;
-                         this.value = parseFloat(get(id)); break;
-          case "color": if (testColor(this) === false) break; 
-                        this.value = value; break;
-          case "text": if (id.search(/fill$/) === -1) break;
-                       if (testColor(this) === false) break; 
-                       this.value = value; break;
-          case "select-one": this.value = value; break;
-        }
-      }
-    });
-  }
-
-  function get(id) {
-    var a = id.split("-");
-    switch (a.length) {
-      case 1: return config[a[0]]; 
-      case 2: return config[a[0]][a[1]];
-      case 3: return config[a[0]][a[1]][a[2]];
-      default: return;
-    }   
-  }
-    
-  Celestial.updateForm  = update;
-  Celestial.showConstellation = showCon;
-  Celestial.setLanguage = function(lang) {
-    var cfg = settings.set();
-    if (formats_all[config.culture].indexOf(lang) !== -1) cfg = setLanguage(lang);
-    return cfg;    
-  };
-}
-
-
-// Dependend fields relations
-var depends = {
-  "stars-show": ["stars-limit", "stars-colors", "stars-style-fill", "stars-designation", "stars-propername", "stars-size", "stars-exponent"],
-  "stars-designation": ["stars-designationType", "stars-designationLimit"],
-  "stars-propername": ["stars-propernameLimit", "stars-propernameType"],
-  "dsos-show": ["dsos-limit", "dsos-colors", "dsos-style-fill", "dsos-names", "dsos-size", "dsos-exponent"],
-  "dsos-names": ["dsos-namesType", "dsos-nameLimit"],
-  "mw-show": ["mw-style-opacity", "mw-style-fill"],
-  "constellations-names": ["constellations-namesType"],
-  "planets-show": ["planets-symbolType", "planets-names"],
-  "planets-names": ["planets-namesType"]
-};
-
-// De/activate fields depending on selection of dependencies
-function enable(source) {
-  var fld = source.id, off;
-  
-  switch (fld) {
-    case "stars-show": 
-      off = !$(fld).checked;
-      for (var i=0; i< depends[fld].length; i++) { fldEnable(depends[fld][i], off); }
-      /* falls through */
-    case "stars-designation": 
-      off = !$("stars-designation").checked || !$("stars-show").checked;
-      for (i=0; i< depends["stars-designation"].length; i++) { fldEnable(depends["stars-designation"][i], off); }
-      /* falls through */
-    case "stars-propername": 
-      off = !$("stars-propername").checked || !$("stars-show").checked;
-      for (i=0; i< depends["stars-propername"].length; i++) { fldEnable(depends["stars-propername"][i], off); }
-      break;
-    case "dsos-show": 
-      off = !$(fld).checked;
-      for (i=0; i< depends[fld].length; i++) { fldEnable(depends[fld][i], off); }
-      /* falls through */
-    case "dsos-names": 
-      off = !$("dsos-names").checked || !$("dsos-show").checked;      
-      for (i=0; i< depends["dsos-names"].length; i++) { fldEnable(depends["dsos-names"][i], off); }
-      break;
-    case "planets-show": 
-      off = !$(fld).checked;
-      for (i=0; i< depends[fld].length; i++) { fldEnable(depends[fld][i], off); }
-      /* falls through */
-    case "planets-names": 
-      off = !$("planets-names").checked || !$("planets-show").checked;      
-      for (i=0; i< depends["planets-names"].length; i++) { fldEnable(depends["planets-names"][i], off); }
-      break;
-    case "constellations-names": 
-    case "mw-show": 
-      off = !$(fld).checked;
-      for (i=0; i< depends[fld].length; i++) { fldEnable(depends[fld][i], off); }
-      break;
-  }  
-}
-
-// Enable/disable field d to status off
-function fldEnable(d, off) {
-  var node = $(d);
-  if (!node) return;
-  node.disabled = off;
-  node.style.color = off ? "#999" : "#000";  
-  node.previousSibling.style.color = off ? "#999" : "#000";  
-  //if (node.previousSibling.previousSibling && node.previousSibling.previousSibling.tagName === "LABEL")
-  //  node.previousSibling.previousSibling.style.color = off ? "#999" : "#000";  
-}
-
-// Error notification
-function popError(nd, err) {
-  var p = findPos(nd);
-  d3.select("#error").html(err).style( {top:px(p[1] + nd.offsetHeight + 1), left:px(p[0]), opacity:1} );
-  nd.focus();
-}
-
-//Check numeric field
-function testNumber(node) {
-  var v, adj = node.id === "hr" || node.id === "min" || node.id === "sec" ? 1 : 0;
-  if (node.validity) {
-    v = node.validity;
-    if (v.typeMismatch || v.badInput) { popError(node, node.title + ": check field value"); return false; }
-    if (v.rangeOverflow || v.rangeUnderflow) { popError(node, node.title + " must be between " + (parseInt(node.min) + adj) + " and " + (parseInt(node.max) - adj)); return false; }
-  } else {
-    v = node.value;
-    if (!isNumber(v)) { popError(node, node.title + ": check field value"); return false; }
-    v = parseFloat(v);
-    if (v < node.min || v > node.max ) { popError(node, node.title + " must be between " + (node.min + adj) + " and " + (+node.max - adj)); return false; }
-  }
-  d3.select("#error").style( {top:"-9999px", left:"-9999px", opacity:0} ); 
-  return true; 
-}
-
-//Check color field
-function testColor(node) {
-  var v;
-  if (node.validity) {
-    v = node.validity;
-    if (v.typeMismatch || v.badInput) { popError(node, node.title + ": check field value"); return false; }
-    if (node.value.search(/^#[0-9A-F]{6}$/i) === -1) { popError(node, node.title + ": not a color value"); return false; }
-  } else {
-    v = node.value;
-    if (v === "") return true;
-    if (v.search(/^#[0-9A-F]{6}$/i) === -1) { popError(node, node.title + ": not a color value"); return false; }
-  }
-  d3.select("#error").style( {top:"-9999px", left:"-9999px", opacity:0} );
-  return true;
-}
-
-function setUnit(trans, old) {
-  var cx = $("centerx");
-  if (!cx) return null;
-  
-  if (old) {
-    if (trans === "equatorial" && old !== "equatorial") {
-      cx.value = (cx.value/15).toFixed(1);
-      if (cx.value < 0) cx.value += 24;
-    } else if (trans !== "equatorial" && old === "equatorial") {
-      cx.value = (cx.value * 15).toFixed(1);
-      if (cx.value > 180) cx.value -= 360;
-    }
-  }
-  if (trans === 'equatorial') {
-    cx.min = "0";
-    cx.max = "24";
-    $("cxunit").innerHTML = "h";
-  } else {
-    cx.min = "-180";
-    cx.max = "180";
-    $("cxunit").innerHTML = "\u00b0";
-  }
-  return cx.value;
-}
-
-function setCenter(ctr, trans) {
-  var cx = $("centerx"), cy = $("centery"), cz = $("centerz");
-  if (!cx || !cy) return;
-  
-  if (ctr === null || ctr.length < 1) ctr = [0,0,0]; 
-  if (ctr.length <= 2 || ctr[2] === undefined) ctr[2] = 0;
-  //config.center = ctr; 
-  if (trans !== "equatorial") cx.value = ctr[0].toFixed(1); 
-  else cx.value = ctr[0] < 0 ? (ctr[0] / 15 + 24).toFixed(1) : (ctr[0] / 15).toFixed(1); 
-  
-  cy.value = ctr[1].toFixed(1);
-  cz.value = ctr[2] !== null ? ctr[2].toFixed(1) : 0;
-  settings.set({center: ctr});
-}
-
-// Set max input limits depending on data
-function setLimits() {
-  var t, rx = /\d+(\.\d+)?/g,
-      s, d, res = {s:6, d:6},
-      config =  Celestial.settings();
-
-  d = config.dsos.data;
-  
-  //test dso limit
-  t = d.match(rx);
-  if (t !== null) {
-    res.d = parseFloat(t[t.length-1]);
-  }
-
-  if (res.d !== 6) {
-    $("dsos-limit").max = res.d;
-    $("dsos-nameLimit").max = res.d;
-  }
-   
-   s = config.stars.data;
-  
-  //test star limit
-  t = s.match(rx);
-  if (t !== null) {
-    res.s = parseFloat(t[t.length-1]);
-  }
-
-  if (res.s != 6) {
-    $("stars-limit").max = res.s;
-    $("stars-designationLimit").max = res.s;
-    $("stars-propernameLimit").max = res.s;
-  }
-
-  return res;
-}
-
-// Options only visible in advanced mode
-//"stars-designationType", "stars-propernameType", "stars-size", "stars-exponent", "stars-size", "stars-exponent", //"constellations-namesType", "planets-namesType", "planets-symbolType"
-function showAdvanced(showit) {
-  var vis = showit ? "inline-block" : "none";
-  d3.selectAll(".advanced").style("display", vis);
-  d3.selectAll("#label-propername").style("display", showit ? "none" : "inline-block");
-}
-
-
-function setVisibility(cfg, which) {
-   var vis, fld;
-   if (!has(cfg, "formFields")) return;
-   if (which && has(cfg.formFields, which)) {
-     d3.select("#" + which).style( {"display": "none"} );
-     return;
+         while (f < 0) f += 360;
+      return f
    }
-   // Special case for backward compatibility
-   if (cfg.form === false && cfg.location === true) {
-     d3.select("#celestial-form").style("display", "inline-block");
-     for (fld in cfg.formFields) {
-      if (!has(cfg.formFields, fld)) continue;
-       if (fld === "location") continue;
-       d3.select("#" + fld).style( {"display": "none"} );     
-     }
-     return;
+   P.inverse = function(t, e, a) {
+      var n = e[0] * x;
+      var r = e[1] * x;
+      var s = a[0] * x;
+      var o = Math.asin(Math.sin(n) * Math.sin(s) + Math.cos(n) * Math.cos(s) * Math.cos(r));
+      var i = ((Math.sin(n) - Math.sin(o) * Math.sin(s)) / (Math.cos(o) * Math.cos(s))).toFixed(6);
+      var l;
+      return i = Math.acos(i), i /= x, [I(t, a[1]) - i, o / x, 0]
+   }, t.horizontal = P, t.ha = function(t, e, a) {
+      var n = I(t, e) - a;
+      return n < 180 && (n += 360), n
+   };
+   var A = !1;
+
+   function q(t, e) {
+      return z(t, j[e])
    }
-   // hide if not desired
-   if (cfg.form === false) d3.select("#celestial-form").style("display", "none"); 
 
-   for (fld in cfg.formFields) {
-     if (!has(cfg.formFields, fld)) continue;
-     if (fld === "location") continue;
-     vis = cfg.formFields[fld] === false ? "none" : "block";
-     d3.select("#" + fld).style( {"display": vis} );     
+   function L(t, e) {
+      if ("equatorial" === e) return t;
+      var a = j[e],
+         n = t.features;
+      for (var r = 0; r < n.length; r++) n[r].geometry.coordinates = C(n[r], a);
+      return t
    }
-   
-}
 
-function listConstellations() {
-  var sel = d3.select("#constellation"),
-      list = [], selected = 0, id, name, config = globalConfig;
-    
-  Celestial.container.selectAll(".constname").each( function(d, i) {
-    id = d.id;
-    if (id === config.constellation) selected = i;
-    name = d.properties[config.constellations.namesType];
-    if (name !== id) name += " (" + id + ")";
-    list.push({o:id, n:name});
-  });
-  if (list.length < 1 || sel.length < 1) {
-    setTimeout(listConstellations, 1000);
-    return;
-  }
-  list = [{o:"---", n:"(Select constellation)"}].concat(list);
-  
-  sel.selectAll('option').remove();
-  sel.selectAll('option').data(list).enter().append('option')
-     .attr("value", function (d) { return d.o; })
-     .text(function (d) { return d.n; });
-  sel.property("selectedIndex", selected);
-  //$("constellation").firstChild.disabled = true;
+   function D(e) {
+      var a = [];
+      for (var n in e)
+         if (nt(e, n) && -1 !== l.planets.which.indexOf(n)) {
+            var r = $t().id(n);
+            nt(e[n], "parent") && r.parentBody(e[n].parent), r.elements(e[n].elements[0]).params(e[n]), "ter" === n ? t.origin = r : a.push(r)
+         } return a
+   }
 
-  //Celestial.constellations = list;
-}
-
-
-
-
-var geoInfo = null;
-
-function geo(cfg) {
-  var dtFormat = d3.time.format("%Y-%m-%d %H:%M:%S"),
-      zenith = [0,0],
-      geopos = [0,0], 
-      date = new Date(),
-      localZone = -date.getTimezoneOffset(),
-      timeZone = localZone,
-      config = settings.set(cfg),
-      frm = d3.select("#celestial-form form").insert("div", "div#general").attr("id", "loc");
-
-  var dtpick = new datetimepicker(config, function(date, tz) { 
-    $("datetime").value = dateFormat(date, tz); 
-    timeZone = tz;
-    go(); 
-  });
-  
-  if (has(config, "geopos") && config.geopos !== null && config.geopos.length === 2) geopos = config.geopos;
-  var col = frm.append("div").attr("class", "col").attr("id", "location").style("display", "none");
-  //Latitude & longitude fields
-  col.append("label").attr("title", "Location coordinates long/lat").attr("for", "lat").html("Location");
-  col.append("input").attr("type", "number").attr("id", "lat").attr("title", "Latitude").attr("placeholder", "Latitude").attr("max", "90").attr("min", "-90").attr("step", "0.0001").attr("value", geopos[0]).on("change",  function () {
-    if (testNumber(this) === true) go(); 
-  });
-  col.append("span").html("\u00b0");
-  col.append("input").attr("type", "number").attr("id", "lon").attr("title", "Longitude").attr("placeholder", "Longitude").attr("max", "180").attr("min", "-180").attr("step", "0.0001").attr("value", geopos[1]).on("change",  function () { 
-    if (testNumber(this) === true) go(); 
-  });
-  col.append("span").html("\u00b0");
-  //Here-button if supported
-  if ("geolocation" in navigator) {
-    col.append("input").attr("type", "button").attr("value", "Here").attr("id", "here").on("click", here);
-  }
-  //Datetime field with dtpicker-button
-  col.append("label").attr("title", "Local date/time").attr("for", "datetime").html(" Date/time");
-  col.append("input").attr("type", "button").attr("id", "day-left").attr("title", "One day back").on("click", function () {
-    date.setDate(date.getDate() - 1); 
-    $("datetime").value = dateFormat(date, timeZone); 
-    go(); 
-  });
-  col.append("input").attr("type", "text").attr("id", "datetime").attr("title", "Date and time").attr("value", dateFormat(date, timeZone))
-  .on("click", showpick, true).on("input", function () { 
-    this.value = dateFormat(date, timeZone); 
-    if (!dtpick.isVisible()) showpick(); 
-  });
-  col.append("div").attr("id", "datepick").on("click", showpick);
-  col.append("input").attr("type", "button").attr("id", "day-right").attr("title", "One day forward").on("click", function () { 
-    date.setDate(date.getDate() + 1); 
-    $("datetime").value = dateFormat(date, timeZone); 
-    go(); 
-  });
-  //Now -button sets current time & date of device  
-  col.append("input").attr("type", "button").attr("value", "Now").attr("id", "now").on("click", now);
-  //Horizon marker
-  col.append("br");
-  col.append("label").attr("title", "Show horizon marker").attr("for", "horizon-show").html(" Horizon marker");
-  col.append("input").attr("type", "checkbox").attr("id", "horizon-show").property("checked", config.horizon.show).on("change", apply);    
-  //Daylight
-  col.append("label").attr("title", "Show daylight").attr("for", "daylight-show").html("Daylight sky");
-  col.append("input").attr("type", "checkbox").attr("id", "daylight-show").property("checked", config.daylight.show).on("change", apply);col.append("br");
-    
-  //Show planets
-  col.append("label").attr("title", "Show solar system objects").attr("for", "planets-show").html(" Planets, Sun & Moon");
-  col.append("input").attr("type", "checkbox").attr("id", "planets-show").property("checked", config.planets.show).on("change", apply);    
-  //Planet names
-  var names = formats.planets[config.culture] || formats.planets.iau;
-  
-  for (var fld in names) {
-    if (!has(names, fld)) continue;
-    var keys = Object.keys(names[fld]);
-    if (keys.length > 1) {
-      //Select List
-      var txt = (fld === "symbol") ? "as" : "with";
-      col.append("label").attr("for", "planets-" + fld + "Type").html(txt);
-      
-      var selected = 0;
-      col.append("label").attr("title", "Type of planet name").attr("for", "planets-" + fld + "Type").attr("class", "advanced").html("");
-      var sel = col.append("select").attr("id", "planets-" + fld + "Type").on("change", apply);
-      var list = keys.map(function (key, i) {
-        if (key === config.planets[fld + "Type"]) selected = i;    
-        return {o:key, n:names[fld][key]}; 
-      });
-      sel.selectAll("option").data(list).enter().append('option')
-         .attr("value", function (d) { return d.o; })
-         .text(function (d) { return d.n; });
-      sel.property("selectedIndex", selected);
-
-      if (fld === "names") {
-        sel.attr("class", "advanced");
-        col.append("label").attr("for", "planets-" + fld).html("names");
-        col.append("input").attr("type", "checkbox").attr("id", "planets-" + fld).property("checked", config.planets[fld]).on("change", apply);
+   function O(e, a) {
+      if (a = a || t.date(), t.origin) {
+         var n = t.origin(a).spherical(),
+            r;
+         return t.container.selectAll(".planet").each((function(t) {
+            e === t.id() && (r = t(a).equatorial(n))
+         })), r
       }
-    } 
-  }    
- 
-  enable($("planets-show"));
-  showAdvanced(config.advanced);
-  
+   }
 
-  d3.select(document).on("mousedown", function () { 
-    if (!hasParent(d3.event.target, "celestial-date") && dtpick.isVisible()) dtpick.hide(); 
-  });
-  
-  function now() {
-    date.setTime(Date.now());
-    $("datetime").value = dateFormat(date, timeZone);
-    go();
-  }
+   function F(t) {
+      var e = {},
+         a = t.features;
+      for (var n = 0; n < a.length; n++) e[a[n].id] = {
+         center: a[n].properties.display.slice(0, 2),
+         scale: a[n].properties.display[2]
+      };
+      return e
+   }
 
-  function here() {
-    navigator.geolocation.getCurrentPosition( function(pos) {
-      geopos = [Round(pos.coords.latitude, 4), Round(pos.coords.longitude, 4)];
-      $("lat").value = geopos[0];
-      $("lon").value = geopos[1];
-      go();
-    });  
-  }
-  
-  function showpick() {
-    dtpick.show(date, timeZone);
-  }
-  
-  function dateFormat(dt, tz) {
-    var tzs;
-    if (!tz || tz === "0") tzs = " ±0000";
-    else {
-      var h = Math.floor(Math.abs(tz) / 60),
-          m = Math.abs(tz) - (h * 60),
-          s = tz > 0 ? " +" : " −";
-      tzs = s + pad(h) + pad(m);
-    }
-    return dtFormat(dt) + tzs;
-  }  
-  
+   function _(t) {
+      var e = {
+         type: "FeatureCollection",
+         features: [{
+            type: "Feature",
+            geometry: {
+               type: "MultiPolygon",
+               coordinates: []
+            }
+         }]
+      };
+      var a = t.features[0].geometry.coordinates[0];
+      e.features[0].geometry.coordinates[0] = [];
+      for (var n = 0; n < a.length; n++) e.features[0].geometry.coordinates[0][n] = a[n].slice().reverse();
+      return e
+   }
 
-  function isValidLocation(loc) {
-    //[lat, lon] expected
-    if (!loc || !isArray(loc) || loc.length < 2) return false;
-    if (!isNumber(loc[0]) || loc[0] < -90 || loc[0] > 90)  return false;
-    if (!isNumber(loc[1]) || loc[1] < -180 || loc[1] > 180)  return false;
-    return true;
-  }
+   function E() {}
 
-  function isValidTimezone(tz) {
-    if (tz === undefined || tz === null) return false;
-    if (!isNumber(tz) && Math.abs(tz) > 840) return false;
-    return true;    
-  }
-  
-  function apply() {
-    Object.assign(config, settings.set());
-    config.horizon.show = !!$("horizon-show").checked;
-    config.daylight.show = !!$("daylight-show").checked;
-    config.planets.show = !!$("planets-show").checked;    
-    config.planets.names = !!$("planets-names").checked;    
-    config.planets.namesType = $("planets-namesType").value;    
-    config.planets.symbolType = $("planets-symbolType").value;    
-    enable($("planets-show"));
-
-    Celestial.apply(config);
-  }
-
-  function go() {
-    var lon = parseFloat($("lon").value),
-        lat = parseFloat($("lat").value),
-        tz;
-    //Get current configuration
-    Object.assign(config, settings.set());
-
-    date = dtFormat.parse($("datetime").value.slice(0,-6));
-
-    //Celestial.apply(config);
-
-    if (!isNaN(lon) && !isNaN(lat)) {
-      if (lat !== geopos[0] || lon !== geopos[1]) {
-        geopos = [lat, lon];
-        setPosition([lat, lon], true);
-        return;
+   function C(t, e) {
+      var a = [];
+      switch (t.geometry.type) {
+         case "Point":
+            a = z(t.geometry.coordinates, e);
+            break;
+         case "LineString":
+            a.push(G(t.geometry.coordinates, e));
+            break;
+         case "MultiLineString":
+            a = U(t.geometry.coordinates, e);
+            break;
+         case "Polygon":
+            a.push(G(t.geometry.coordinates[0], e));
+            break;
+         case "MultiPolygon":
+            a.push(U(t.geometry.coordinates[0], e));
+            break
       }
-      //if (!tz) tz = date.getTimezoneOffset();
-      $("datetime").value = dateFormat(date, timeZone); 
+      return a
+   }
 
-      var dtc = new Date(date.valueOf() - (timeZone - localZone) * 60000);
-
-      zenith = Celestial.getPoint(horizontal.inverse(dtc, [90, 0], geopos), config.transform);
-      zenith[2] = 0;
-      if (config.follow === "zenith") {
-        Celestial.rotate({center:zenith});
-      } else {
-        Celestial.redraw();
+   function N(t, e) {
+      var a = [];
+      if (!e) return [];
+      ot(e) || (e = [e]);
+      for (var n = 0; n < e.length; n++) switch (e[n]) {
+         case "center":
+            a = "lat" === t ? a.concat(B(t, l.center[0], "N")) : a.concat(B(t, l.center[1], "S"));
+            break;
+         case "outline":
+            a = "lon" === t ? (a = a.concat(B(t, l.center[1] - 89.99, "S"))).concat(B(t, l.center[1] + 89.99, "N")) : (a = a.concat(B(t, l.center[0] - 179.99, "E"))).concat(B(t, l.center[0] + 179.99, "W"));
+            break;
+         default:
+            if (st(e[n])) {
+               a = "lat" === t ? a.concat(B(t, e[n], "N")) : a.concat(B(t, e[n], "S"));
+               break
+            }
       }
-    }
-  }
+      return H(a)
+   }
 
-  
-  function setPosition(p, settime) {
-    if (!p || !has(config, "settimezone") || config.settimezone === false) return;
-    var timestamp = Math.floor(date.getTime() / 1000),
-        url = "https://api.timezonedb.com/v2.1/get-time-zone?key=" + config.timezoneid + "&format=json&by=position" + 
-              "&lat=" + p[0] + "&lng=" + p[1] + "&time=" + timestamp;
-       // oldZone = timeZone;
-
-    d3.json(url, function(error, json) { 
-      if (error) return console.warn(error);
-      if (json.status === "FAILED") {
-        // Location at sea inferred from longitude
-        timeZone = Math.round(p[1] / 15) * 60;
-        geoInfo = {
-          gmtOffset: timeZone * 60,
-          message: "Sea locatation inferred",
-          timestamp: timestamp
-        };
-      } else {
-        timeZone = json.gmtOffset / 60;
-        geoInfo = json;
+   function H(t) {
+      var e = [];
+      for (var a = 0; a < t.length; a++) {
+         var n = {
+            type: "Feature",
+            id: a,
+            properties: {},
+            geometry: {
+               type: "Point"
+            }
+         };
+         n.properties.value = t[a].value, n.properties.orientation = t[a].orientation, n.geometry.coordinates = t[a].coordinates, e.push(n)
       }
-      //if (settime) {
-        //date.setTime(timestamp * 1000); // - (timeZone - oldZone) * 60000);
-        //console.log(date.toUTCString());
-      //}
-      $("datetime").value = dateFormat(date, timeZone);
-      go();
-    }); 
-  }
-
-  Celestial.dateFormat = dateFormat;
-  
-  Celestial.date = function (dt, tz) { 
-    if (!dt) return date;  
-    if (isValidTimezone(tz)) timeZone = tz;
-    Object.assign(config, settings.set());
-    if (dtpick.isVisible()) dtpick.hide();
-    date.setTime(dt.valueOf());
-    $("datetime").value = dateFormat(dt, timeZone); 
-    go();
-  };
-  Celestial.timezone = function (tz) { 
-    if (!tz) return timeZone;  
-    if (isValidTimezone(tz)) timeZone = tz;
-    Object.assign(config, settings.set());
-    if (dtpick.isVisible()) dtpick.hide();
-    $("datetime").value = dateFormat(date, timeZone); 
-    go();
-  };
-  Celestial.position = function () { return geopos; };
-  Celestial.location = function (loc, tz) {
-    if (!loc || loc.length < 2) return geopos;
-    if (isValidLocation(loc)) {
-      geopos = loc.slice();
-      $("lat").value = geopos[0];
-      $("lon").value = geopos[1];
-      if (isValidTimezone(tz)) timeZone = tz;
-      else setPosition(geopos, true);
-    }
-  };
-  //{"date":dt, "location":loc, "timezone":tz}
-  Celestial.skyview = function (cfg) {
-    if (!cfg) return {"date": date, "location": geopos, "timezone": timeZone};
-    var valid = false;
-    if (dtpick.isVisible()) dtpick.hide();
-    if (has(cfg, "timezone") && isValidTimezone(cfg.timezone)) {
-      timeZone = cfg.timezone;
-      valid = true;
-    }
-    if (has(cfg, "date") && isValidDate(cfg.date)) {
-      date.setTime(cfg.date.valueOf());
-      $("datetime").value = dateFormat(cfg.date, timeZone); 
-      valid = true;
-    }
-    if (has(cfg, "location") && isValidLocation(cfg.location)) {
-      geopos = cfg.location.slice();
-      $("lat").value = geopos[0];
-      $("lon").value = geopos[1];
-      if (!has(cfg, "timezone")) { 
-        setPosition(geopos, !has(cfg, "date"));
-        return;
-      }
-    }
-    //Celestial.updateForm();
-    if (valid === false) return {"date": date, "location": geopos, "timezone": timeZone};
-    if (config.follow === "zenith") go();
-    else Celestial.redraw();
-  };  
-  Celestial.dtLoc = Celestial.skyview;
-  Celestial.zenith = function () { return zenith; };
-  Celestial.nadir = function () {
-    var b = -zenith[1],
-        l = zenith[0] + 180;
-    if (l > 180) l -= 360;    
-    return [l, b-0.001]; 
-  };
-
-  if (has(cfg, "formFields") && (cfg.location === true || cfg.formFields.location === true)) {
-    d3.select("#location").style( {"display": "inline-block"} );
-  }
-  //only if appropriate
-  if (cfg.location === true && cfg.formFields.location === true)
-    setTimeout(go, 1000); 
- 
-}
-﻿
-var gmdat = {
-  "sol": 0.0002959122082855911025,  // AU^3/d^2
-  "mer": 164468599544771, //km^3/d^2
-  "ven": 2425056445892137,
-  "ter": 2975536307796296,
-  "lun": 36599199229256,
-  "mar": 319711652803400,
-  "cer": 467549107200,
-  "ves": 129071530155,
-  "jup": 945905718740635000,
-  "sat": 283224952705891000,
-  "ura": 43256077238632300,
-  "nep": 51034401552155700,
-  "plu": 7327611364884,
-  "eri": 8271175680000
-},
-
-
-symbols = {
-  "sol":"\u2609", "mer":"\u263f", "ven":"\u2640", "ter":"\u2295", "lun":"\u25cf", "mar":"\u2642", "cer":"\u26b3", 
-  "ves":"\u26b6", "jup":"\u2643", "sat":"\u2644", "ura":"\u2645", "nep":"\u2646", "plu":"\u2647", "eri":"\u26aa"
-}, 
-
-ε = 23.43928 * deg2rad,
-sinε = Math.sin(ε),
-cosε = Math.cos(ε),
-kelements = ["a","e","i","w","M","L","W","N","n","ep","ref","lecl","becl","Tilt"];
-/*
-    ep = epoch (iso-date)
-    N = longitude of the ascending node (deg) Ω
-    i = inclination to the refrence plane, default:ecliptic (deg) 
-    w = argument of periapsis (deg)  ω
-    a = semi-major axis, or mean distance from parent body (AU,km)
-    e = eccentricity (0=circle, 0-1=ellipse, 1=parabola, >1=hyperbola ) (-)
-    M = mean anomaly (0 at periapsis; increases uniformly with time) (deg)
-    n = mean daily motion = 360/P (deg/day)
-    
-    W = N + w  = longitude of periapsis ϖ
-    L = M + W  = mean longitude
-    q = a*(1-e) = periapsis distance
-    Q = a*(1+e) = apoapsis distance
-    P = 2π * sqrt(a^3/GM) = orbital period (years)
-    T = Epoch_of_M - (M(deg)/360_deg) / P  = time of periapsis
-    v = true anomaly (angle between position and periapsis) ν
-    E = eccentric anomaly
-    
-    Mandatory: a, e, i, N, w|W, M|L, dM|n
-    
-*/
-
-var Kepler = function () {
-  var gm = gmdat.sol, 
-      parentBody = "sol", 
-      elem = {}, dat = {},
-      id, name, symbol;
-
-
-  function kepler(date) {
-    dates(date);
-    if (id === "sol") {
-      dat.ephemeris.x = 0;
-      dat.ephemeris.y = 0;
-      dat.ephemeris.z = 0;
-      dat.ephemeris.mag = -6;
-      return kepler;
-    }
-    coordinates();
-    return kepler;
-  }
-
-  var dates = function(date) {
-    var dt, de = dat.ephemeris = {};
-    if (date) {
-      if (date instanceof Date) { dt = new Date(date.valueOf()); }
-      else { dt = dateParse(date); }
-    }
-    if (!dt) { dt = new Date(); }
-    de.jd = JD(dt);
-      
-    dt = dateParse(elem.ep);
-    if (!dt) dt = dateParse("2000-01-01");
-    de.jd0 = JD(dt);
-    de.d = de.jd - de.jd0;
-    de.cy = de.d / 36525;
-  };
-
-  var coordinates = function() {
-    var key, de = dat.ephemeris;
-    if (id === "lun") {
-      de = moon_elements(de);
-      if (!de) return;
-    } else {
-      for (var i=0; i<kelements.length; i++) {
-        key = kelements[i];
-        if (!has(elem, key)) continue; 
-        if (has(elem, "d"+key)) {
-          de[key] = elem[key] + elem["d"+key] * de.cy;
-        } else if (has(elem, key)) {
-          de[key] = elem[key];
-        }
-      }
-      if (has(de, "M") && !has(de, "dM") && has(de, "n")) {
-        de.M += (de.n * de.d);
-      }
-    }
-    derive();
-    trueAnomaly();
-    cartesian();    
-  };
-
-  kepler.cartesian = function() {
-    return dat;    
-  };
-
-  kepler.spherical = function() {
-    spherical();
-    return dat;    
-  };
-
-  kepler.equatorial = function(pos) {
-    equatorial(pos);
-    return dat;    
-  };
-
-  kepler.transpose = function() {
-    transpose(dat);
-    return dat;    
-  };
-  
-  kepler.elements = function(_) {
-    var key;
-    
-    if (!arguments.length || arguments[0] === undefined) return kepler;
-    
-    for (var i=0; i<kelements.length; i++) {
-      key = kelements[i];
-      if (!has(_, key)) continue; 
-      elem[key] = _[key];
-      
-      if (key === "a" || key === "e") elem[key] *= 1.0; 
-      else if (key !== "ref" && key !== "ep") elem[key] *= deg2rad;
-
-      if (has(_, "d" + key)) {
-        key = "d" + key;
-        elem[key] = _[key];
-        if (key === "da" || key === "de") elem[key] *= 1.0; 
-        else elem[key] *= deg2rad;
-      } 
-    }
-    return kepler;
-  };
-
-  kepler.params = function(_) {
-    if (!arguments.length) return kepler; 
-    for (var par in _) {
-      if (!has(_, par)) continue;
-      if (_[par] === "elements") continue;
-      dat[par] = _[par];
-    }
-    return kepler;
-  };
-  
-
-  kepler.parentBody = function(_) {
-    if (!arguments.length) return parentBody; 
-    parentBody = _;
-    gm = gmdat[parentBody];
-    return kepler;
-  };
-
-  kepler.id = function(_) {
-    if (!arguments.length) return id; 
-    id = _;
-    symbol = symbols[_];
-    return kepler;
-  };
-
-  kepler.Name = function(_) {
-    if (!arguments.length) return name; 
-    name = _;
-    return kepler;
-  };
-
-  kepler.symbol = function(_) {
-    if (!arguments.length) return symbol; 
-    symbol = symbols[_];
-    return kepler;
-  };
-
-  
-  function near_parabolic(E, e) {
-    var anom2 = e > 1.0 ? E*E : -E*E,
-        term = e * anom2 * E / 6.0,
-        rval = (1.0 - e) * E - term,
-        n = 4;
-
-    while(Math.abs(term) > 1e-15) {
-      term *= anom2 / (n * (n + 1));
-      rval -= term;
-      n += 2;
-    }
-    return(rval);
-  }
-
-  function anomaly() {
-    var de = dat.ephemeris,
-        curr, err, trial, tmod,
-        e = de.e, M = de.M,
-        thresh = 1e-8,
-        offset = 0.0, 
-        delta_curr = 1.9, 
-        is_negative = false, 
-        n_iter = 0;
-
-    if (!M) return(0.0); 
-
-    if (e < 1.0) {
-      if (M < -Math.PI || M > Math.PI) {
-        tmod = Trig.normalize0(M);
-        offset = M - tmod;
-        M = tmod;
-      }
-
-      if (e < 0.9) {   
-        curr = Math.atan2(Math.sin(M), Math.cos(M) - e);
-        do {
-          err = (curr - e * Math.sin(curr) - M) / (1.0 - e * Math.cos(curr));
-          curr -= err;
-        } while (Math.abs(err) > thresh);
-        return curr; // + offset;
-      }
-    }
-
-    if ( M < 0.0) {
-      M = -M;
-      is_negative = true;
-    }
-
-    curr = M;
-    thresh = thresh * Math.abs(1.0 - e);
-               /* Due to roundoff error,  there's no way we can hope to */
-               /* get below a certain minimum threshhold anyway:        */
-    if ( thresh < 1e-15) { thresh = 1e-15; }
-    if ( (e > 0.8 && M < Math.PI / 3.0) || e > 1.0) {   /* up to 60 degrees */
-      trial = M / Math.abs( 1.0 - e);
-
-      if (trial * trial > 6.0 * Math.abs(1.0 - e)) {  /* cubic term is dominant */
-        if (M < Math.PI) {
-          trial = Math.pow(6.0 * M, 1/3);
-        } else {       /* hyperbolic w/ 5th & higher-order terms predominant */
-          trial = Trig.asinh( M / e);
-        }
-      }
-      curr = trial;
-    }
-    if (e > 1.0 && M > 4.0) {   /* hyperbolic, large-mean-anomaly case */
-      curr = Math.log(M);
-    }
-    if (e < 1.0) {
-      while(Math.abs(delta_curr) > thresh) {
-        if ( n_iter++ > 8) {
-          err = near_parabolic(curr, e) - M;
-        } else {
-          err = curr - e * Math.sin(curr) - M;
-        }
-        delta_curr = -err / (1.0 - e * Math.cos(curr));
-        curr += delta_curr;
-      }
-    } else {
-      while (Math.abs(delta_curr) > thresh) {
-        if (n_iter++ > 7) {
-          err = -near_parabolic(curr, e) - M;
-        } else {
-          err = e * Trig.sinh(curr) - curr - M;
-        }
-        delta_curr = -err / (e * Trig.cosh(curr) - 1.0);
-        curr += delta_curr;
-      }
-    }
-    return( is_negative ? offset - curr : offset + curr);
-  }
-
-  function trueAnomaly() {
-    var x, y, r0, g, t, de = dat.ephemeris;
-
-    if (de.e === 1.0) {   /* parabolic */
-      t = de.jd0 - de.T;
-      g = de.w0 * t * 0.5;
-
-      y = Math.pow(g + Math.sqrt(g * g + 1.0), 1/3);
-      de.v = 2.0 * Math.atan(y - 1.0 / y);
-    } else {          /* got the mean anomaly;  compute eccentric,  then true */
-      de.E = anomaly();
-      if (de.e > 1.0) {    /* hyperbolic case */
-        x = (de.e - Trig.cosh(de.E));
-        y = Trig.sinh(de.E);
-      } else {          /* elliptical case */
-        x = (Math.cos(de.E) - de.e);
-        y =  Math.sin(de.E);
-      }
-      y *= Math.sqrt(Math.abs(1.0 - de.e * de.e));
-      de.v = Math.atan2(y, x);
-    }
-
-    r0 = de.q * (1.0 + de.e);
-    de.r = r0 / (1.0 + de.e * Math.cos(de.v));
-  }
-
-  function derive() {
-    var de = dat.ephemeris;
-    if (!de.hasOwnProperty("w")) {
-      de.w = de.W - de.N;
-    }
-    if (!de.hasOwnProperty("M")) {
-      de.M = de.L - de.W;
-    }
-    if (de.e < 1.0) { de.M = Trig.normalize0(de.M); }
-    //de.P = Math.pow(Math.abs(de.a), 1.5);
-    de.P = τ * Math.sqrt(Math.pow(de.a, 3) / gm) / 365.25;
-    de.T = de.jd0 - (de.M / halfπ) / de.P;
-
-    if (de.e !== 1.0) {   /* for non-parabolic orbits: */
-     de.q = de.a * (1.0 - de.e);
-     de.t0 = de.a * Math.sqrt(Math.abs(de.a) / gm);
-    } else {
-     de.w0 = (3.0 / Math.sqrt(2)) / (de.q * Math.sqrt(de.q / gm));
-     de.a = 0.0;
-     de.t0 = 0.0;
-    }
-    de.am = Math.sqrt(gm * de.q * (1.0 + de.e));
-  }
-
-  function transpose() {
-    var de = dat.ephemeris;
-    if (!de.ref || de.ref === "ecl") {
-      de.tx = de.x;
-      de.ty = de.y;
-      de.tz = de.z;
-      return;
-    }
-    var a0 = de.lecl,// - Math.PI/2,
-        a1 = Math.PI/2 - de.becl,
-        angles = [0, a1, -a0];
-    transform(de, angles);
-    var tp =  Trig.cartesian([de.tl, de.tb, de.r]);
-    de.tx = tp.x;
-    de.ty = tp.y;
-    de.tz = tp.z;
-  }
-
-  function equatorial(pos) {
-    var de = dat.ephemeris, pe = pos.ephemeris;
-    ε = (23.439292 - 0.0130042 * de.cy - 1.667e-7 * de.cy * de.cy + 5.028e-7 * de.cy * de.cy * de.cy) * deg2rad;
-    sinε = Math.sin(ε);
-    cosε = Math.cos(ε);
-    var o = (id === "lun") ? {x:0, y:0, z:0} : {x:pe.x, y:pe.y, z:pe.z};
-    de.xeq = de.x - o.x;
-    de.yeq = (de.y - o.y) * cosε - (de.z - o.z) * sinε;
-    de.zeq = (de.y - o.y) * sinε + (de.z - o.z) * cosε;
-
-    de.ra = Trig.normalize(Math.atan2(de.yeq, de.xeq));
-    de.dec = Math.atan2(de.zeq, Math.sqrt(de.xeq*de.xeq + de.yeq*de.yeq));
-    if (id === "lun") de = moon_corr(de, pe);
-    de.pos = [de.ra / deg2rad, de.dec / deg2rad];
-    de.rt = Math.sqrt(de.xeq*de.xeq + de.yeq*de.yeq + de.zeq*de.zeq);
-    if (id !== "sol") de.mag = magnitude();
-  }
-
-  function magnitude() {
-    var de = dat.ephemeris,
-        rs = de.r, rt = de.rt,
-        a = Math.acos((rs*rs + rt*rt - 1) / (2 * rs * rt)),
-        q = 0.666 *((1-a/Math.PI) * Math.cos(a) + 1 / Math.PI * Math.sin(a)),
-        m = dat.H * 1 + 5 * Math.log(rs*rt) * Math.LOG10E - 2.5 * Math.log(q) * Math.LOG10E;
-        
-    return m;
-  }
-
-  function cartesian() {
-    var de = dat.ephemeris,
-        u = de.v + de.w;
-    de.x = de.r * (Math.cos(de.N) * Math.cos(u) - Math.sin(de.N) * Math.sin(u) * Math.cos(de.i));
-    de.y = de.r * (Math.sin(de.N) * Math.cos(u) + Math.cos(de.N) * Math.sin(u) * Math.cos(de.i));
-    de.z = de.r * (Math.sin(u) * Math.sin(de.i));
-    return dat;
-  }
-
-  function spherical() {
-    var de = dat.ephemeris,
-        lon = Math.atan2(de.y, de.x),
-        lat = Math.atan2(de.z, Math.sqrt(de.x*de.x + de.y*de.y));
-    de.l = Trig.normalize(lon);
-    de.b = lat;
-    return dat; 
-  }
-
-  function transform(angles) {
-    
-  }
-
-  function polar2cart(pos) {
-    var rclat = Math.cos(pos.lat) * pos.r;
-    pos.x = rclat * Math.cos(pos.lon);
-    pos.y = rclat * Math.sin(pos.lon);
-    pos.z = pos.r * Math.sin(pos.lat);
-    return pos;
-  }
-
-  
-  function JD(dt) {  
-    var yr = dt.getUTCFullYear(),
-        mo = dt.getUTCMonth() + 1,
-        dy = dt.getUTCDate(),
-        frac = (dt.getUTCHours() - 12 + dt.getUTCMinutes()/60.0 + dt.getUTCSeconds()/3600.0) / 24, 
-        IYMIN = -4799;        /* Earliest year allowed (4800BC) */
-
-    if (yr < IYMIN) return -1; 
-    var a = Math.floor((14 - mo) / 12),
-        y = yr + 4800 - a,
-        m = mo + (12 * a) - 3;
-    var jdn = dy + Math.floor((153 * m + 2)/5) + (365 * y) + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-    return jdn + frac;   
-  }
-
-  function mst(lon) {
-    var l = lon || 0;  // lon=0 -> gmst
-    return (18.697374558 + 24.06570982441908 * dat.ephemeris.d) * 15 + l;
-  }
-  
-    
-  function observer(pos) {
-    var flat = 298.257223563,    // WGS84 flattening of earth
-        re = 6378.137,           // GRS80/WGS84 semi major axis of earth ellipsoid
-        h = pos.h || 0,
-        cart = {},
-        gmst = mst();
-    
-    var cosl = Math.cos(pos.lat),
-        sinl = Math.sin(pos.lat),
-        fl = 1.0 - 1.0 / flat;
-    var fl2 = fl * fl;
-    
-    var u = 1.0 / Math.sqrt (cosl * cosl + fl2 * sinl * sinl),
-        a = re * u + h,
-        b = re * fl2 * u + h,
-        r = Math.sqrt (a * a * cosl * cosl + b * b * sinl * sinl); // geocentric distance from earth center
-
-    cart.lat = Math.acos (a * cosl / r); 
-    cart.lon = pos.lon; 
-    cart.r = h;
-    
-    if (pos.lat < 0.0) cart.lat *= -1; 
-
-    polar2cart(cart); 
-
-    // rotate around earth's polar axis to align coordinate system from Greenwich to vernal equinox
-    var angle = gmst * deg2rad; // sideral time gmst given in hours. Convert to radians
-
-    cart.x = cart.x * Math.cos(angle) - cart.y * Math.sin(angle);
-    cart.y = cart.x * Math.sin(angle) + cart.y * Math.cos(angle);
-    return(cart);
-  }
-
-  function moon_elements(dat) {
-    if ((typeof Moon !== "undefined")) return Moon.elements(dat);
-  }
-  
-  function moon_corr(dat, pos) {
-    spherical();
-    if ((typeof Moon !== "undefined")) return Moon.corr(dat, pos);
-  }
-
-  return kepler;  
-};﻿
-var Moon = {
-  elements: function(dat) {
-    var t = (dat.jd - 2451545) / 36525,
-        t2 = t * t,
-        t3 = t * t2,
-        t4 = t * t3,
-        t5 = t * t4,
-        t2e4 = t2 * 1e-4,
-        t3e6 = t3 * 1e-6,
-        t4e8 = t4 * 1e-8;
-
-    // semimajor axis
-    var sa = 3400.4 * Math.cos(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6 - 1.769 * t4e8)) 
-        - 635.6 * Math.cos(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8)) 
-        - 235.6 * Math.cos(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        + 218.1 * Math.cos(deg2rad * (238.1713 +  854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6  - 1.769 * t4e8)) 
-        + 181.0 * Math.cos(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        - 39.9 * Math.cos(deg2rad * (103.2079 + 377336.3051 * t - 121.035 * t2e4 
-        - 10.724 * t3e6 + 5.028 * t4e8)) 
-        - 38.4 * Math.cos(deg2rad * (233.2295 + 926533.2733 * t - 34.136 * t2e4 
-        + 3.705 * t3e6 - 1.769 * t4e8)) 
-        + 33.8 * Math.cos(deg2rad * (336.4374 + 1303869.5784 * t - 155.171 * t2e4 
-        - 7.020 * t3e6 + 3.259 * t4e8)) 
-        + 28.8 * Math.cos(deg2rad * (111.4008 + 1781068.4461 * t - 65.201 * t2e4 
-        + 7.328 * t3e6 - 3.538 * t4e8)) 
-        + 12.6 * Math.cos(deg2rad * (13.1347 + 1331734.0404 * t + 58.906 * t2e4 
-        + 17.971 * t3e6 - 8.566 * t4e8)) 
-        + 11.4 * Math.cos(deg2rad * (186.5442 + 966404.0351 * t - 68.058 * t2e4 
-        - 0.567 * t3e6 + 0.232 * t4e8)) 
-        - 11.1 * Math.cos(deg2rad * (222.5657 - 441199.8173 * t - 91.506 * t2e4 
-        - 14.307 * t3e6 + 6.797 * t4e8)) 
-        - 10.2 * Math.cos(deg2rad * (269.9268 + 954397.7353 * t + 179.941 * t2e4 
-        + 28.695 * t3e6 - 13.594 * t4e8)) 
-        + 9.7 * Math.cos(deg2rad * (145.6272 + 1844931.9583 * t + 147.340 * t2e4 
-        + 32.359 * t3e6 - 15.363 * t4e8)) 
-        + 9.6 * Math.cos(deg2rad * (240.6422 + 818536.1225 * t - 29.529 * t2e4 
-        + 3.582 * t3e6 - 1.769 * t4e8)) 
-        + 8.0 * Math.cos(deg2rad * (297.8502 + 445267.1115 * t - 16.300 * t2e4 
-        + 1.832 * t3e6 - 0.884 * t4e8)) 
-        - 6.2 * Math.cos(deg2rad * (132.4925 + 513197.9179 * t + 88.434 * t2e4 
-        + 14.388 * t3e6 - 6.797 * t4e8)) 
-        + 6.0 * Math.cos(deg2rad * (173.5506 + 1335801.3346 * t - 48.901 * t2e4 
-        + 5.496 * t3e6 - 2.653 * t4e8)) 
-        + 3.7 * Math.cos(deg2rad * (113.8717 + 1745069.3958 * t - 63.665 * t2e4 
-        + 7.287 * t3e6 - 3.538 * t4e8)) 
-        + 3.6 * Math.cos(deg2rad * (338.9083 + 1267870.5281 * t - 153.636 * t2e4 
-        - 7.061 * t3e6 + 3.259 * t4e8)) 
-        + 3.2 * Math.cos(deg2rad * (246.3642 + 2258267.3137 * t + 24.769 * t2e4 
-        + 21.675 * t3e6 - 10.335 * t4e8)) 
-        - 3.0 * Math.cos(deg2rad * (8.1929 + 1403732.1410 * t + 55.834 * t2e4 
-        + 18.052 * t3e6 - 8.566 * t4e8)) 
-        + 2.3 * Math.cos(deg2rad * (98.2661 + 449334.4057 * t - 124.107 * t2e4 
-        - 10.643 * t3e6 + 5.028 * t4e8)) 
-        - 2.2 * Math.cos(deg2rad * (357.5291 + 35999.0503 * t - 1.536 * t2e4 
-        + 0.041 * t3e6 + 0.000 * t4e8)) 
-        - 2.0 * Math.cos(deg2rad * (38.5872 + 858602.4669 * t - 138.871 * t2e4 
-        - 8.852 * t3e6 + 4.144 * t4e8)) 
-        - 1.8 * Math.cos(deg2rad * (105.6788 + 341337.2548 * t - 119.499 * t2e4 
-        - 10.765 * t3e6 + 5.028 * t4e8)) 
-        - 1.7 * Math.cos(deg2rad * (201.4740 + 826670.7108 * t - 245.142 * t2e4 
-        - 21.367 * t3e6 + 10.057 * t4e8)) 
-        + 1.6 * Math.cos(deg2rad * (184.1196 + 401329.0556 * t + 125.428 * t2e4 
-        + 18.579 * t3e6 - 8.798 * t4e8)) 
-        - 1.4 * Math.cos(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 - 7.029 * t4e8)) 
-        + 1.3 * Math.cos(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8));
-
-    var sapp = - 0.55 * Math.cos(deg2rad * (238.2 + 854535.2 * t)) 
-        + 0.10 * Math.cos(deg2rad * (103.2 + 377336.3 * t)) 
-        + 0.10 * Math.cos(deg2rad * (233.2 + 926533.3 * t));
-
-    var sma = 383397.6 + sa + sapp * t;
-
-    // orbital eccentricity
-
-    var se = 0.014217 * Math.cos(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8)) 
-        + 0.008551 * Math.cos(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8)) 
-        - 0.001383 * Math.cos(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        + 0.001353 * Math.cos(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        - 0.001146 * Math.cos(deg2rad * (66.5106 + 349471.8432 * t - 335.112 * t2e4 
-        - 35.715 * t3e6 + 16.854 * t4e8)) 
-        - 0.000915 * Math.cos(deg2rad * (201.4740 + 826670.7108 * t - 245.142 * t2e4 
-        - 21.367 * t3e6 + 10.057 * t4e8)) 
-        + 0.000869 * Math.cos(deg2rad * (103.2079 + 377336.3051 * t - 121.035 * t2e4 
-        - 10.724 * t3e6 + 5.028 * t4e8)) 
-        - 0.000628 * Math.cos(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6  - 1.769 * t4e8)) 
-        - 0.000393 * Math.cos(deg2rad * (291.5472 - 127727.0245 * t - 425.082 * t2e4 
-        - 50.062 * t3e6 + 23.651 * t4e8)) 
-        + 0.000284 * Math.cos(deg2rad * (328.2445 - 99862.5625 * t - 211.005 * t2e4 
-        - 25.072 * t3e6 + 11.826 * t4e8)) 
-        - 0.000278 * Math.cos(deg2rad * (162.8868 - 31931.7561 * t - 106.271 * t2e4 
-        - 12.516 * t3e6 + 5.913 * t4e8)) 
-        - 0.000240 * Math.cos(deg2rad * (269.9268 + 954397.7353 * t + 179.941 * t2e4 
-        + 28.695 * t3e6 - 13.594 * t4e8)) 
-        + 0.000230 * Math.cos(deg2rad * (111.4008 + 1781068.4461 * t - 65.201 * t2e4 
-        + 7.328 * t3e6  - 3.538 * t4e8)) 
-        + 0.000229 * Math.cos(deg2rad * (167.2476 + 762807.1986 * t - 457.683 * t2e4 
-        - 46.398 * t3e6 + 21.882 * t4e8)) 
-        - 0.000202 * Math.cos(deg2rad * ( 83.3826 - 12006.2998 * t + 247.999 * t2e4 
-        + 29.262 * t3e6 - 13.826 * t4e8)) 
-        + 0.000190 * Math.cos(deg2rad * (190.8102 - 541062.3799 * t - 302.511 * t2e4 
-        - 39.379 * t3e6 + 18.623 * t4e8)) 
-        + 0.000177 * Math.cos(deg2rad * (357.5291 + 35999.0503 * t - 1.536 * t2e4 
-        + 0.041 * t3e6 + 0.000 * t4e8)) 
-        + 0.000153 * Math.cos(deg2rad * (32.2842 + 285608.3309 * t - 547.653 * t2e4 
-        - 60.746 * t3e6 + 28.679 * t4e8)) 
-        - 0.000137 * Math.cos(deg2rad * (44.8902 + 1431596.6029 * t + 269.911 * t2e4 
-        + 43.043 * t3e6 - 20.392 * t4e8)) 
-        + 0.000122 * Math.cos(deg2rad * (145.6272 + 1844931.9583 * t + 147.340 * t2e4 
-        + 32.359 * t3e6 - 15.363 * t4e8)) 
-        + 0.000116 * Math.cos(deg2rad * (302.2110 + 1240006.0662 * t - 367.713 * t2e4 
-        - 32.051 * t3e6 + 15.085 * t4e8)) 
-        - 0.000111 * Math.cos(deg2rad * (203.9449 + 790671.6605 * t - 243.606 * t2e4 
-        - 21.408 * t3e6 + 10.057 * t4e8)) 
-        - 0.000108 * Math.cos(deg2rad * (68.9815 + 313472.7929 * t - 333.576 * t2e4 
-        - 35.756 * t3e6 + 16.854 * t4e8)) 
-        + 0.000096 * Math.cos(deg2rad * (336.4374 + 1303869.5784 * t - 155.171 * t2e4 
-        - 7.020 * t3e6 + 3.259 * t4e8)) 
-        - 0.000090 * Math.cos(deg2rad * (98.2661 + 449334.4057 * t - 124.107 * t2e4 
-        - 10.643 * t3e6 + 5.028 * t4e8)) 
-        + 0.000090 * Math.cos(deg2rad * (13.1347 + 1331734.0404 * t + 58.906 * t2e4 
-        + 17.971 * t3e6 - 8.566 * t4e8)) 
-        + 0.000056 * Math.cos(deg2rad * (55.8468 - 1018261.2475 * t - 392.482 * t2e4 
-        - 53.726 * t3e6 + 25.420 * t4e8)) 
-        - 0.000056 * Math.cos(deg2rad * (238.1713 + 854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6 - 1.769 * t4e8)) 
-        + 0.000052 * Math.cos(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 - 7.029 * t4e8)) 
-        - 0.000050 * Math.cos(deg2rad * (133.0212 + 698943.6863 * t - 670.224 * t2e4 
-        - 71.429 * t3e6 + 33.708 * t4e8)) 
-        - 0.000049 * Math.cos(deg2rad * (267.9846 + 1176142.5540 * t - 580.254 * t2e4 
-        - 57.082 * t3e6 + 26.911 * t4e8)) 
-        - 0.000049 * Math.cos(deg2rad * (184.1196 + 401329.0556 * t + 125.428 * t2e4 
-        + 18.579 * t3e6 - 8.798 * t4e8)) 
-        - 0.000045 * Math.cos(deg2rad * (49.1562 - 75869.8120 * t + 35.458 * t2e4 
-        + 4.231 * t3e6 - 2.001 * t4e8)) 
-        + 0.000044 * Math.cos(deg2rad * (257.3208 - 191590.5367 * t - 637.623 * t2e4 
-        - 75.093 * t3e6 + 35.477 * t4e8)) 
-        + 0.000042 * Math.cos(deg2rad * (105.6788 + 341337.2548 * t - 119.499 * t2e4 
-        - 10.765 * t3e6 + 5.028 * t4e8)) 
-        + 0.000042 * Math.cos(deg2rad * (160.4159 + 4067.2942 * t - 107.806 * t2e4 
-        - 12.475 * t3e6 + 5.913 * t4e8)) 
-        + 0.000040 * Math.cos(deg2rad * (246.3642 + 2258267.3137 * t + 24.769 * t2e4 
-        + 21.675 * t3e6 - 10.335 * t4e8)) 
-        - 0.000040 * Math.cos(deg2rad * (156.5838 - 604925.8921 * t - 515.053 * t2e4 
-        - 64.410 * t3e6 + 30.448 * t4e8)) 
-        + 0.000036 * Math.cos(deg2rad * (169.7185 + 726808.1483 * t - 456.147 * t2e4 
-        - 46.439 * t3e6 + 21.882 * t4e8)) 
-        + 0.000029 * Math.cos(deg2rad * (113.8717 + 1745069.3958 * t - 63.665 * t2e4 
-        + 7.287 * t3e6 - 3.538 * t4e8)) 
-        - 0.000029 * Math.cos(deg2rad * (297.8502 + 445267.1115 * t - 16.300 * t2e4 
-        + 1.832 * t3e6 - 0.884 * t4e8)) 
-        - 0.000028 * Math.cos(deg2rad * (294.0181 - 163726.0747 * t - 423.546 * t2e4 
-        - 50.103 * t3e6 + 23.651 * t4e8)) 
-        + 0.000027 * Math.cos(deg2rad * (263.6238 + 381403.5993 * t - 228.841 * t2e4 
-        - 23.199 * t3e6 + 10.941 * t4e8)) 
-        - 0.000026 * Math.cos(deg2rad * (358.0578 + 221744.8187 * t - 760.194 * t2e4 
-        - 85.777 * t3e6 + 40.505 * t4e8)) 
-        - 0.000026 * Math.cos(deg2rad * (8.1929 + 1403732.1410 * t + 55.834 * t2e4 
-        + 18.052 * t3e6 - 8.566 * t4e8));
-
-    var sedp = -0.0022 * Math.cos(deg2rad * (103.2 + 377336.3 * t));
-
-    var ecc = 0.055544 + se + 1e-3 * t * sedp;
-
-    // sine of half the inclination
-
-    var sg = 0.0011776 * Math.cos(deg2rad * (49.1562 - 75869.8120 * t + 35.458 * t2e4 
-        + 4.231 * t3e6 - 2.001 * t4e8)) 
-        - 0.0000971 * Math.cos(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6 - 1.769 * t4e8)) 
-        + 0.0000908 * Math.cos(deg2rad * (186.5442 + 966404.0351 * t - 68.058 * t2e4 
-        - 0.567 * t3e6 + 0.232 * t4e8)) 
-        + 0.0000623 * Math.cos(deg2rad * (83.3826 - 12006.2998 * t + 247.999 * t2e4 
-        + 29.262 * t3e6 - 13.826 * t4e8)) 
-        + 0.0000483 * Math.cos(deg2rad * (51.6271 - 111868.8623 * t + 36.994 * t2e4 
-        + 4.190 * t3e6 - 2.001 * t4e8)) 
-        + 0.0000348 * Math.cos(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8)) 
-        - 0.0000316 * Math.cos(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 - 7.029 * t4e8)) 
-        - 0.0000253 * Math.cos(deg2rad * (46.6853 - 39870.7617 * t + 33.922 * t2e4 
-        + 4.272 * t3e6 - 2.001 * t4e8)) 
-        - 0.0000141 * Math.cos(deg2rad * (274.1928 - 553068.6797 * t - 54.513 * t2e4 
-        - 10.116 * t3e6 + 4.797 * t4e8)) 
-        + 0.0000127 * Math.cos(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8)) 
-        + 0.0000117 * Math.cos(deg2rad * (184.1196 + 401329.0556 * t + 125.428 * t2e4 
-        + 18.579 * t3e6 - 8.798 * t4e8)) 
-        - 0.0000078 * Math.cos(deg2rad * (98.3124 - 151739.6240 * t + 70.916 * t2e4 
-        + 8.462 * t3e6 - 4.001 * t4e8)) 
-        - 0.0000063 * Math.cos(deg2rad * (238.1713 + 854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6 - 1.769 * t4e8)) 
-        + 0.0000063 * Math.cos(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        + 0.0000036 * Math.cos(deg2rad * (321.5076 + 1443602.9027 * t + 21.912 * t2e4 
-        + 13.780 * t3e6 - 6.566 * t4e8)) 
-        - 0.0000035 * Math.cos(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        + 0.0000024 * Math.cos(deg2rad * (149.8932 + 337465.5434 * t - 87.113 * t2e4 
-        - 6.453 * t3e6 + 3.028 * t4e8)) 
-        + 0.0000024 * Math.cos(deg2rad * (170.9849 - 930404.9848 * t + 66.523 * t2e4 
-        + 0.608 * t3e6 - 0.232 * t4e8));
-
-    var sgp = - 0.0203 * Math.cos(deg2rad * (125.0 - 1934.1 * t)) 
-        + 0.0034 * Math.cos(deg2rad * (220.2 - 1935.5 * t));
-
-    var gamma = 0.0449858 + sg + 1e-3 * sgp;
-
-    // longitude of perigee
-
-    var sp = - 15.448 * Math.sin(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8))
-        - 9.642 * Math.sin(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8)) 
-        - 2.721 * Math.sin(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        + 2.607 * Math.sin(deg2rad * (66.5106 + 349471.8432 * t - 335.112 * t2e4 
-        - 35.715 * t3e6 + 16.854 * t4e8)) 
-        + 2.085 * Math.sin(deg2rad * (201.4740 + 826670.7108 * t - 245.142 * t2e4 
-        - 21.367 * t3e6 + 10.057 * t4e8)) 
-        + 1.477 * Math.sin(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        + 0.968 * Math.sin(deg2rad * (291.5472 - 127727.0245 * t - 425.082 * t2e4 
-        - 50.062 * t3e6 + 23.651 * t4e8)) 
-        - 0.949 * Math.sin(deg2rad * (103.2079 + 377336.3051 * t - 121.035 * t2e4 
-        - 10.724 * t3e6 + 5.028 * t4e8)) 
-        - 0.703 * Math.sin(deg2rad * (167.2476 + 762807.1986 * t - 457.683 * t2e4 
-        - 46.398 * t3e6 + 21.882 * t4e8)) 
-        - 0.660 * Math.sin(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6 - 1.769 * t4e8)) 
-        - 0.577 * Math.sin(deg2rad * (190.8102 - 541062.3799 * t - 302.511 * t2e4 
-        - 39.379 * t3e6 + 18.623 * t4e8)) 
-        - 0.524 * Math.sin(deg2rad * (269.9268 + 954397.7353 * t + 179.941 * t2e4 
-        + 28.695 * t3e6 - 13.594 * t4e8)) 
-        - 0.482 * Math.sin(deg2rad * (32.2842 + 285608.3309 * t - 547.653 * t2e4 
-        - 60.746 * t3e6 + 28.679 * t4e8)) 
-        + 0.452 * Math.sin(deg2rad * (357.5291 + 35999.0503 * t - 1.536 * t2e4 
-        + 0.041 * t3e6 + 0.000 * t4e8)) 
-        - 0.381 * Math.sin(deg2rad * (302.2110 + 1240006.0662 * t - 367.713 * t2e4 
-        - 32.051 * t3e6 + 15.085 * t4e8)) 
-        - 0.342 * Math.sin(deg2rad * (328.2445 - 99862.5625 * t - 211.005 * t2e4 
-        - 25.072 * t3e6 + 11.826 * t4e8)) 
-        - 0.312 * Math.sin(deg2rad * (44.8902 + 1431596.6029 * t + 269.911 * t2e4 
-        + 43.043 * t3e6 - 20.392 * t4e8)) 
-        + 0.282 * Math.sin(deg2rad * (162.8868 - 31931.7561 * t - 106.271 * t2e4 
-        - 12.516 * t3e6 + 5.913 * t4e8)) 
-        + 0.255 * Math.sin(deg2rad * (203.9449 + 790671.6605 * t - 243.606 * t2e4 
-        - 21.408 * t3e6 + 10.057 * t4e8)) 
-        + 0.252 * Math.sin(deg2rad * (68.9815 + 313472.7929 * t - 333.576 * t2e4 
-        - 35.756 * t3e6 + 16.854 * t4e8)) 
-        - 0.211 * Math.sin(deg2rad * (83.3826 - 12006.2998 * t + 247.999 * t2e4 
-        + 29.262 * t3e6 - 13.826 * t4e8)) 
-        + 0.193 * Math.sin(deg2rad * (267.9846 + 1176142.5540 * t - 580.254 * t2e4 
-        - 57.082 * t3e6 + 26.911 * t4e8)) 
-        + 0.191 * Math.sin(deg2rad * (133.0212 + 698943.6863 * t - 670.224 * t2e4 
-        - 71.429 * t3e6 + 33.708 * t4e8)) 
-        - 0.184 * Math.sin(deg2rad * (55.8468 - 1018261.2475 * t - 392.482 * t2e4 
-        - 53.726 * t3e6 + 25.420 * t4e8)) 
-        + 0.182 * Math.sin(deg2rad * (145.6272 + 1844931.9583 * t + 147.340 * t2e4 
-        + 32.359 * t3e6 - 15.363 * t4e8)) 
-        - 0.158 * Math.sin(deg2rad * (257.3208 - 191590.5367 * t - 637.623 * t2e4 
-        - 75.093 * t3e6 + 35.477 * t4e8)) 
-        + 0.148 * Math.sin(deg2rad * (156.5838 - 604925.8921 * t - 515.053 * t2e4 
-        - 64.410 * t3e6 + 30.448 * t4e8)) 
-        - 0.111 * Math.sin(deg2rad * (169.7185 + 726808.1483 * t - 456.147 * t2e4 
-        - 46.439 * t3e6 + 21.882 * t4e8)) 
-        + 0.101 * Math.sin(deg2rad * (13.1347 + 1331734.0404 * t + 58.906 * t2e4 
-        + 17.971 * t3e6 - 8.566 * t4e8)) 
-        + 0.100 * Math.sin(deg2rad * (358.0578 + 221744.8187 * t - 760.194 * t2e4 
-        - 85.777 * t3e6 + 40.505 * t4e8)) 
-        + 0.087 * Math.sin(deg2rad * (98.2661 + 449334.4057 * t - 124.107 * t2e4 
-        - 10.643 * t3e6 + 5.028 * t4e8)) 
-        + 0.080 * Math.sin(deg2rad * (42.9480 + 1653341.4216 * t - 490.283 * t2e4 
-        - 42.734 * t3e6 + 20.113 * t4e8)) 
-        + 0.080 * Math.sin(deg2rad * (222.5657 - 441199.8173 * t - 91.506 * t2e4 
-        - 14.307 * t3e6 + 6.797 * t4e8)) 
-        + 0.077 * Math.sin(deg2rad * (294.0181 - 163726.0747 * t - 423.546 * t2e4 
-        - 50.103 * t3e6 + 23.651 * t4e8)) 
-        - 0.073 * Math.sin(deg2rad * (280.8834 - 1495460.1151 * t - 482.452 * t2e4 
-        - 68.074 * t3e6 + 32.217 * t4e8)) 
-        - 0.071 * Math.sin(deg2rad * (304.6819 + 1204007.0159 * t - 366.177 * t2e4 
-        - 32.092 * t3e6 + 15.085 * t4e8)) 
-        - 0.069 * Math.sin(deg2rad * (233.7582 + 1112279.0417 * t - 792.795 * t2e4 
-        - 82.113 * t3e6 + 38.736 * t4e8)) 
-        - 0.067 * Math.sin(deg2rad * (34.7551 + 249609.2807 * t - 546.117 * t2e4 
-        - 60.787 * t3e6 + 28.679 * t4e8)) 
-        - 0.067 * Math.sin(deg2rad * (263.6238 + 381403.5993 * t - 228.841 * t2e4 
-        - 23.199 * t3e6 + 10.941 * t4e8)) 
-        + 0.055 * Math.sin(deg2rad * (21.6203 - 1082124.7597 * t - 605.023 * t2e4 
-        - 78.757 * t3e6 + 37.246 * t4e8)) 
-        + 0.055 * Math.sin(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 -7.029 * t4e8)) 
-        - 0.054 * Math.sin(deg2rad * (8.7216 + 1589477.9094 * t - 702.824 * t2e4 
-        - 67.766 * t3e6 + 31.939 * t4e8)) 
-        - 0.052 * Math.sin(deg2rad * (179.8536 + 1908795.4705 * t + 359.881 * t2e4 
-        + 57.390 * t3e6 - 27.189 * t4e8)) 
-        - 0.050 * Math.sin(deg2rad * (98.7948 + 635080.1741 * t - 882.765 * t2e4 
-        - 96.461 * t3e6 + 45.533 * t4e8)) 
-        - 0.049 * Math.sin(deg2rad * (128.6604 - 95795.2683 * t - 318.812 * t2e4 
-        - 37.547 * t3e6 + 17.738 * t4e8)) 
-        - 0.047 * Math.sin(deg2rad * (17.3544 + 425341.6552 * t - 370.570 * t2e4 
-        - 39.946 * t3e6 + 18.854 * t4e8)) 
-        - 0.044 * Math.sin(deg2rad * (160.4159 + 4067.2942 * t - 107.806 * t2e4 
-        - 12.475 * t3e6 + 5.913 * t4e8)) 
-        - 0.043 * Math.sin(deg2rad * (238.1713 + 854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6 - 1.769 * t4e8)) 
-        + 0.042 * Math.sin(deg2rad * (270.4555 + 1140143.5037 * t - 578.718 * t2e4 
-        - 57.123 * t3e6 + 26.911 * t4e8)) 
-        - 0.042 * Math.sin(deg2rad * (132.4925 + 513197.9179 * t + 88.434 * t2e4 
-        + 14.388 * t3e6 - 6.797 * t4e8)) 
-        - 0.041 * Math.sin(deg2rad * (122.3573 - 668789.4043 * t - 727.594 * t2e4 
-        - 89.441 * t3e6 + 42.274 * t4e8)) 
-        - 0.040 * Math.sin(deg2rad * (105.6788 + 341337.2548 * t - 119.499 * t2e4 
-        - 10.765 * t3e6 + 5.028 * t4e8)) 
-        + 0.038 * Math.sin(deg2rad * (135.4921 + 662944.6361 * t - 668.688 * t2e4 
-        - 71.470 * t3e6 + 33.708 * t4e8)) 
-        - 0.037 * Math.sin(deg2rad * (242.3910 - 51857.2124 * t - 460.540 * t2e4 
-        - 54.293 * t3e6 + 25.652 * t4e8)) 
-        + 0.036 * Math.sin(deg2rad * (336.4374 +  1303869.5784 * t - 155.171 * t2e4 
-        - 7.020 * t3e6 + 3.259 * t4e8)) 
-        + 0.035 * Math.sin(deg2rad * (223.0943 - 255454.0489 * t - 850.164 * t2e4 
-        - 100.124 * t3e6 + 47.302 * t4e8)) 
-        - 0.034 * Math.sin(deg2rad * (193.2811 - 577061.4302 * t - 300.976 * t2e4 
-        - 39.419 * t3e6 + 18.623 * t4e8)) 
-        + 0.031 * Math.sin(deg2rad * (87.6023 - 918398.6850 * t - 181.476 * t2e4 
-        - 28.654 * t3e6 + 13.594 * t4e8));
-
-    var spp = 2.4 * Math.sin(deg2rad * (103.2 + 377336.3 * t));
-
-    var lp = 83.353 + 4069.0137 * t - 103.238 * t2e4 
-        - 12.492 * t3e6 + 5.263 * t4e8 + sp + 1e-3 * t * spp;
-
-    // longitude of the ascending node
-
-    var sr = - 1.4979 * Math.sin(deg2rad * (49.1562 - 75869.8120 * t + 35.458 * t2e4 
-        + 4.231 * t3e6 - 2.001 * t4e8)) 
-        - 0.1500 * Math.sin(deg2rad * (357.5291 + 35999.0503 * t - 1.536 * t2e4 
-        + 0.041 * t3e6 + 0.000 * t4e8)) 
-        - 0.1226 * Math.sin(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6 - 1.769 * t4e8)) 
-        + 0.1176 * Math.sin(deg2rad * (186.5442 + 966404.0351 * t - 68.058 * t2e4 
-        - 0.567 * t3e6 + 0.232 * t4e8)) 
-        - 0.0801 * Math.sin(deg2rad * (83.3826 - 12006.2998 * t + 247.999 * t2e4 
-        + 29.262 * t3e6 - 13.826 * t4e8)) 
-        - 0.0616 * Math.sin(deg2rad * (51.6271 - 111868.8623 * t + 36.994 * t2e4 
-        + 4.190 * t3e6 - 2.001 * t4e8)) 
-        + 0.0490 * Math.sin(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8)) 
-        + 0.0409 * Math.sin(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 - 7.029 * t4e8)) 
-        + 0.0327 * Math.sin(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        + 0.0324 * Math.sin(deg2rad * (46.6853 - 39870.7617 * t + 33.922 * t2e4 
-        + 4.272 * t3e6 - 2.001 * t4e8)) 
-        + 0.0196 * Math.sin(deg2rad * (98.3124 - 151739.6240 * t + 70.916 * t2e4 
-        + 8.462 * t3e6 - 4.001 * t4e8)) 
-        + 0.0180 * Math.sin(deg2rad * (274.1928 - 553068.6797 * t - 54.513 * t2e4 
-        - 10.116 * t3e6 + 4.797 * t4e8)) 
-        + 0.0150 * Math.sin(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8)) 
-        - 0.0150 * Math.sin(deg2rad * (184.1196 + 401329.0556 * t + 125.428 * t2e4 
-        + 18.579 * t3e6 - 8.798 * t4e8)) 
-        - 0.0078 * Math.sin(deg2rad * (238.1713 + 854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6 - 1.769 * t4e8)) 
-        - 0.0045 * Math.sin(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        + 0.0044 * Math.sin(deg2rad * (321.5076 + 1443602.9027 * t + 21.912 * t2e4 
-        + 13.780 * t3e6 - 6.566 * t4e8)) 
-        - 0.0042 * Math.sin(deg2rad * (162.8868 - 31931.7561 * t - 106.271 * t2e4 
-        - 12.516 * t3e6 + 5.913 * t4e8)) 
-        - 0.0031 * Math.sin(deg2rad * (170.9849 - 930404.9848 * t + 66.523 * t2e4 
-        + 0.608 * t3e6 - 0.232 * t4e8)) 
-        + 0.0031 * Math.sin(deg2rad * (103.2079 + 377336.3051 * t - 121.035 * t2e4 
-        - 10.724 * t3e6 + 5.028 * t4e8)) 
-        + 0.0029 * Math.sin(deg2rad * (222.6120 - 1042273.8471 * t + 103.516 * t2e4 
-        + 4.798 * t3e6 - 2.232 * t4e8)) 
-        + 0.0028 * Math.sin(deg2rad * (184.0733 + 1002403.0853 * t - 69.594 * t2e4 
-        - 0.526 * t3e6 + 0.232 * t4e8));
-
-    var srp = 25.9 * Math.sin(deg2rad * (125.0 - 1934.1 * t)) 
-        - 4.3 * Math.sin(deg2rad * (220.2 - 1935.5 * t));
-
-    var srpp = 0.38 * Math.sin(deg2rad * (357.5 + 35999.1 * t));
-
-    var raan = 125.0446 - 1934.13618 * t + 20.762 * t2e4 
-        + 2.139 * t3e6 - 1.650 * t4e8 + sr 
-        + 1e-3 * (srp + srpp * t);
-
-    // mean longitude
-
-    var sl = - 0.92581 * Math.sin(deg2rad * (235.7004 + 890534.2230 * t - 32.601 * t2e4 
-        + 3.664 * t3e6 - 1.769 * t4e8)) 
-        + 0.33262 * Math.sin(deg2rad * (100.7370 + 413335.3554 * t - 122.571 * t2e4 
-        - 10.684 * t3e6 + 5.028 * t4e8)) 
-        - 0.18402 * Math.sin(deg2rad * (357.5291 + 35999.0503 * t - 1.536 * t2e4 
-        + 0.041 * t3e6 + 0.000 * t4e8)) 
-        + 0.11007 * Math.sin(deg2rad * (134.9634 + 477198.8676 * t + 89.970 * t2e4 
-        + 14.348 * t3e6 - 6.797 * t4e8)) 
-        - 0.06055 * Math.sin(deg2rad * (238.1713 + 854535.1727 * t - 31.065 * t2e4 
-        + 3.623 * t3e6 - 1.769 * t4e8)) 
-        + 0.04741 * Math.sin(deg2rad * (325.7736 - 63863.5122 * t - 212.541 * t2e4 
-        - 25.031 * t3e6 + 11.826 * t4e8)) 
-        - 0.03086 * Math.sin(deg2rad * (10.6638 + 1367733.0907 * t + 57.370 * t2e4 
-        + 18.011 * t3e6 - 8.566 * t4e8)) 
-        + 0.02184 * Math.sin(deg2rad * (103.2079 + 377336.3051 * t - 121.035 * t2e4 
-        - 10.724 * t3e6 + 5.028 * t4e8)) 
-        + 0.01645 * Math.sin(deg2rad * (49.1562 - 75869.8120 * t + 35.458 * t2e4 
-        + 4.231 * t3e6 - 2.001 * t4e8)) 
-        + 0.01022 * Math.sin(deg2rad * (233.2295 + 926533.2733 * t - 34.136 * t2e4 
-        + 3.705 * t3e6 - 1.769 * t4e8)) 
-        - 0.00756 * Math.sin(deg2rad * (336.4374 + 1303869.5784 * t - 155.171 * t2e4 
-        - 7.020 * t3e6 + 3.259 * t4e8)) 
-        - 0.00530 * Math.sin(deg2rad * (222.5657 - 441199.8173 * t - 91.506 * t2e4 
-        - 14.307 * t3e6 + 6.797 * t4e8)) 
-        - 0.00496 * Math.sin(deg2rad * (162.8868 - 31931.7561 * t - 106.271 * t2e4 
-        - 12.516 * t3e6 + 5.913 * t4e8)) 
-        - 0.00472 * Math.sin(deg2rad * (297.8502 + 445267.1115 * t - 16.300 * t2e4 
-        + 1.832 * t3e6 - 0.884 * t4e8)) 
-        - 0.00271 * Math.sin(deg2rad * (240.6422 + 818536.1225 * t - 29.529 * t2e4 
-        + 3.582 * t3e6 - 1.769 * t4e8)) 
-        + 0.00264 * Math.sin(deg2rad * (132.4925 + 513197.9179 * t + 88.434 * t2e4 
-        + 14.388 * t3e6 - 6.797 * t4e8)) 
-        - 0.00254 * Math.sin(deg2rad * (186.5442 + 966404.0351 * t - 68.058 * t2e4 
-        - 0.567 * t3e6 + 0.232 * t4e8)) 
-        + 0.00234 * Math.sin(deg2rad * (269.9268 + 954397.7353 * t + 179.941 * t2e4 
-        + 28.695 * t3e6 - 13.594 * t4e8)) 
-        - 0.00220 * Math.sin(deg2rad * (13.1347 + 1331734.0404 * t + 58.906 * t2e4 
-        + 17.971 * t3e6 - 8.566 * t4e8)) 
-        - 0.00202 * Math.sin(deg2rad * (355.0582 + 71998.1006 * t - 3.072 * t2e4 
-        + 0.082 * t3e6 + 0.000 * t4e8)) 
-        + 0.00167 * Math.sin(deg2rad * (328.2445 - 99862.5625 * t - 211.005 * t2e4 
-        - 25.072 * t3e6 + 11.826 * t4e8)) 
-        - 0.00143 * Math.sin(deg2rad * (173.5506 + 1335801.3346 * t - 48.901 * t2e4 
-        + 5.496 * t3e6 - 2.653 * t4e8)) 
-        - 0.00121 * Math.sin(deg2rad * (98.2661 + 449334.4057 * t - 124.107 * t2e4 
-        - 10.643 * t3e6 + 5.028 * t4e8)) 
-        - 0.00116 * Math.sin(deg2rad * (145.6272 + 1844931.9583 * t + 147.340 * t2e4 
-        + 32.359 * t3e6 - 15.363 * t4e8)) 
-        + 0.00102 * Math.sin(deg2rad * (105.6788 + 341337.2548 * t - 119.499 * t2e4 
-        - 10.765 * t3e6 + 5.028 * t4e8)) 
-        - 0.00090 * Math.sin(deg2rad * (184.1196 + 401329.0556 * t + 125.428 * t2e4 
-        + 18.579 * t3e6 - 8.798 * t4e8)) 
-        - 0.00086 * Math.sin(deg2rad * (338.9083 + 1267870.5281 * t - 153.636 * t2e4 
-        - 7.061 * t3e6 + 3.259 * t4e8)) 
-        - 0.00078 * Math.sin(deg2rad * (111.4008 + 1781068.4461 * t - 65.201 * t2e4 
-        + 7.328 * t3e6 - 3.538 * t4e8)) 
-        + 0.00069 * Math.sin(deg2rad * (323.3027 - 27864.4619 * t - 214.077 * t2e4 
-        - 24.990 * t3e6 + 11.826 * t4e8)) 
-        + 0.00066 * Math.sin(deg2rad * (51.6271 - 111868.8623 * t + 36.994 * t2e4 
-        + 4.190 * t3e6 - 2.001 * t4e8)) 
-        + 0.00065 * Math.sin(deg2rad * (38.5872 + 858602.4669 * t - 138.871 * t2e4 
-        - 8.852 * t3e6 + 4.144 * t4e8)) 
-        - 0.00060 * Math.sin(deg2rad * (83.3826 - 12006.2998 * t + 247.999 * t2e4 
-        + 29.262 * t3e6 - 13.826 * t4e8)) 
-        + 0.00054 * Math.sin(deg2rad * (201.4740 + 826670.7108 * t - 245.142 * t2e4 
-        - 21.367 * t3e6 + 10.057 * t4e8)) 
-        - 0.00052 * Math.sin(deg2rad * (308.4192 - 489205.1674 * t + 158.029 * t2e4 
-        + 14.915 * t3e6 - 7.029 * t4e8)) 
-        + 0.00048 * Math.sin(deg2rad * (8.1929 + 1403732.1410 * t + 55.834 * t2e4 
-        + 18.052 * t3e6 - 8.566 * t4e8)) 
-        - 0.00041 * Math.sin(deg2rad * (46.6853 - 39870.7617 * t + 33.922 * t2e4 
-        + 4.272 * t3e6 - 2.001 * t4e8)) 
-        - 0.00033 * Math.sin(deg2rad * (274.1928 - 553068.6797 * t - 54.513 * t2e4 
-        - 10.116 * t3e6 + 4.797 * t4e8)) 
-        + 0.00030 * Math.sin(deg2rad * (160.4159 + 4067.2942 * t - 107.806 * t2e4 
-        - 12.475 * t3e6 + 5.913 * t4e8));
-
-    var slp = 3.96 * Math.sin(deg2rad * (119.7 + 131.8 * t)) 
-        + 1.96 * Math.sin(deg2rad * (125.0 - 1934.1 * t));
-
-    var slpp = 0.463 * Math.sin(deg2rad * (357.5 + 35999.1 * t)) 
-        + 0.152 * Math.sin(deg2rad * (238.2 + 854535.2 * t)) 
-        - 0.071 * Math.sin(deg2rad * (27.8 + 131.8 * t)) 
-        - 0.055 * Math.sin(deg2rad * (103.2 + 377336.3 * t)) 
-        - 0.026 * Math.sin(deg2rad * (233.2 + 926533.3 * t));
-
-    var slppp = 14 * Math.sin(deg2rad * (357.5 + 35999.1 * t)) 
-        + 5 * Math.sin(deg2rad * (238.2 + 854535.2 * t));
-
-    var lambda = 218.31665 + 481267.88134 * t - 13.268 * t2e4 
-        + 1.856 * t3e6 - 1.534 * t4e8 + sl 
-        + 1e-3 * (slp + slpp * t + slppp * t2e4);
-
-     dat.a = sma;
-     dat.e = ecc;
-     dat.i = 2.0 * Math.asin(gamma);
-     dat.w = Trig.normalize(deg2rad * (lp - raan));
-     dat.N = Trig.normalize(deg2rad * raan);
-     dat.M = Trig.normalize(deg2rad * (lambda - lp));
-     return dat;
-  },
-  corr: function(dat, sol) {
-    var M = Trig.normalize(sol.M + Math.PI),
-        w = Trig.normalize(sol.w + Math.PI),
-        L = dat.M + dat.w,     // Argument of latitude 
-        E = L + dat.N - M - w; // Mean elongation
-    
-    var lon = 
-      -0.022234 * Math.sin(dat.M - 2*E) +  // Evection
-       0.011494 * Math.sin(2*E) +          // Variation
-      -0.003246 * Math.sin(M) +        // Yearly Equation
-      -0.001029 * Math.sin(2*dat.M - 2*E) +
-      -9.94838e-4 * Math.sin(dat.M - 2*E + M) +
-       9.25025e-4 * Math.sin(dat.M + 2*E) +
-       8.02851e-4 * Math.sin(2*E - M) +
-       7.15585e-4 * Math.sin(dat.M - M) +
-      -6.10865e-4 * Math.sin(E) + 
-      -5.41052e-4 * Math.sin(dat.M + M) +
-      -2.61799e-4 * Math.sin(2*L - 2*E) +
-       1.91986e-4 * Math.sin(dat.M - 4*E);
-    dat.ra += lon;
-    var lat =
-      -0.003019 * Math.sin(L - 2*E) +
-      -9.59931e-4 * Math.sin(dat.M - L - 2*E) +
-      -8.02851e-4 * Math.sin(dat.M + L - 2*E) +
-       5.75958e-4 * Math.sin(L + 2*E) +
-       2.96706e-4 * Math.sin(2*dat.M + L);  
-    dat.dec += lat;
-  
-    dat.age = Trig.normalize(dat.l - sol.l + Math.PI);   
-    dat.phase = 0.5 * (1 - Math.cos(dat.age));
-
-    return dat;
-  }
-
-};
-function exportSVG(fname) {
-  var doc = d3.select("body").append("div").attr("id", "d3-celestial-svg").attr("style", "display: none"),
-      svg = d3.select("#d3-celestial-svg").append("svg"), //.attr("style", "display: none"),
-      m = Celestial.metrics(),
-      cfg = settings.set(),
-      path = cfg.datapath,
-      proj = projections[cfg.projection],
-      rotation = getAngles(cfg.center),
-      center = [-rotation[0], -rotation[1]],
-      scale0 = proj.scale * m.width/1024,
-      projection = Celestial.projection(cfg.projection).rotate(rotation).translate([m.width/2, m.height/2]).scale([m.scale]),
-      adapt = cfg.adaptable ? Math.sqrt(m.scale/scale0) : 1,
-      culture = (cfg.culture !== "" && cfg.culture !== "iau") ? cfg.culture : "",
-      circle, id;
-
-  svg.selectAll("*").remove();
-
-  var defs = svg.append("defs");
-
-  if (proj.clip) {
-    projection.clipAngle(90);
-  }
-  circle = d3.geo.circle().angle([179.95]).origin(center);
-
-  svg.attr("width", m.width).attr("height", m.height);
-  // .attr("viewBox", " 0 0 " + (m.width) + " " + (m.height));
-
-  var groupNames = ['background', 'milkyWay', 'milkyWayBg', 'gridLines', 'constBoundaries', 
-                    'planesequatorial', 'planesecliptic', 'planesgalactic', 'planessupergalactic',
-                    'constLines', 'mapBorder','stars', 'dsos', 'planets', 'gridvaluesLon', 'gridvaluesLat', 
-                    'constNames', 'starDesignations', 'starNames', 'dsoNames', 'planetNames', 'horizon', 'daylight'],
-                groups = {}, styles = {};
-
-  for (var i=0; i<groupNames.length; i++) {
-     // inkscape:groupmode="layer", inkscape:label="Ebene 1" 
-    groups[groupNames[i]] = svg.append('g').attr({"id": groupNames[i], ":inkscape:groupmode": "layer", ":inkscape:label": groupNames[i]});
-    styles[groupNames[i]] = {};
-  }
-/*
-  var background = svg.append('g'),
-      grid = svg.append('g'),
-      objects = svg.append('g'),
-      planets = svg.append('g'),
-      foreground = svg.append('g');
-*/  
-  var graticule = d3.geo.graticule().minorStep([15,10]);
-  
-  var map = d3.geo.path().projection(projection);
-
-  var q = d3.queue(2);
-  
-  groups.background.append("path").datum(circle).attr("class", "background").attr("d", map); 
-  styles.background.fill = cfg.background.fill;
-
-  if (cfg.lines.graticule.show) {
-    if (cfg.transform === "equatorial") {
-      groups.gridLines.append("path").datum(graticule)
-       .attr("class", "gridLines")
-       .attr("d", map);
-      styles.gridLines = svgStyle(cfg.lines.graticule);
-    } else {
-      Celestial.graticule(groups.gridLines, map, cfg.transform);
-      styles.gridLines = svgStyle(cfg.lines.graticule);
-    }
-    if (has(cfg.lines.graticule, "lon") && cfg.lines.graticule.lon.pos.length > 0) {
-      var jlon = {type: "FeatureCollection", features: getGridValues("lon", cfg.lines.graticule.lon.pos)};      
-      groups.gridvaluesLon.selectAll(".gridvalues_lon")
-        .data(jlon.features)
-        .enter().append("text")
-        .attr("transform", function(d, i) { return point(d.geometry.coordinates); })
-        .text( function(d) { return d.properties.value; } )
-        .attr({dy: ".5em", dx: "-.75em", class: "gridvaluesLon"});
-      styles.gridvaluesLon = svgTextStyle(cfg.lines.graticule.lon); 
-    }
-    if (has(cfg.lines.graticule, "lat") && cfg.lines.graticule.lat.pos.length > 0) {
-      var jlat = {type: "FeatureCollection", features: getGridValues("lat", cfg.lines.graticule.lat.pos)};
-      groups.gridvaluesLat.selectAll(".gridvalues_lat")
-        .data(jlat.features)
-        .enter().append("text")
-        .attr("transform", function(d, i) { return point(d.geometry.coordinates); })
-        .text( function(d) { return d.properties.value; } )
-        .attr({dy: "-.5em", dx: "-.75em", class: "gridvaluesLat"});
-       styles.gridvaluesLat = svgTextStyle(cfg.lines.graticule.lat); 
-    }
-  }
-
-  //Celestial planes
-  for (var key in cfg.lines) {
-    if (has(cfg.lines, key) && key != "graticule" && cfg.lines[key].show !== false) { 
-      id = "planes" + key;
-      groups[id].append("path")
-         .datum(d3.geo.circle().angle([90]).origin(poles[key]) )
-         .attr("class", id)
-         .attr("d", map);
-      styles[id] = svgStyle(cfg.lines[key]);
-    }
-  }
-
-  //Milky way outline
-  if (cfg.mw.show) {
-    q.defer(function(callback) { 
-      d3.json(path + "mw.json", function(error, json) {
-        if (error) callback(error);
-        var mw = getData(json, cfg.transform);
-        var mw_back = getMwbackground(mw);
-        
-        groups.milkyWay.selectAll(".mway")
-         .data(mw.features)
-         .enter().append("path")
-         .attr("class", "milkyWay")
-         .attr("d", map);
-        styles.milkyWay = svgStyle(cfg.mw.style);
-
-        groups.milkyWayBg.selectAll(".mwaybg")
-         .data(mw_back.features)
-         .enter().append("path")
-         .attr("class", "milkyWayBg")
-         .attr("d", map);
-        styles.milkyWayBg = {"fill": cfg.background.fill, 
-                 "fill-opacity": cfg.background.opacity };
-        callback(null);
-      });
-    });
-  }
-
-  //Constellation boundaries
-  if (cfg.constellations.bounds) { 
-    q.defer(function(callback) { 
-      d3.json(path + filename("constellations", "borders"), function(error, json) {
-        if (error) callback(error);
-
-        var conb = getData(json, cfg.transform);
-        if (Celestial.constellation) {
-          var re = new RegExp("\\b" + Celestial.constellation + "\\b");
-        }
-
-        groups.constBoundaries.selectAll(".bounds")
-         .data(conb.features)
-         .enter().append("path")
-         .attr("class", function(d) { return (Celestial.constellation && d.ids.search(re) !== -1) ? "constBoundariesSel" : "constBoundaries"; }) 
-         .attr("d", map);
-
-        styles.constBoundaries = svgStyle(cfg.constellations.boundStyle);
-        styles.constBoundariesSel = {"fill": "none",
-            "stroke": cfg.constellations.boundStyle.stroke, 
-            "stroke-width": cfg.constellations.boundStyle.width * 1.5,
-            "stroke-opacity": 1,
-            "stroke-dasharray": "none"};
-        
-        callback(null);
-      });
-    });
-  }
-
-  //Constellation lines
-  if (cfg.constellations.lines) { 
-    q.defer(function(callback) { 
-      d3.json(path + filename("constellations", "lines"), function(error, json) {
-        if (error) callback(error);
-
-        var conl = getData(json, cfg.transform);
-        groups.constLines.selectAll(".lines")
-         .data(conl.features)
-         .enter().append("path")
-         .attr("class", function(d) { return "constLines" + d.properties.rank; })
-         .attr("d", map);
-         
-        styles.constLines1 = {"fill": "none", "stroke": cfg.constellations.lineStyle.stroke[0],
-                              "stroke-width": cfg.constellations.lineStyle.width[0],
-                              "stroke-opacity": cfg.constellations.lineStyle.opacity[0]};
-        styles.constLines2 = {"fill": "none", "stroke": cfg.constellations.lineStyle.stroke[1],
-                              "stroke-width": cfg.constellations.lineStyle.width[1],
-                              "stroke-opacity": cfg.constellations.lineStyle.opacity[1]};
-        styles.constLines3 = {"fill": "none", "stroke": cfg.constellations.lineStyle.stroke[2],
-                              "stroke-width": cfg.constellations.lineStyle.width[2],
-                              "stroke-opacity": cfg.constellations.lineStyle.opacity[2]};
-        callback(null);
-      });
-    });
-  }
-
-  // Map border
-  q.defer(function(callback) {
-    var rot = projection.rotate();
-    projection.rotate([0,0,0]);
-    groups.mapBorder.append("path")
-     .datum(graticule.outline)
-     .attr("class", "mapBorder")
-     .attr("d", map);
-     
-    styles.mapBorder = {"fill": "none", "stroke": cfg.background.stroke, "stroke-width": cfg.background.width, "stroke-opacity": 1, "stroke-dasharray": "none" };
-
-    projection.rotate(rot);
-    callback(null);
-  });  
-  
-  //Constellation names or designation
-  if (cfg.constellations.names) { 
-    q.defer(function(callback) { 
-      d3.json(path + filename("constellations"), function(error, json) {
-        if (error) callback(error);
-
-        var conn = getData(json, cfg.transform);
-        groups.constNames.selectAll(".constnames")
-         .data(conn.features.filter( function(d) {
-            return clip(d.geometry.coordinates) === 1; 
-          }))
-         .enter().append("text")
-         .attr("class", function(d) { return "constNames" + d.properties.rank; })
-         .attr("transform", function(d, i) { return point(d.geometry.coordinates); })
-         .text( function(d) { return constName(d); } ); 
- 
-        styles.constNames1 = {"fill": cfg.constellations.nameStyle.fill[0],
-                              "fill-opacity": cfg.constellations.nameStyle.opacity[0],
-                              "font": cfg.constellations.nameStyle.font[0],
-                              "text-anchor": svgAlign(cfg.constellations.nameStyle.align)};
-        styles.constNames2 = {"fill": cfg.constellations.nameStyle.fill[1],
-                              "fill-opacity": cfg.constellations.nameStyle.opacity[1],
-                              "font": cfg.constellations.nameStyle.font[1],
-                              "text-anchor": svgAlign(cfg.constellations.nameStyle.align)};
-        styles.constNames3 = {"fill": cfg.constellations.nameStyle.fill[2],
-                              "fill-opacity": cfg.constellations.nameStyle.opacity[2],
-                              "font": cfg.constellations.nameStyle.font[2],
-                              "text-anchor": svgAlign(cfg.constellations.nameStyle.align)};
-        callback(null);
-      });
-    });
-  }
-  
-  //Stars
-  if (cfg.stars.show) { 
-    q.defer(function(callback) { 
-      d3.json(path +  cfg.stars.data, function(error, json) {
-        if (error) callback(error);
-
-        var cons = getData(json, cfg.transform);
-        
-        groups.stars.selectAll(".stars")
-          .data(cons.features.filter( function(d) {
-            return d.properties.mag <= cfg.stars.limit; 
-          }))
-          .enter().append("path")
-          .attr("class", function(d) { return "stars" + starColor(d.properties.bv); })
-          .attr("d", map.pointRadius( function(d) {
-            return d.properties ? starSize(d.properties.mag) : 1;
-          }));
-
-        styles.stars = svgStyle(cfg.stars.style);
-        var range = bvcolor.domain();
-        for (i=Round(range[1],1); i<=Round(range[0],1); i+=0.1) {
-          styles["stars" + Math.round(i*10).toString()] = {"fill": bvcolor(i)};
-        }
-          
-        if (cfg.stars.designation) { 
-          groups.starDesignations.selectAll(".stardesigs")
-            .data(cons.features.filter( function(d) {
-              return d.properties.mag <= cfg.stars.designationLimit*adapt && clip(d.geometry.coordinates) === 1; 
-            }))
-            .enter().append("text")
-            .attr("transform", function(d) { return point(d.geometry.coordinates); })
-            .text( function(d) { return starDesignation(d.id); })
-            .attr({dy: ".85em", dx: ".35em", class: "starDesignations"});
-          styles.starDesignations = svgTextStyle(cfg.stars.designationStyle);
-        }
-        if (cfg.stars.propername) { 
-          groups.starNames.selectAll(".starnames")
-            .data(cons.features.filter( function(d) {
-              return d.properties.mag <= cfg.stars.propernameLimit*adapt && clip(d.geometry.coordinates) === 1; 
-            }))
-            .enter().append("text")
-            .attr("transform", function(d) { return point(d.geometry.coordinates); })
-            .text( function(d) { return starPropername(d.id); })
-            .attr({dy: "-.5em", dx: "-.35em", class: "starNames"});
-
-          styles.starNames = svgTextStyle(cfg.stars.propernameStyle);
-        }
-        callback(null);
-      });
-    });
-  }
-
-  //Deep space objects
-  if (cfg.dsos.show) { 
-    q.defer(function(callback) { 
-      d3.json(path +  cfg.dsos.data, function(error, json) {
-        if (error) callback(error);
-
-        var cond = getData(json, cfg.transform);
-        
-        groups.dsos.selectAll(".dsos")
-          .data(cond.features.filter( function(d) {
-            return clip(d.geometry.coordinates) === 1 && 
-                   (d.properties.mag === 999 && Math.sqrt(parseInt(d.properties.dim)) > cfg.dsos.limit*adapt ||
-                   d.properties.mag !== 999 && d.properties.mag <= cfg.dsos.limit); 
-          }))
-          .enter().append("path")
-          .attr("class", function(d) { return "dsos" + d.properties.type; })
-          .attr("transform", function(d) { return point(d.geometry.coordinates); })
-          .attr("d", function(d) { return dsoSymbol(d.properties); });
-
-        styles.dsos = svgStyle(cfg.dsos.style);
-
-        for (key in cfg.dsos.symbols) {
-          if (!has(cfg.dsos.symbols, key)) continue;
-          id = "dsos" + key;
-          styles[id] = { "fill-opacity": cfg.dsos.style.opacity, "stroke-opacity": cfg.dsos.style.opacity };
-          if (has(cfg.dsos.symbols[key], "stroke")) {
-            styles[id].fill = "none"; 
-            styles[id].stroke = cfg.dsos.colors ? cfg.dsos.symbols[key].stroke : cfg.dsos.style.stroke;
-            styles[id]["stroke-width"] = cfg.dsos.colors ? cfg.dsos.symbols[key].width : cfg.dsos.style.width;
-          } else {
-            styles[id].stroke = "none"; 
-            styles[id].fill = cfg.dsos.colors ? cfg.dsos.symbols[key].fill : cfg.dsos.style.fill;
-          }
-        }
-        
-      
-        if (cfg.dsos.names) { 
-          groups.dsoNames.selectAll(".dsonames")
-            .data(cond.features.filter( function(d) {
-              return clip(d.geometry.coordinates) === 1 && 
-                   (d.properties.mag == 999 && Math.sqrt(parseInt(d.properties.dim)) > cfg.dsos.nameLimit ||
-                     d.properties.mag != 999 && d.properties.mag <= cfg.dsos.nameLimit); 
-            }))
-            .enter().append("text")
-            .attr("class", function(d) { return "dsoNames " + d.properties.type; })
-            .attr("transform", function(d) { return point(d.geometry.coordinates); })
-            .text( function(d) { return dsoName(d); })
-            .attr({dy: "-.5em", dx: ".35em"});
-               
-          styles.dsoNames = {"fill-opacity": cfg.dsos.style.opacity,
-                    "font": cfg.dsos.nameStyle.font,
-                    "text-anchor": svgAlign(cfg.dsos.nameStyle.align)};
-          
-          for (key in cfg.dsos.symbols) {
-            if (!has(cfg.dsos.symbols, key)) continue;
-            styles[key] = {"fill": cfg.dsos.colors ? cfg.dsos.symbols[key].fill : cfg.dsos.style.fill };
-          }
-        }
-        callback(null);
-      });
-    });
-  }
-
-  //Planets
-  if ((cfg.location || cfg.formFields.location) && cfg.planets.show && Celestial.origin) {
-    q.defer(function(callback) {
-      var dt = Celestial.date(),
-          o = Celestial.origin(dt).spherical(),
-          jp = {type: "FeatureCollection", features: []},
-          jlun = {type: "FeatureCollection", features: []};
-      Celestial.container.selectAll(".planet").each(function(d) {
-        var id = d.id(), r = 12,
-            p = d(dt).equatorial(o);
-            
-        p.ephemeris.pos = transformDeg(p.ephemeris.pos, euler[cfg.transform]);  //transform; 
-        if (clip(p.ephemeris.pos) === 1) {
-          if (id === "lun")
-            jlun.features.push(createEntry(p));
-          else
-            jp.features.push(createEntry(p));
-        }
-      });
-      if (cfg.planets.symbolType === "disk") {
-        groups.planets.selectAll(".planets")
-         .data(jp.features)
-         .enter().append("path")
-         .attr("transform", function(d) { return point(d.geometry.coordinates); })
-         .attr("d", function(d) { 
-           var r = (has(cfg.planets.symbols[d.id], "size")) ? (cfg.planets.symbols[d.id].size - 1) * adapt : null;
-           return planetSymbol(d.properties, r); 
+      return e
+   }
+
+   function B(t, e, a) {
+      var n, r, s, o, i, c = t,
+         p = [],
+         d = e;
+      "equatorial" === l.transform && "lon" === c && (c = "ra"), "ra" === c ? (n = 0, r = 23, s = 1) : "lon" === c ? (n = 0, r = 350, s = 10) : (n = -80, r = 80, s = 10);
+      for (var u = n; u <= r; u += s) {
+         var h = a;
+         "lat" === c ? (i = [d, u], o = u.toString() + "°", h += u < 0 ? "S" : "N") : "ra" === c ? (i = [15 * u, d], o = u.toString() + "ʰ") : (i = [u, d], o = u.toString() + "°"), p.push({
+            coordinates: i,
+            value: o,
+            orientation: h
          })
-         .attr("class", function(d) { return "planets " + d.id; });
-      } else {
-        groups.planets.selectAll(".planets")
-         .data(jp.features)
-         .enter().append("text")
-         .attr("transform", function(d) { return point(d.geometry.coordinates); })
-         .text( function(d) { return d.properties.symbol; })
-         .attr("class", function(d) { return "planets " + d.id; })
-         .attr({dy: ".35em"});
       }
-      // Special case for Moon crescent
-      if (jlun.features.length > 0) {
-        if (cfg.planets.symbolType === "letter") {
-          groups.planets.selectAll(".moon")
-           .data(jlun.features)
-           .enter().append("text")
-           .attr("transform", function(d) { return point(d.geometry.coordinates); })
-           .text( function(d) { return d.properties.symbol; })
-           .attr("class", function(d) { return "planets " + d.id; })
-           .attr({dy: ".35em"});
-        } else {
-          var rl = has(cfg.planets.symbols.lun, "size") ? (cfg.planets.symbols.lun.size - 1) * adapt : 11 * adapt; 
-          groups.planets.selectAll(".dmoon")
-           .data(jlun.features)
-           .enter().append("path")
-           .attr("class", "darkluna" )
-           .attr("transform", function(d) { return point(d.geometry.coordinates); })
-           .attr("d", function(d) { return d3.svg.symbol().type("circle").size(rl*rl)(); });
-          groups.planets.selectAll(".moon")
-           .data(jlun.features)
-           .enter().append("path")
-           .attr("class", function(d) { return "planets " + d.id; })
-           .attr("transform", function(d) { return point(d.geometry.coordinates); })
-           .attr("d", function(d) { return moonSymbol(d.properties, rl); });
-        }
-      } 
-      
-      styles.planets = svgTextStyle(cfg.planets.symbolStyle);
-      styles.darkluna = {"fill": "#557"};
-      for (key in cfg.planets.symbols) {
-         if (!has(cfg.planets.symbols, key)) continue;
-         styles[key] = {"fill": cfg.planets.symbols[key].fill};
+      return p
+   }
+
+   function G(t, e) {
+      var a = [];
+      for (var n = 0; n < t.length; n++) a.push(z(t[n], e));
+      return a
+   }
+
+   function U(t, e) {
+      var a = [];
+      for (var n = 0; n < t.length; n++) a.push(G(t[n], e));
+      return a
+   }
+   t.add = function(e) {
+      var a = {};
+      return nt(e, "type") ? "dso" !== e.type && "json" !== e.type || nt(e, "file") && nt(e, "callback") ? "line" !== e.type && "raw" !== e.type || nt(e, "callback") ? (nt(e, "file") && (a.file = e.file), a.type = e.type, nt(e, "callback") && (a.callback = e.callback), nt(e, "redraw") && (a.redraw = e.redraw), nt(e, "save") && (a.save = e.save), t.data.push(a), void 0) : console.log("Can't add data") : console.log("Can't add data file") : console.log("Missing type")
+   }, t.remove = function(e) {
+      if (null !== e && e < t.data.length) return t.data.splice(e, 1)
+   }, t.clear = function() {
+      t.data = []
+   }, t.addCallback = function(e) {
+      t.callback = e, A = null !== e
+   }, t.runCallback = function(e) {
+      A = !1, t.callback(), A = !0
+   }, t.getData = L, t.getPoint = q, t.getPlanet = O;
+   var W = {};
+   var V = {
+      width: 1080,
+      projection: "airy",
+      transform: "equatorial",
+      center: null,
+      geopos: null,
+      follow: "zenith",
+      orientationfixed: !0,
+      zoomlevel: null,
+      zoomextend: 10,
+      adaptable: !0,
+      interactive: !1,
+      form: !1,
+      location: !1,
+      formFields: {
+         location: !0,
+         general: !0,
+         stars: !0,
+         dsos: !0,
+         constellations: !0,
+         lines: !0,
+         other: !0,
+         download: !1
+      },
+      advanced: !0,
+      daterange: [],
+      settimezone: !0,
+      timezoneid: "5DYRJSZCL694",
+      controls: !1,
+      lang: "",
+      culture: "",
+      container: "celestial-map",
+      datapath: "data/",
+      stars: {
+         show: !0,
+         limit: 6,
+         colors: !1,
+         style: {
+            fill: "#000000",
+            opacity: 1
+         },
+         designation: !1,
+         designationType: "desig",
+         designationStyle: {
+            fill: "#ddddbb",
+            font: "11px 'Palatino Linotype', Georgia, Times, 'Times Roman', serif",
+            align: "left",
+            baseline: "top"
+         },
+         designationLimit: 2.5,
+         propername: !1,
+         propernameType: "name",
+         propernameStyle: {
+            fill: "#ddddbb",
+            font: "0px 'Palatino Linotype', Georgia, Times, 'Times Roman', serif",
+            align: "right",
+            baseline: "bottom"
+         },
+         propernameLimit: 1.5,
+         size: 12,
+         exponent: -.29,
+         data: "stars.6.json"
+      },
+      dsos: {
+         show: !1,
+         limit: 6,
+         colors: !0,
+         style: {
+            fill: "#cccccc",
+            stroke: "#cccccc",
+            width: 2,
+            opacity: 1
+         },
+         names: !0,
+         namesType: "desig",
+         nameStyle: {
+            fill: "#cccccc",
+            font: "11px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, serif",
+            align: "left",
+            baseline: "bottom"
+         },
+         nameLimit: 4,
+         size: 7,
+         exponent: 1.4,
+         data: "dsos.bright.json",
+         symbols: {
+            gg: {
+               shape: "circle",
+               fill: "#ff0000"
+            },
+            g: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            s: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            s0: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            sd: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            e: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            i: {
+               shape: "ellipse",
+               fill: "#ff0000"
+            },
+            oc: {
+               shape: "circle",
+               fill: "#ff9900",
+               stroke: "#ff9900",
+               width: 2
+            },
+            gc: {
+               shape: "circle",
+               fill: "#ff9900"
+            },
+            en: {
+               shape: "square",
+               fill: "#ff00cc"
+            },
+            bn: {
+               shape: "square",
+               fill: "#ff00cc"
+            },
+            sfr: {
+               shape: "square",
+               fill: "#cc00ff"
+            },
+            rn: {
+               shape: "square",
+               fill: "#0000ff"
+            },
+            pn: {
+               shape: "diamond",
+               fill: "#00cccc"
+            },
+            snr: {
+               shape: "diamond",
+               fill: "#ff00cc"
+            },
+            dn: {
+               shape: "square",
+               fill: "#999999",
+               stroke: "#999999",
+               width: 2
+            },
+            pos: {
+               shape: "marker",
+               fill: "#cccccc",
+               stroke: "#cccccc",
+               width: 1.5
+            }
+         }
+      },
+      constellations: {
+         show: !0,
+         names: !1,
+         namesType: "desig",
+         nameStyle: {
+            fill: "#cccc99",
+            align: "center",
+            baseline: "middle",
+            opacity: .7,
+            font: ["12px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif", "11px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif", "11px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"]
+         },
+         lines: !0,
+         lineStyle: {
+            stroke: "#3a3939",
+            width: 1,
+            opacity: .65
+         },
+         bounds: !1,
+         boundStyle: {
+            stroke: "#ccff00",
+            width: 2,
+            opacity: .8,
+            dash: [2, 6]
+         }
+      },
+      mw: {
+         show: !1,
+         style: {
+            fill: "#ffffff",
+            opacity: "0.15"
+         }
+      },
+      lines: {
+         graticule: {
+            show: !1,
+            stroke: "#949494",
+            width: 2.8,
+            opacity: .7,
+            lon: {
+               pos: [],
+               fill: "#eee",
+               font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"
+            },
+            lat: {
+               pos: [],
+               fill: "#eee",
+               font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"
+            }
+         },
+         equatorial: {
+            show: !1,
+            stroke: "#aaaaaa",
+            width: 1.3,
+            opacity: .7
+         },
+         ecliptic: {
+            show: !1,
+            stroke: "#66cc66",
+            width: 1.3,
+            opacity: .7
+         },
+         galactic: {
+            show: !1,
+            stroke: "#cc6666",
+            width: 1.3,
+            opacity: .7
+         },
+         supergalactic: {
+            show: !1,
+            stroke: "#cc66cc",
+            width: 1.3,
+            opacity: .7
+         }
+      },
+      background: {
+         fill: "#efc8be",
+         opacity: 1,
+         stroke: "#efc8be",
+         width: 2.5
+      },
+      horizon: {
+         show: !1,
+         stroke: "#cccccc",
+         width: 1,
+         fill: "#000000",
+         opacity: .4
+      },
+      daylight: {
+         show: !1
+      },
+      planets: {
+         show: !0,
+         which: ["ter", "lun"],
+         symbols: {
+            sol: {
+               symbol: "☉",
+               letter: "Su",
+               fill: "#ffff00",
+               size: 12
+            },
+            mer: {
+               symbol: "☿",
+               letter: "Me",
+               fill: "#cccccc"
+            },
+            ven: {
+               symbol: "♀",
+               letter: "V",
+               fill: "#eeeecc"
+            },
+            ter: {
+               symbol: "⊕",
+               letter: "T",
+               fill: "#00ccff"
+            },
+            lun: {
+               symbol: "●",
+               letter: "L",
+               fill: "#ffffff",
+               size: 40
+            },
+            mar: {
+               symbol: "♂",
+               letter: "Ma",
+               fill: "#ff6600"
+            },
+            cer: {
+               symbol: "⚳",
+               letter: "C",
+               fill: "#cccccc"
+            },
+            ves: {
+               symbol: "⚶",
+               letter: "Ma",
+               fill: "#cccccc"
+            },
+            jup: {
+               symbol: "♃",
+               letter: "J",
+               fill: "#ffaa33"
+            },
+            sat: {
+               symbol: "♄",
+               letter: "Sa",
+               fill: "#ffdd66"
+            },
+            ura: {
+               symbol: "♅",
+               letter: "U",
+               fill: "#66ccff"
+            },
+            nep: {
+               symbol: "♆",
+               letter: "N",
+               fill: "#6666ff"
+            },
+            plu: {
+               symbol: "♇",
+               letter: "P",
+               fill: "#aaaaaa"
+            },
+            eri: {
+               symbol: "⚪",
+               letter: "E",
+               fill: "#eeeeee"
+            }
+         },
+         symbolStyle: {
+            fill: "#cccccc",
+            opacity: 1,
+            font: "bold 17px 'DejaVu Sans Mono', 'Arial Unicode MS', sans-serif",
+            align: "center",
+            baseline: "middle"
+         },
+         symbolType: "symbol",
+         names: !1,
+         nameStyle: {
+            fill: "#cccccc",
+            font: "14px 'Lucida Sans Unicode', 'DejaVu Sans', sans-serif",
+            align: "right",
+            baseline: "top"
+         },
+         namesType: "en"
+      },
+      set: function(t) {
+         var e, a, n = {},
+            r = {};
+         if (0 === Object.entries(W).length ? Object.assign(n, this) : Object.assign(n, W), !t) return n;
+         for (e in n)
+            if (nt(n, e))
+               if (nt(t, e) && null !== t[e])
+                  if (null === n[e] || n[e].constructor != Object) r[e] = t[e];
+                  else
+                     for (a in r[e] = {}, n[e]) nt(t[e], a) ? r[e][a] = t[e][a] : r[e][a] = n[e][a];
+         else r[e] = n[e];
+         return Object.assign(W, r), r
+      },
+      applyDefaults: function(t) {
+         var e = {};
+         return Object.assign(e, W), e.stars.size = e.stars.size || 7, e.stars.exponent = e.stars.exponent || -.28, (!e.center || e.center.length <= 0) && (e.center = [0, 0, 0]), e.datapath = e.datapath || "", e.datapath = e.datapath.replace(/([^\/]$)/, "$1/"), e.transform && "" !== e.transform || (e.transform = "equatorial"), e.culture && -1 !== e.culture.search(/^cn$/) || (e.culture = "iau"), nt(t, "stars") && (nt(t.stars, "names") && (e.stars.designation = t.stars.names), nt(t.stars, "namelimit") && (e.stars.designationLimit = t.stars.namelimit), nt(t.stars, "namestyle") && Object.assign(e.stars.designationStyle, t.stars.namestyle), nt(t.stars, "proper") && (e.stars.propername = t.stars.proper), nt(t.stars, "propernamelimit") && (e.stars.propernameLimit = t.stars.propernamelimit), nt(t.stars, "propernamestyle") && Object.assign(e.stars.propernameStyle, t.stars.propernamestyle)), e.stars.designationType && "" !== e.stars.designationType || (e.stars.designationType = "desig"), nt($.starnames[e.culture].designation, e.stars.designationType) || (e.designationType = "desig"), e.stars.propernameType && "" !== e.stars.propernameType || (e.stars.propernameType = "name"), nt($.starnames[e.culture].propername, e.stars.propernameType) || (e.propernameType = "name"), nt(t, "dsos") && (nt(t.dsos, "desig") && !0 === t.dsos.desig && (e.dsos.namesType = "desig"), nt(t.dsos, "namelimit") && (e.dsos.nameLimit = t.dsos.namelimit), nt(t.dsos, "namestyle") && Object.assign(e.dsos.nameStyle, t.dsos.namestyle)), e.dsos.namesType && "" !== e.dsos.namesType || (e.dsos.namesType = "desig"), nt(t, "constellations") && (nt(t.constellations, "show") && !0 === t.constellations.show && (e.constellations.names = !0), nt(t.constellations, "desig") && !0 === t.constellations.desig && (e.constellations.namesType = "desig"), "latin" === e.constellations.namesType && (e.constellations.namesType = "la"), "iau" === e.constellations.namesType && (e.constellations.namesType = "name"), nt(t.constellations, "namestyle") && Object.assign(e.constellations.nameStyle, t.constellations.namestyle), nt(t.constellations, "linestyle") && Object.assign(e.constellations.lineStyle, t.constellations.linestyle), nt(t.constellations, "boundstyle") && Object.assign(e.constellations.boundStyle, t.constellations.boundstyle)), e.constellations.namesType && "" !== e.constellations.namesType || (e.constellations.namesType = "desig"), nt($.constellations[e.culture].names, e.constellations.namesType) || (e.constellations.namesType = "name"), nt(t, "planets") && nt(t.planets, "style") && Object.assign(e.planets.style, t.planets.symbolStyle), e.planets.symbolType && "" !== e.planets.symbolType || (e.planets.symbolType = "symbol"), e.planets.namesType && "" !== e.planets.namesType || (e.planets.namesType = "desig"), nt($.planets[e.culture].names, e.planets.namesType) || (e.planets.namesType = "desig"), e.constellations.nameStyle.font = R(e.constellations.nameStyle.font), e.constellations.nameStyle.opacity = R(e.constellations.nameStyle.opacity), e.constellations.nameStyle.fill = R(e.constellations.nameStyle.fill), e.constellations.lineStyle.width = R(e.constellations.lineStyle.width), e.constellations.lineStyle.opacity = R(e.constellations.lineStyle.opacity), e.constellations.lineStyle.stroke = R(e.constellations.lineStyle.stroke), Object.assign(W, e), e
       }
-        
-      //Planet names
-      if (cfg.planets.names) {
-        groups.planetNames.selectAll(".planetnames")
-         .data(jp.features)
-         .enter().append("text")
-         .attr("transform", function(d) { return point(d.geometry.coordinates); })
-         .text( function(d) { return d.properties.name; })
-         .attr({dy: ".85em", dx: "-.35em"})
-         .attr("class", function(d) { return "planetNames " + d.id; });
-        if (jlun.features.length > 0) {
-          groups.planetNames.selectAll(".moonname")
-           .data(jlun.features)
-           .enter().append("text")
-           .attr("transform", function(d) { return point(d.geometry.coordinates); })
-           .text( function(d) { return d.properties.name; })
-           .attr({dy: ".85em", dx: "-.35em"})
-           .attr("class", function(d) { return "planetNames " + d.id; });
-        }
+   };
+
+   function R(t) {
+      var e;
+      return ot(t) ? 1 === t.length ? [t[0], t[0], t[0]] : 2 === t.length ? [t[0], t[1], t[1]] : t.length >= 3 ? t : void 0 : [t, t, t]
+   }
+   t.settings = function() {
+      return V
+   };
+   var Y = d3.scale.quantize().domain([3.347, -.335]).range(["#ff4700", "#ff4b00", "#ff4f00", "#ff5300", "#ff5600", "#ff5900", "#ff5b00", "#ff5d00", "#ff6000", "#ff6300", "#ff6500", "#ff6700", "#ff6900", "#ff6b00", "#ff6d00", "#ff7000", "#ff7300", "#ff7500", "#ff7800", "#ff7a00", "#ff7c00", "#ff7e00", "#ff8100", "#ff8300", "#ff8506", "#ff870a", "#ff8912", "#ff8b1a", "#ff8e21", "#ff9127", "#ff932c", "#ff9631", "#ff9836", "#ff9a3c", "#ff9d3f", "#ffa148", "#ffa34b", "#ffa54f", "#ffa753", "#ffa957", "#ffab5a", "#ffad5e", "#ffb165", "#ffb269", "#ffb46b", "#ffb872", "#ffb975", "#ffbb78", "#ffbe7e", "#ffc184", "#ffc489", "#ffc78f", "#ffc892", "#ffc994", "#ffcc99", "#ffce9f", "#ffd1a3", "#ffd3a8", "#ffd5ad", "#ffd7b1", "#ffd9b6", "#ffdbba", "#ffddbe", "#ffdfc2", "#ffe1c6", "#ffe3ca", "#ffe4ce", "#ffe8d5", "#ffe9d9", "#ffebdc", "#ffece0", "#ffefe6", "#fff0e9", "#fff2ec", "#fff4f2", "#fff5f5", "#fff6f8", "#fff9fd", "#fef9ff", "#f9f6ff", "#f6f4ff", "#f3f2ff", "#eff0ff", "#ebeeff", "#e9edff", "#e6ebff", "#e3e9ff", "#e0e7ff", "#dee6ff", "#dce5ff", "#d9e3ff", "#d7e2ff", "#d3e0ff", "#c9d9ff", "#bfd3ff", "#b7ceff", "#afc9ff", "#a9c5ff", "#a4c2ff", "#9fbfff", "#9bbcff"]);
+   var J = {
+      airy: {
+         n: "Airy’s Minimum Error",
+         arg: Math.PI / 2,
+         scale: 360,
+         ratio: 1,
+         clip: !0
+      },
+      aitoff: {
+         n: "Aitoff",
+         arg: null,
+         scale: 162
+      },
+      armadillo: {
+         n: "Armadillo",
+         arg: 0,
+         scale: 250
+      },
+      august: {
+         n: "August",
+         arg: null,
+         scale: 94,
+         ratio: 1.4
+      },
+      azimuthalEqualArea: {
+         n: "Azimuthal Equal Area",
+         arg: null,
+         scale: 340,
+         ratio: 1,
+         clip: !0
+      },
+      azimuthalEquidistant: {
+         n: "Azimuthal Equidistant",
+         arg: null,
+         scale: 320,
+         ratio: 1,
+         clip: !0
+      },
+      baker: {
+         n: "Baker Dinomic",
+         arg: null,
+         scale: 160,
+         ratio: 1.4
+      },
+      berghaus: {
+         n: "Berghaus Star",
+         arg: 0,
+         scale: 320,
+         ratio: 1,
+         clip: !0
+      },
+      boggs: {
+         n: "Boggs Eumorphic",
+         arg: null,
+         scale: 170
+      },
+      bonne: {
+         n: "Bonne",
+         arg: Math.PI / 2.5,
+         scale: 225,
+         ratio: .88
+      },
+      bromley: {
+         n: "Bromley",
+         arg: null,
+         scale: 162
+      },
+      cassini: {
+         n: "Cassini",
+         arg: null,
+         scale: 325,
+         ratio: 1,
+         clip: !0
+      },
+      collignon: {
+         n: "Collignon",
+         arg: null,
+         scale: 100,
+         ratio: 2.6
+      },
+      craig: {
+         n: "Craig Retroazimuthal",
+         arg: 0,
+         scale: 310,
+         ratio: 1.5,
+         clip: !0
+      },
+      craster: {
+         n: "Craster Parabolic",
+         arg: null,
+         scale: 160
+      },
+      cylindricalEqualArea: {
+         n: "Cylindrical Equal Area",
+         arg: Math.PI / 6,
+         scale: 190,
+         ratio: 2.3
+      },
+      cylindricalStereographic: {
+         n: "Cylindrical Stereographic",
+         arg: Math.PI / 4,
+         scale: 230,
+         ratio: 1.3
+      },
+      eckert1: {
+         n: "Eckert I",
+         arg: null,
+         scale: 175
+      },
+      eckert2: {
+         n: "Eckert II",
+         arg: null,
+         scale: 175
+      },
+      eckert3: {
+         n: "Eckert III",
+         arg: null,
+         scale: 190
+      },
+      eckert4: {
+         n: "Eckert IV",
+         arg: null,
+         scale: 190
+      },
+      eckert5: {
+         n: "Eckert V",
+         arg: null,
+         scale: 182
+      },
+      eckert6: {
+         n: "Eckert VI",
+         arg: null,
+         scale: 182
+      },
+      eisenlohr: {
+         n: "Eisenlohr",
+         arg: null,
+         scale: 102
+      },
+      equirectangular: {
+         n: "Equirectangular",
+         arg: null,
+         scale: 165
+      },
+      fahey: {
+         n: "Fahey",
+         arg: null,
+         scale: 196,
+         ratio: 1.4
+      },
+      mtFlatPolarParabolic: {
+         n: "Flat Polar Parabolic",
+         arg: null,
+         scale: 175
+      },
+      mtFlatPolarQuartic: {
+         n: "Flat Polar Quartic",
+         arg: null,
+         scale: 230,
+         ratio: 1.65
+      },
+      mtFlatPolarSinusoidal: {
+         n: "Flat Polar Sinusoidal",
+         arg: null,
+         scale: 175,
+         ratio: 1.9
+      },
+      foucaut: {
+         n: "Foucaut",
+         arg: null,
+         scale: 142
+      },
+      ginzburg4: {
+         n: "Ginzburg IV",
+         arg: null,
+         scale: 180,
+         ratio: 1.7
+      },
+      ginzburg5: {
+         n: "Ginzburg V",
+         arg: null,
+         scale: 196,
+         ratio: 1.55
+      },
+      ginzburg6: {
+         n: "Ginzburg VI",
+         arg: null,
+         scale: 190,
+         ratio: 1.4
+      },
+      ginzburg8: {
+         n: "Ginzburg VIII",
+         arg: null,
+         scale: 205,
+         ratio: 1.3
+      },
+      ginzburg9: {
+         n: "Ginzburg IX",
+         arg: null,
+         scale: 190,
+         ratio: 1.4
+      },
+      homolosine: {
+         n: "Goode Homolosine",
+         arg: null,
+         scale: 160,
+         ratio: 2.2
+      },
+      hammer: {
+         n: "Hammer",
+         arg: 2,
+         scale: 180
+      },
+      hatano: {
+         n: "Hatano",
+         arg: null,
+         scale: 186
+      },
+      healpix: {
+         n: "HEALPix",
+         arg: 1,
+         scale: 320,
+         ratio: 1.2
+      },
+      hill: {
+         n: "Hill Eucyclic",
+         arg: 2,
+         scale: 190,
+         ratio: 1.1
+      },
+      kavrayskiy7: {
+         n: "Kavrayskiy VII",
+         arg: null,
+         scale: 185,
+         ratio: 1.75
+      },
+      lagrange: {
+         n: "Lagrange",
+         arg: Math.PI / 4,
+         scale: 88,
+         ratio: 1.6,
+         clip: !1
+      },
+      larrivee: {
+         n: "l'Arrivée",
+         arg: null,
+         scale: 160,
+         ratio: 1.25
+      },
+      laskowski: {
+         n: "Laskowski Tri-Optimal",
+         arg: null,
+         scale: 165,
+         ratio: 1.7
+      },
+      loximuthal: {
+         n: "Loximuthal",
+         arg: Math.PI / 4,
+         scale: 175,
+         ratio: 1.8
+      },
+      mercator: {
+         n: "Mercator",
+         arg: null,
+         scale: 160,
+         ratio: 1.3
+      },
+      miller: {
+         n: "Miller",
+         arg: null,
+         scale: 160,
+         ratio: 1.5
+      },
+      mollweide: {
+         n: "Mollweide",
+         arg: null,
+         scale: 180
+      },
+      naturalEarth: {
+         n: "Natural Earth",
+         arg: null,
+         scale: 185,
+         ratio: 1.85
+      },
+      nellHammer: {
+         n: "Nell Hammer",
+         arg: null,
+         scale: 160,
+         ratio: 2.6
+      },
+      orthographic: {
+         n: "Orthographic",
+         arg: null,
+         scale: 480,
+         ratio: 1,
+         clip: !0
+      },
+      patterson: {
+         n: "Patterson Cylindrical",
+         arg: null,
+         scale: 160,
+         ratio: 1.75
+      },
+      polyconic: {
+         n: "Polyconic",
+         arg: null,
+         scale: 160,
+         ratio: 1.3
+      },
+      quincuncial: {
+         n: "Quincuncial",
+         arg: null,
+         scale: 160,
+         ratio: 1.3
+      },
+      rectangularPolyconic: {
+         n: "Rectangular Polyconic",
+         arg: 0,
+         scale: 160,
+         ratio: 1.65
+      },
+      robinson: {
+         n: "Robinson",
+         arg: null,
+         scale: 160
+      },
+      sinusoidal: {
+         n: "Sinusoidal",
+         arg: null,
+         scale: 160,
+         ratio: 2
+      },
+      stereographic: {
+         n: "Stereographic",
+         arg: null,
+         scale: 500,
+         ratio: 1,
+         clip: !0
+      },
+      times: {
+         n: "Times",
+         arg: null,
+         scale: 210,
+         ratio: 1.4
+      },
+      twoPointEquidistant: {
+         n: "Two-Point Equidistant",
+         arg: Math.PI / 2,
+         scale: 320,
+         ratio: 1.15,
+         clip: !0
+      },
+      vanDerGrinten: {
+         n: "van Der Grinten",
+         arg: null,
+         scale: 160,
+         ratio: 1
+      },
+      vanDerGrinten2: {
+         n: "van Der Grinten II",
+         arg: null,
+         scale: 160,
+         ratio: 1
+      },
+      vanDerGrinten3: {
+         n: "van Der Grinten III",
+         arg: null,
+         scale: 160,
+         ratio: 1
+      },
+      vanDerGrinten4: {
+         n: "van Der Grinten IV",
+         arg: null,
+         scale: 160,
+         ratio: 1.6
+      },
+      wagner4: {
+         n: "Wagner IV",
+         arg: null,
+         scale: 185
+      },
+      wagner6: {
+         n: "Wagner VI",
+         arg: null,
+         scale: 160
+      },
+      wagner7: {
+         n: "Wagner VII",
+         arg: null,
+         scale: 190,
+         ratio: 1.8
+      },
+      wiechel: {
+         n: "Wiechel",
+         arg: null,
+         scale: 360,
+         ratio: 1,
+         clip: !0
+      },
+      winkel3: {
+         n: "Winkel Tripel",
+         arg: null,
+         scale: 196,
+         ratio: 1.7
       }
-      styles.planetNames = svgTextStyle(cfg.planets.nameStyle);
-      
-      callback(null);
-    });  
-  }
-  
-  if ((cfg.location || cfg.formFields.location) && cfg.daylight.show && proj.clip) {
-    q.defer(function(callback) {
-      var sol = getPlanet("sol");
-      if (sol) {
-        var up = Celestial.zenith(),
-            solpos = sol.ephemeris.pos,
-            dist = d3.geo.distance(up, solpos),
-            pt = projection(solpos),
-            daylight = d3.geo.circle().angle([179.95]).origin(solpos);
-
-        groups.daylight.append("path").datum(daylight)
-         .attr("class", "daylight")
-         .attr("d", map);
-       
-        styles.daylight = svgSkyStyle(dist, pt);  
-
-        if (clip(solpos) === 1 && dist < halfπ) {
-          groups.daylight.append("circle")
-           .attr("cx", pt[0])
-           .attr("cy", pt[1])
-           .attr("r", 5)
-           .style("fill", "#fff");
-        }
+   };
+   t.projections = function() {
+      return J
+   };
+   var $ = {
+      starnames: {
+         iau: {
+            designation: {
+               desig: "Designation",
+               bayer: "Bayer",
+               flam: "Flamsteed",
+               var: "Variable",
+               gl: "Gliese",
+               hd: "Draper",
+               hip: "Hipparcos"
+            },
+            propername: {
+               name: "IAU Name",
+               ar: "Arabic",
+               zh: "Chinese",
+               en: "English",
+               fi: "Finnish",
+               fr: "French",
+               de: "German",
+               el: "Greek",
+               hi: "Hindi",
+               it: "Italian",
+               ja: "Japanese",
+               ko: "Korean",
+               la: "Latin",
+               fa: "Persian",
+               ru: "Russian",
+               es: "Spanish",
+               tr: "Turkish"
+            }
+         },
+         cn: {
+            propername: {
+               name: "Proper name",
+               en: "English",
+               pinyin: "Pinyin"
+            },
+            designation: {
+               desig: "IAU Designation"
+            }
+         }
+      },
+      constellations: {
+         iau: {
+            names: {
+               desig: "Designation",
+               name: "IAU Name",
+               ar: "Arabic",
+               zh: "Chinese",
+               cz: "Czech",
+               en: "English",
+               ee: "Estonian",
+               fi: "Finnish",
+               fr: "French",
+               de: "German",
+               el: "Greek",
+               he: "Hebrew",
+               hi: "Hindi",
+               it: "Italian",
+               ja: "Japanese",
+               ko: "Korean",
+               la: "Latin",
+               fa: "Persian",
+               ru: "Russian",
+               es: "Spanish",
+               tr: "Turkish"
+            }
+         },
+         cn: {
+            names: {
+               name: "Proper name",
+               en: "English",
+               pinyin: "Pinyin"
+            }
+         }
+      },
+      planets: {
+         iau: {
+            symbol: {
+               symbol: "☾ Symbol",
+               letter: "Ⅼ Letter",
+               disk: "● Disk"
+            },
+            names: {
+               desig: "Designation",
+               ar: "Arabic",
+               zh: "Chinese",
+               en: "English",
+               fr: "French",
+               de: "German",
+               el: "Greek",
+               he: "Hebrew",
+               hi: "Hindi",
+               it: "Italian",
+               ja: "Japanese",
+               ko: "Korean",
+               la: "Latin",
+               fa: "Persian",
+               ru: "Russian",
+               es: "Spanish"
+            }
+         },
+         cn: {
+            symbol: {
+               symbol: "☾ Symbol",
+               letter: "Ⅼ Letter",
+               disk: "● Disk"
+            },
+            names: {
+               desig: "Designation",
+               name: "Chinese",
+               pinyin: "Pinyin",
+               en: "English"
+            }
+         }
+      },
+      dsonames: {
+         iau: {
+            names: {
+               desig: "Designation",
+               name: "English",
+               ar: "Arabic",
+               zh: "Chinese",
+               fi: "Finnish",
+               fr: "French",
+               de: "German",
+               el: "Greek",
+               hi: "Hindi",
+               it: "Italian",
+               ja: "Japanese",
+               ko: "Korean",
+               la: "Latin",
+               fa: "Persian",
+               ru: "Russian",
+               es: "Spanish",
+               tr: "Turkish"
+            }
+         },
+         cn: {
+            names: {
+               desig: "Designation",
+               name: "Chinese",
+               pinyin: "Pinyin",
+               en: "English"
+            }
+         }
       }
-      callback(null);
-    });  
-  }
+   };
+   var K = {
+      iau: Object.keys($.constellations.iau.names).concat(Object.keys($.planets.iau.names)).filter((function(t, e, a) {
+         return a.indexOf(t) === e
+      })),
+      cn: Object.keys($.constellations.cn.names).concat(Object.keys($.starnames.cn.propername)).filter((function(t, e, a) {
+         return a.indexOf(t) === e
+      }))
+   };
+   var Z = {};
 
-  if ((cfg.location || cfg.formFields.location) && cfg.horizon.show && !proj.clip) {
-    q.defer(function(callback) {
-      var horizon = d3.geo.circle().angle([90]).origin(Celestial.nadir());
-     
-      groups.horizon.append("path").datum(horizon)
-       .attr("class", "horizon")
-       .attr("d", map);
-      styles.horizon =  svgStyle(cfg.horizon);  
-      callback(null);
-    });
-  }
-  
-  if (Celestial.data.length > 0) { 
-    Celestial.data.forEach( function(d) {
-      if (has(d, "save")) {
-       q.defer(function(callback) { 
-         d.save(); 
-        callback(null);
-       });
+   function Q(t) {
+      return document.getElementById(t)
+   }
+
+   function X(t) {
+      return t + "px"
+   }
+
+   function tt(t, e) {
+      return Math.round(Math.pow(10, e) * t) / Math.pow(10, e)
+   }
+
+   function et(t) {
+      return t ? t < 0 ? -1 : 1 : 0
+   }
+
+   function at(t) {
+      return t < 10 ? "0" + t : t
+   }
+
+   function nt(t, e) {
+      return null !== t && hasOwnProperty.call(t, e)
+   }
+
+   function rt(t, e, a) {
+      return null !== t && hasOwnProperty.call(t, e) ? t[e] : a
+   }
+
+   function st(t) {
+      return null !== t && !isNaN(parseFloat(t)) && isFinite(t)
+   }
+
+   function ot(t) {
+      return null !== t && "[object Array]" === Object.prototype.toString.call(t)
+   }
+
+   function it(t) {
+      var e = typeof t;
+      return "function" === e || "object" === e && !!t
+   }
+
+   function lt(t) {
+      return "function" == typeof t || !1
+   }
+
+   function ct(t) {
+      return t && t instanceof Date && !isNaN(t)
+   }
+
+   function pt(t) {
+      var e = new XMLHttpRequest;
+      return e.open("HEAD", t, !1), e.send(), 404 != e.status
+   }
+
+   function dt(t) {
+      var e = 0,
+         a = 0;
+      if (t.offsetParent)
+         do {
+            e += t.offsetLeft, a += t.offsetTop
+         } while (null !== (t = t.offsetParent));
+      return [e, a]
+   }
+
+   function ut(t, e) {
+      while (t.parentNode) {
+         if (t.id === e) return !0;
+         t = t.parentNode
       }
-    });
-  }
-  
-  // Helper functions
-  
-  function clip(coords) {
-    return proj.clip && d3.geo.distance(center, coords) > halfπ ? 0 : 1;
-  }
+      return !1
+   }
 
-  function point(coords) {
-    return "translate(" + projection(coords) + ")";
-  }
-    
-  function filename(what, sub, ext) {
-    var cult = (has(formats[what], culture)) ? "." + culture : "";
-    ext = ext ? "." + ext : ".json";
-    sub = sub ? "." + sub : "";
-    return what + sub + cult + ext;
-  }
+   function ht(t, e, a) {
+      t.addEventListener ? t.addEventListener(e, a, !1) : t.attachEvent("on" + e, a)
+   }
 
-  function svgStyle(s) {
-    var res = {};
-    res.fill = s.fill || "none";
-    res["fill-opacity"] = s.opacity || 1;  
-    res.stroke = s.stroke || "none";
-    res["stroke-width"] = s.width || null;
-    res["stroke-opacity"] = s.opacity || 1;  
-    if (has(s, "dash")) res["stroke-dasharray"] = s.dash.join(" ");
-    else res["stroke-dasharray"] = "none";
-    res.font = s.font || null;
-    return res;
-  }
+   function ft(t) {
+      "undefined" != typeof t.stopPropagation ? t.stopPropagation() : t.cancelBubble = !0
+   }
 
-  function svgTextStyle(s) {
-    var res = {};
-    res.stroke = "none";
-    res.fill = s.fill || "none";
-    res["fill-opacity"] = s.opacity || 1;  
-    //res.textBaseline = s.baseline || "bottom";
-    res["text-anchor"] = svgAlign(s.align);
-    res.font = s.font || null;
-    return res;
-  }
-
-  function svgStyleA(rank, s) {
-    var res = {};
-    rank = rank || 1;
-    res.fill = isArray(s.fill) ? s.fill[rank-1] : null;
-    res["fill-opacity"] = isArray(s.opacity) ? s.opacity[rank-1] : 1;  
-    res.stroke = isArray(s.stroke) ? s.stroke[rank-1] : null;
-    res["stroke-width"] = isArray(s.width) ? s.width[rank-1] : null;
-    res["stroke-opacity"] = isArray(s.opacity) ? s.opacity[rank-1] : 1;  
-    res["text-anchor"] = svgAlign(s.align);
-    res.font = isArray(s.font) ? s.font[rank-1] : null;
-    //res.textBaseline = s.baseline || "bottom";
-    return res;
-  }
-
-  function svgSkyStyle(dist, pt) {
-    var factor, color1, color2, color3,
-        upper = 1.36, 
-        lower = 1.885;
-    
-    if (dist > lower) return {fill: "transparent"};
-    
-    if (dist <= upper) { 
-      color1 = "#daf1fa";
-      color2 = "#93d7f0"; 
-      color3 = "#57c0e8"; 
-      factor = -(upper-dist) / 10; 
-    } else {
-      factor = (dist - upper) / (lower - upper);
-      color1 = d3.interpolateLab("#daf1fa", "#e8c866")(factor);
-      color2 = d3.interpolateLab("#93c7d0", "#ff854a")(factor);
-      color3 = d3.interpolateLab("#57b0c8", "#6caae2")(factor);
-    }
-
-    var gradient = groups.daylight.append("radialGradient")
-     .attr("cx", pt[0])
-     .attr("cy", pt[1])
-     .attr("fr", "0")
-     .attr("r", "300")
-     .attr("id", "skygradient")
-     .attr("gradientUnits", "userSpaceOnUse");
-
-    gradient.append("stop").attr("offset", "0").attr("stop-color", color1);
-    gradient.append("stop").attr("offset", 0.2+0.4*factor).attr("stop-color", color2);
-    gradient.append("stop").attr("offset", "1").attr("stop-color", color3);
-
-    return {"fill": "url(#skygradient)", "fill-opacity": skyTransparency(factor, 1.4)};
-  }
-
-  function skyTransparency(t, a) {
-    return 0.9 * (1 - ((Math.pow(Math.E, t*a) - 1) / (Math.pow(Math.E, a) - 1)));
-  }
-  
-
-
-  function svgAlign(s) {
-    if (!s) return "start";
-    if (s === "center") return "middle"; 
-    if (s === "right") return "end";
-    return "start";
-  }
-
-  function dsoSymbol(p) {
-    var size = dsoSize(p.mag, p.dim) || 9,
-        type = dsoShape(p.type);
-    if (d3.svg.symbolTypes.indexOf(type) !== -1) {
-      return d3.svg.symbol().type(type).size(size)();
-    } else {
-      return d3.svg.customSymbol().type(type).size(size)();
-    }
-  }
-
-  function dsoShape(type) {
-    if (!type || !has(cfg.dsos.symbols, type)) return "circle"; 
-    else return cfg.dsos.symbols[type].shape; 
-  }
-
-  function dsoSize(mag, dim) {
-    if (!mag || mag === 999) return Math.pow(parseInt(dim) * cfg.dsos.size * adapt / 7, 0.5); 
-    return Math.pow(2 * cfg.dsos.size * adapt - mag, cfg.dsos.exponent);
-  }
- 
-  function dsoName(d) {
-    //return p[cfg.dsos.namesType]; 
-    var lang = cfg.dsos.namesType, id = d.id;
-    if (lang === "desig" || !has(dsonames, id)) return d.properties.desig;
-    return has(dsonames[id], lang) ? dsonames[id][lang] : d.properties.desig; 
-  }
-
-  function dsoColor(p) {
-    if (cfg.dsos.colors === true) return svgStyle(cfg.dsos.symbols[p.type]);
-    return svgStyle(cfg.dsos.style);
-  }
- 
-  function starDesignation(id) {
-    if (!has(starnames, id)) return "";
-    return starnames[id][cfg.stars.designationType]; 
-  }
-
-  function starPropername(id) {
-    var lang = cfg.stars.propernameType;
-    if (!has(starnames, id)) return "";
-    return has(starnames[id], lang) ? starnames[id][lang] : starnames[id].name; 
-  }
-
-  function starSize(mag) {
-    if (mag === null) return 0.1; 
-    var d = cfg.stars.size * adapt * Math.exp(cfg.stars.exponent * (mag + 2));
-    return Math.max(d, 0.1);
-  }
-  
-  function starColor(bv) {
-    if (!cfg.stars.colors || isNaN(bv)) return ""; 
-    return Math.round(bv*10).toString();
-  }
-  
-  function constName(d) { 
-    return d.properties[cfg.constellations.namesType]; 
-  }
-
-  function moonSymbol(p, r) { 
-    var size = r ? r*r : 121;
-    return d3.svg.customSymbol().type("crescent").size(size).ratio(p.age)();
-  }
-
-  function planetSymbol(p, r) { 
-    var size = r ? r*r : planetSize(p.mag);
-    return d3.svg.symbol().type("circle").size(size)();
-  }
-
-  function planetSize(m) {
-    var mag = m || 2; 
-    var r = 4 * adapt * Math.exp(-0.05 * (mag+2));
-    return Math.max(r, 2);
-  }
-
-  function createEntry(o) {
-    var res = {type: "Feature", "id":o.id, properties: {}, geometry:{}};
-    res.properties.name = o[cfg.planets.namesType];
-    if (cfg.planets.symbolType === "symbol" || cfg.planets.symbolType === "letter")
-      res.properties.symbol = cfg.planets.symbols[res.id][cfg.planets.symbolType];
-    res.properties.mag = o.ephemeris.mag || 10;
-    if (res.id === "lun") {
-      res.properties.age = o.ephemeris.age;
-      res.properties.phase = o.ephemeris.phase;
-    }
-    res.geometry.type = "Point";
-    res.geometry.coordinates = o.ephemeris.pos;
-    return res;
-  }
-
-  function createStyles() {
-    var res = "";
-    for (var key in styles) {
-      if (!has(styles, key)) continue;
-      res += " ." + key + stringifyStyle(styles[key]);
-    }
-    return "/*\u003c![CDATA[*/\n" + res + "\n/*]]\u003e*/";
-  }
-
-  function stringifyStyle(s) {
-    var res = " {";
-    for (var key in s) {
-      if (!has(s, key)) continue;
-      res += key + ":" + s[key] + "; ";
-    }
-    return res + "} ";
-  }
-
-  q.await(function(error) {
-    if (error) throw error;
-       var svg = d3.select("#d3-celestial-svg svg")
-      .attr("title", "D3-Celestial")
-      .attr("version", 1.1)
-      .attr("xmlns", "http://www.w3.org/2000/svg");
-      var x = document.createElement("textarea");
-      x.setAttribute("id", "svg_element");
-      x.setAttribute("value", svg.node().outerHTML);
-      document.body.appendChild(x);
-  });
-
-}
-
-var customSvgSymbols = d3.map({
-  'ellipse': function(size, ratio) {
-    var s = Math.sqrt(size), 
-        rx = s*0.666, ry = s/3;
-    return 'M' + (-rx) + ',' + (-ry) +
-    ' m' + (-rx) + ',0' +
-    ' a' + rx + ',' + ry + ' 0 1,0' + (rx * 2) + ',0' +
-    ' a' + rx + ',' + ry + ' 0 1,0' + (-(rx * 2)) + ',0';
-  },
-  'marker': function(size, ratio) {
-    var s =  size > 48 ? size / 4 : 12,
-        r = s/2, l = r-3;
-    return 'M ' + (-r) + ' 0 h ' + l + 
-           ' M 0 ' + (-r) + ' v ' + l + 
-           ' M ' + r + ' 0 h ' + (-l) +  
-           ' M 0 ' + r + ' v ' + (-l);
-  },
-  'cross-circle': function(size, ratio) {
-    var s = Math.sqrt(size), 
-        r = s/2;
-    return 'M' + (-r) + ',' + (-r) +
-    ' m' + (-r) + ',0' +
-    ' a' + r + ',' + r + ' 0 1,0' + (r * 2) + ',0' +
-    ' a' + r + ',' + r + ' 0 1,0' + (-(r * 2)) + ',0' +
-    ' M' + (-r) + ' 0 h ' + (s) + 
-    ' M 0 ' + (-r) + ' v ' + (s);
-        
-  },
-  'stroke-circle': function(size, ratio) {
-    var s = Math.sqrt(size), 
-        r = s/2;
-    return 'M' + (-r) + ',' + (-r) +
-    ' m' + (-r) + ',0' +
-    ' a' + r + ',' + r + ' 0 1,0' + (r * 2) + ',0' +
-    ' a' + r + ',' + r + ' 0 1,0' + (-(r * 2)) + ',0' +
-    ' M' + (-s-2) + ',' + (-s-2) + ' l' + (s+4) + ',' + (s+4);
-
-  }, 
-  "crescent": function(size, ratio) {
-    var s = Math.sqrt(size), 
-        r = s/2,
-        ph = 0.5 * (1 - Math.cos(ratio)),
-        e = 1.6 * Math.abs(ph - 0.5) + 0.01,
-        dir = ratio > Math.PI ? 0 : 1,
-        termdir = Math.abs(ph) > 0.5 ? dir : Math.abs(dir-1); 
-    return 'M ' + (-1) + ',' + (-1) +
-    ' m 1,' + (-r+1) + 
-    ' a' + r + ',' + r + ' 0 1 ' + dir + ' 0,' + (r * 2) +
-    ' a' + (r*e) + ',' + r + ' 0 1 ' + termdir + ' 0,' + (-(r * 2)) + 'z';
-  } 
-});
-
-d3.svg.customSymbol = function() {
-  var type, size = 64, ratio = d3.functor(1);
-  
-  function symbol(d,i) {
-    return customSvgSymbols.get(type.call(this,d,i))(size.call(this,d,i), ratio.call(this,d,i));
-  }
-  symbol.type = function(_) {
-    if (!arguments.length) return type; 
-    type = d3.functor(_);
-    return symbol;
-  };
-  symbol.size = function(_) {
-    if (!arguments.length) return size; 
-    size = d3.functor(_);
-    return symbol;
-  };
-  symbol.ratio = function(_) {
-    if (!arguments.length) return ratio; 
-    ratio = d3.functor(_);
-    return symbol;
-  };
-  return symbol;
-};
-
-var datetimepicker = function(cfg, callback) {
-  var date = new Date(), 
-      tzFormat = d3.time.format("%Z"),
-      tz = [{"−12:00":-720}, {"−11:00":-660}, {"−10:00":-600}, {"−09:30":-570}, {"−09:00":-540}, {"−08:00":-480}, {"−07:00":-420}, {"−06:00":-360}, {"−05:00":-300}, {"−04:30":-270}, {"−04:00":-240}, {"−03:30":-210}, {"−03:00":-180}, {"−02:30":-150}, {"−02:00":-120}, {"−01:00":-60}, {"±00:00":0}, {"+01:00":60}, {"+02:00":120}, {"+03:00":180}, {"+03:30":210}, {"+04:00":240}, {"+04:30":270}, {"+05:00":300}, {"+05:30":330}, {"+05:45":345}, {"+06:00":360}, {"+06:30":390}, {"+07:00":420}, {"+08:00":480}, {"+08:30":510}, {"+08:45":525}, {"+09:00":540}, {"+09:30":570}, {"+10:00":600}, {"+10:30":630}, {"+11:00":660}, {"+12:00":720}, {"+12:45":765}, {"+13:00":780}, {"+14:00":840}],
-      months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      days = ["Su", "M", "Tu", "W", "Th", "F", "Sa"],
-      years = getYears(date),
-      dateFormat = d3.time.format("%Y-%m-%d"),
-      dtrange = cfg.daterange || [];
-    
-  var picker = d3.select("#celestial-form").append("div").attr("id", "celestial-date");
-  nav("left");
-  monSel();
-  yrSel();
-  nav("right");
-  
-  var cal = picker.append("div").attr("id", "cal");
-
-  daySel();
-  
-  timeSel();
-  tzSel();
-  
-  function daySel() {
-    var mo = $("mon").value, yr = $("yr").value,
-        curdt = new Date(yr, mo, 1),
-        cal = d3.select("#cal"),
-        today = new Date();
-    yr = parseInt(yr);   
-    mo = parseInt(mo);   
-    curdt.setDate(curdt.getDate() - curdt.getDay());
-    var nd = cal.node();
-    while (nd.firstChild) nd.removeChild(nd.firstChild);
-    
-    for (var i=0; i<7; i++) {
-      cal.append("div").classed({"date": true, "weekday": true}).html(days[i]);
-    }
-    for (i=0; i<42; i++) {
-      var curmon = curdt.getMonth(), curday = curdt.getDay(), curid = dateFormat(curdt);
-      cal.append("div").classed({
-        "date": true, 
-        "grey": curmon !== mo,
-        "weekend": curmon === mo && (curday === 0 || curday === 6),
-        "today": dateDiff(curdt, today) === 0,
-        "selected": dateDiff(curdt, date) === 0
-      }).attr("id", curid)
-      .on("click", pick)
-      .html(curdt.getDate().toString());
-      
-      curdt.setDate(curdt.getDate()+1);
-    }
-  }
-
-  function yrSel() {     
-    picker.append("select").attr("title", "Year").attr("id", "yr").on("change", daySel);   
-    
-    fillYrSel();
-  }
-
-  function fillYrSel() { 
-    var sel = d3.select("select#yr"),
-        year = date.getFullYear(),
-        selected = 0,
-        years = getYears(date);
-        
-    sel.selectAll("*").remove();    
-    sel.selectAll('option').data(years).enter().append('option')
-       .text(function (d, i) { 
-         if (d === year) selected = i; 
-         return d.toString(); 
-       });
-    sel.property("selectedIndex", selected);
-  }
-  
-  function monSel() { 
-    var sel = picker.append("select").attr("title", "Month").attr("id", "mon").on("change", daySel),
-        selected = 0,
-        month = date.getMonth();
-    
-    sel.selectAll('option').data(months).enter().append('option')
-       .attr("value", function (d, i) { 
-         if (i === month) selected = i; 
-         return i; 
-       })
-       .text(function (d) { return d; });
-    sel.property("selectedIndex", selected);
-  }
-  
-  function nav(dir) {
-    var lnk = picker.append("div").attr("id", dir).on("click", function () {
-      var mon = $("mon"), yr = $("yr");
-      
-      if (dir === "left") {
-        if (mon.selectedIndex === 0) {
-          mon.selectedIndex = 11;
-          yr.selectedIndex--;
-        } else mon.selectedIndex--;
-      } else {
-        if (mon.selectedIndex === 11) {
-          mon.selectedIndex = 0;
-          yr.selectedIndex++;
-        } else mon.selectedIndex++;
+   function mt(t, e, a) {
+      var n = e.valueOf() - t.valueOf(),
+         r;
+      switch (a || "d") {
+         case "y":
+         case "yr":
+            n /= 31556926080;
+            break;
+         case "m":
+         case "mo":
+            n /= 26298e5;
+            break;
+         case "d":
+         case "dy":
+            n /= 864e5;
+            break;
+         case "h":
+         case "hr":
+            n /= 36e5;
+            break;
+         case "n":
+         case "mn":
+            n /= 6e4;
+            break;
+         case "s":
+         case "sec":
+            n /= 1e3;
+            break;
+         case "ms":
+            break
       }
-      daySel();
-    });
-  }
+      return Math.floor(n)
+   }
 
-  function timeSel() { 
-    picker.append("input").attr("type", "number").attr("id", "hr").attr("title", "Hours").attr("max", "24").attr("min", "-1").attr("step", "1").attr("value", date.getHours()).on("change", function () { if (testNumber(this) === true) pick(); });
-
-    picker.append("input").attr("type", "number").attr("id", "min").attr("title", "Minutes").attr("max", "60").attr("min", "-1").attr("step", "1").attr("value", date.getMinutes()).on("change", function () { if (testNumber(this) === true) pick(); });
-    
-    picker.append("input").attr("type", "number").attr("id", "sec").attr("title", "Seconds").attr("max", "60").attr("min", "-1").attr("step", "1").attr("value", date.getSeconds()).on("change", function () { if (testNumber(this) === true) pick(); });
-  }
-  
-  function tzSel() { 
-    var sel = picker.append("select").attr("title", "Time zone offset from UTC").attr("id", "tz").on("change", pick),
-        selected = 15,
-        tzOffset = -date.getTimezoneOffset();
-    sel.selectAll('option').data(tz).enter().append('option')
-       .attr("value", function (d, i) { 
-         var k = Object.keys(d)[0];
-         if (d[k] === tzOffset) selected = i; 
-         return d[k]; 
-       })
-       .text(function (d) { return Object.keys(d)[0]; });
-    sel.property("selectedIndex", selected);
-  }
-  
-  function getYears(dt) {
-    var r = getDateRange(dt.getFullYear()), res = [];
-    for (var i = r[0]; i <= r[1]; i++) res.push(i);
-    return res;
-  }  
-  
-  function getDateRange(yr) {
-    if (!dtrange || dtrange.length < 1) return [yr - 10, yr + 10];
-    
-    if (dtrange.length === 1 && isNumber(dtrange[0])) {
-      if (dtrange[0] >= 100) return [dtrange[0] - 10, dtrange[0] + 10];
-      else return [yr - dtrange[0], yr + dtrange[0]];
-    }
-    if (dtrange.length === 2 && isNumber(dtrange[0])&& isNumber(dtrange[1])) {
-      if (dtrange[1] >= 100) return [dtrange[0], dtrange[1]];
-      else return [dtrange[0] - dtrange[1], dtrange[0] + dtrange[1]];
-    }      
-    return [yr - 10, yr + 10];
-  }
-
-  function select(id, val) {
-    var sel = $(id);
-    for (var i=0; i<sel.childNodes.length; i++) {
-      if (sel.childNodes[i].value == val) {
-        sel.selectedIndex = i;
-        break;
+   function yt(t) {
+      if (t) {
+         var e = t.split(".");
+         if (!(e.length < 1) && ((e = e[0].split("-"))[0] = e[0].replace(/\D/g, ""), e[0])) return e[1] = e[1] ? e[1].replace(/\D/g, "") : "1", e[2] = e[2] ? e[2].replace(/\D/g, "") : "1", new Date(Date.UTC(e[0], e[1] - 1, e[2]))
       }
-    }
-  }
-  
-  function set(dt) {
-     if (dt) date.setTime(dt.valueOf());
-     
-     select("yr", date.getFullYear());
-     select("mon", date.getMonth());
-     daySel();
-     $("hr").value = date.getHours();
-     $("min").value = date.getMinutes();
-     $("sec").value = date.getSeconds();
-  } 
-  
-  this.show = function(dt, tz) {
-    var nd = $("celestial-date"),
-        src = $("datepick"),
-        left = src.offsetLeft + src.offsetWidth - nd.offsetWidth,
-        top = src.offsetTop - nd.offsetHeight - 1;
-  
-    if (nd.offsetTop === -9999) {
-      date.setTime(dt.valueOf());
-      select("tz", tz);
-      set();
-      d3.select("#celestial-date").style({"top": px(top), "left": px(left), "opacity": 1});  
-      d3.select("#datepick").classed("active", true);
-    } else {
-      vanish();
-    }
-  };
-  
-  this.isVisible = function () {
-    if (!document.getElementById("datepick")) return false;
-    return d3.select("#datepick").classed("active") === true;
-  };
+   }
 
-  this.hide = function () {
-    vanish();
-  };
-  
-  function vanish() {
-    d3.select("#celestial-date").style("opacity", 0);
-    d3.select("#error").style( {top:"-9999px", left:"-9999px", opacity:0} ); 
-    d3.select("#datepick").classed("active", false);
-    setTimeout(function () { $("celestial-date").style.top = px(-9999); }, 600);    
-  }
-  
-  function pick() {
-    var h = $("hr").value, m = $("min").value,
-        s = $("sec").value, tz = $("tz").value;
-        
-    if (this.id && this.id.search(/^\d/) !== -1) {
-      date = dateFormat.parse(this.id); 
-    }
-    fillYrSel();
-    
-    date.setHours(h, m, s);
-    set();
-    
-    callback(date, tz);
-  } 
-  
-};// Copyright 2014, Jason Davies, http://www.jasondavies.com
-// See LICENSE.txt for details.
-(function() {
+   function gt(t, e, a) {
+      return t = (t * x + w) % w, e = (e * x + w) % w, Math.abs(t - e) > Math.PI && (t > e ? t -= w : e > t && (e -= w)), d3.interpolateNumber(t / x, e / x)
+   }
+   Z.symbol = function() {
+      var t = d3.functor("circle"),
+         e = d3.functor(64),
+         a = d3.functor(Math.PI),
+         n = d3.functor("#fff"),
+         r = d3.functor(""),
+         s = d3.functor([2, 2]),
+         o;
 
-var radians = Math.PI / 180,
-    degrees = 180 / Math.PI;
+      function i(e) {
+         l[t()](e)
+      }
+      var l = {
+         circle: function(t) {
+            var a, n = Math.sqrt(e()) / 2;
+            return t.arc(o[0], o[1], n, 0, 2 * Math.PI), t.closePath(), n
+         },
+         square: function(t) {
+            var a, n = Math.sqrt(e()) / 1.7;
+            return t.moveTo(o[0] - n, o[1] - n), t.lineTo(o[0] + n, o[1] - n), t.lineTo(o[0] + n, o[1] + n), t.lineTo(o[0] - n, o[1] + n), t.closePath(), n
+         },
+         diamond: function(t) {
+            var a, n = Math.sqrt(e()) / 1.5;
+            return t.moveTo(o[0], o[1] - n), t.lineTo(o[0] + n, o[1]), t.lineTo(o[0], o[1] + n), t.lineTo(o[0] - n, o[1]), t.closePath(), n
+         },
+         triangle: function(t) {
+            var a, n = Math.sqrt(e()) / Math.sqrt(3);
+            return t.moveTo(o[0], o[1] - n), t.lineTo(o[0] + n, o[1] + n), t.lineTo(o[0] - n, o[1] + n), t.closePath(), n
+         },
+         ellipse: function(t) {
+            var a, n = Math.sqrt(e()) / 2;
+            return t.save(), t.translate(o[0], o[1]), t.scale(1.6, .8), t.beginPath(), t.arc(0, 0, n, 0, 2 * Math.PI), t.closePath(), t.restore(), n
+         },
+         marker: function(t) {
+            var a, n = Math.sqrt(e()) / 2;
+            return t.moveTo(o[0], o[1] - n), t.lineTo(o[0], o[1] + n), t.moveTo(o[0] - n, o[1]), t.lineTo(o[0] + n, o[1]), t.closePath(), n
+         },
+         "cross-circle": function(t) {
+            var a = Math.sqrt(e()),
+               n = a / 2;
+            return t.moveTo(o[0], o[1] - a), t.lineTo(o[0], o[1] + a), t.moveTo(o[0] - a, o[1]), t.lineTo(o[0] + a, o[1]), t.stroke(), t.beginPath(), t.moveTo(o[0], o[1]), t.arc(o[0], o[1], n, 0, 2 * Math.PI), t.closePath(), n
+         },
+         "stroke-circle": function(t) {
+            var a = Math.sqrt(e()),
+               n = a / 2;
+            return t.moveTo(o[0], o[1] - a), t.lineTo(o[0], o[1] + a), t.stroke(), t.beginPath(), t.moveTo(o[0], o[1]), t.arc(o[0], o[1], n, 0, 2 * Math.PI), t.closePath(), n
+         },
+         crescent: function(t) {
+            var n, r = Math.sqrt(e()) / 2,
+               s = a(),
+               i = .5 * (1 - Math.cos(s)),
+               l = 1.6 * Math.abs(i - .5) + .01,
+               c = s > Math.PI,
+               p = Math.abs(i) > .5 ? c : !c,
+               d = t.fillStyle,
+               u = i < .157 ? "#669" : "#557";
+            return t.save(), t.fillStyle = u, t.beginPath(), t.moveTo(o[0], o[1]), t.arc(o[0], o[1], r, 0, 2 * Math.PI), t.closePath(), t.fill(), t.fillStyle = d, t.beginPath(), t.moveTo(o[0], o[1]), t.arc(o[0], o[1], r, -Math.PI / 2, Math.PI / 2, c), t.scale(l, 1), t.arc(o[0] / l, o[1], r, Math.PI / 2, -Math.PI / 2, p), t.closePath(), t.fill(), t.restore(), r
+         }
+      };
+      return i.type = function(e) {
+         return arguments.length ? (t = d3.functor(e), i) : t
+      }, i.size = function(t) {
+         return arguments.length ? (e = d3.functor(t), i) : e
+      }, i.age = function(t) {
+         return arguments.length ? (a = d3.functor(t), i) : a
+      }, i.text = function(t) {
+         return arguments.length ? (r = d3.functor(t), i) : r
+      }, i.position = function(t) {
+         if (arguments.length) return o = t, i
+      }, i
+   }, t.Canvas = Z;
+   var vt = {
+      sinh: function(t) {
+         return (Math.pow(Math.E, t) - Math.pow(Math.E, -t)) / 2
+      },
+      cosh: function(t) {
+         return (Math.pow(Math.E, t) + Math.pow(Math.E, -t)) / 2
+      },
+      tanh: function(t) {
+         return 2 / (1 + Math.exp(-2 * t)) - 1
+      },
+      asinh: function(t) {
+         return Math.log(t + Math.sqrt(t * t + 1))
+      },
+      acosh: function(t) {
+         return Math.log(t + Math.sqrt(t * t - 1))
+      },
+      normalize0: function(t) {
+         return (t + 3 * Math.PI) % (2 * Math.PI) - Math.PI
+      },
+      normalize: function(t) {
+         return (t + 2 * Math.PI) % (2 * Math.PI)
+      },
+      cartesian: function(t) {
+         var e = t[0],
+            a = k - t[1],
+            n = t[2];
+         return {
+            x: n * Math.sin(a) * Math.cos(e),
+            y: n * Math.sin(a) * Math.sin(e),
+            z: n * Math.cos(a)
+         }
+      },
+      spherical: function(t) {
+         var e = Math.sqrt(t.x * t.x + t.y * t.y + t.z * t.z),
+            a = Math.atan(t.y / t.x),
+            n = Math.acos(t.z / e);
+         return [a / x, n / x, e]
+      },
+      distance: function(t, e) {
+         return Math.acos(Math.sin(t[1]) * Math.sin(e[1]) + Math.cos(t[1]) * Math.cos(e[1]) * Math.cos(t[0] - e[0]))
+      }
+   };
+   var Mt = 1e-6,
+      bt = Math.PI / 2,
+      wt = Math.PI / 4,
+      kt = 2 * Math.PI;
 
-// TODO make incremental rotate optional
+   function xt(t) {
+      var e = t[0],
+         a = t[1],
+         n = Math.cos(a);
+      return [n * Math.cos(e), n * Math.sin(e), Math.sin(a)]
+   }
 
-d3.geo.zoom = function() {
-  var projection,
-      duration;
+   function zt(t, e) {
+      return [t[1] * e[2] - t[2] * e[1], t[2] * e[0] - t[0] * e[2], t[0] * e[1] - t[1] * e[0]]
+   }
 
-  var zoomPoint,
-      zooming = 0,
-      event = d3_eventDispatch(zoom, "zoomstart", "zoom", "zoomend"),
-      zoom = d3.behavior.zoom()
-        .on("zoomstart", function() {
-          var mouse0 = d3.mouse(this),
-              rotate = quaternionFromEuler(projection.rotate()),
-              point = position(projection, mouse0);
-          if (point) zoomPoint = point;
+   function Tt(t) {
+      var e = Math.sqrt(t[0] * t[0] + t[1] * t[1] + t[2] * t[2]);
+      t[0] /= e, t[1] /= e, t[2] /= e
+   }
 
-          zoomOn.call(zoom, "zoom", function() {
-                projection.scale(view.k = d3.event.scale);
-                var mouse1 = d3.mouse(this),
-                    between = rotateBetween(zoomPoint, position(projection, mouse1));
-                projection.rotate(view.r = eulerFromQuaternion(rotate = between
-                    ? multiply(rotate, between)
-                    : multiply(bank(projection, mouse0, mouse1), rotate)));
-                mouse0 = mouse1;
-                zoomed(event.of(this, arguments));
-              });
-          zoomstarted(event.of(this, arguments));
-        })
-        .on("zoomend", function() {
-          zoomOn.call(zoom, "zoom", null);
-          zoomended(event.of(this, arguments));
-        }),
-      zoomOn = zoom.on,
-      view = {r: [0, 0, 0], k: 1};
+   function St(t) {
+      return Math.abs(t[0]) <= Math.PI ? t[0] : et(t[0]) * ((Math.abs(t[0]) + Math.PI) % kt - Math.PI)
+   }
 
-  zoom.rotateTo = function(location) {
-    var between = rotateBetween(cartesian(location), cartesian([-view.r[0], -view.r[1]]));
-    return eulerFromQuaternion(multiply(quaternionFromEuler(view.r), between));
-  };
+   function jt(t, e) {
+      var a = St(e),
+         n = e[1],
+         r = Math.sin(n),
+         s = [Math.sin(a), -Math.cos(a), 0],
+         o = 0,
+         i = 0,
+         l = 0;
+      1 === r ? n = bt + Mt : -1 === r && (n = -bt - Mt);
+      for (var c = 0, p = t.length; c < p; ++c)
+         if (u = (d = t[c]).length) {
+            var d, u, h = d[u - 1],
+               f = St(h),
+               m = h[1] / 2 + wt,
+               y = Math.sin(m),
+               g = Math.cos(m),
+               v, M, b, w;
+            for (var k = 0; k < u; ++k, f = w, y = b, g = M, h = v) {
+               w = St(v = d[k]);
+               var x = v[1] / 2 + wt;
+               b = Math.sin(x), M = Math.cos(x);
+               var z = w - f,
+                  T = z >= 0 ? 1 : -1,
+                  S = T * z,
+                  j = S > Math.PI,
+                  P = y * b;
+               if (l += Math.atan2(P * T * Math.sin(S), g * M + P * Math.cos(S)), o += j ? z + T * kt : z, (j ^ f) >= (a ^ w) >= a) {
+                  var I = zt(xt(h), xt(v));
+                  Tt(I);
+                  var A = zt(s, I);
+                  Tt(A);
+                  var q = (j ^ z >= 0 ? -1 : 1) * Math.asin(A[2]);
+                  (n > q || n === q && (I[0] || I[1])) && (i += j ^ z >= 0 ? 1 : -1)
+               }
+            }
+         } return (o < -Mt || o < Mt && l < -Mt) ^ 1 & i
+   }
 
-  zoom.projection = function(_) {
-    if (!arguments.length) return projection;
-    projection = _;
-    view = {r: projection.rotate(), k: projection.scale()};
-    return zoom.scale(view.k);
-  };
+   function Pt(e) {
+      var a = V.set(e);
+      var n = t.projections(),
+         r = t.eulerAngles();
+      var s = d3.select("#celestial-form");
+      if (s.size() < 1) {
+         var o = a.container || "celestial-map";
+         s = d3.select("#" + o).select((function() {
+            return this.parentNode
+         })).append("div").attr("id", "celestial-form")
+      }
+      var i;
+      var l = s.append("div").attr("class", "ctrl").append("form").attr("id", "params").attr("name", "params").attr("method", "get").attr("action", "#");
+      var c = l.append("div").attr("class", "col").attr("id", "general");
+      c.append("label").attr("title", "Map width in pixel, 0 indicates full width").attr("for", "width").html("Width "), c.append("input").attr("type", "number").attr("maxlength", "4").attr("max", "20000").attr("min", "0").attr("title", "Map width").attr("id", "width").attr("value", a.width).on("change", M), c.append("span").html("px"), c.append("label").attr("title", "Map projection, (hemi) indicates hemispherical projection").attr("for", "projection").html("Projection");
+      var p = c.append("select").attr("id", "projection").on("change", w);
+      var d = 0;
+      var u = Object.keys(n).map((function(t, e) {
+         var r = n[t].clip && !0 === n[t].clip ? n[t].n + " (hemi)" : n[t].n;
+         return t === a.projection && (d = e), {
+            o: t,
+            n: r
+         }
+      }));
+      p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+         return t.o
+      })).text((function(t) {
+         return t.n
+      })), p.property("selectedIndex", d), d = 0, c.append("label").attr("title", "Coordinate space in which the map is displayed").attr("for", "transform").html("Coordinates"), p = c.append("select").attr("id", "transform").on("change", b), u = Object.keys(r).map((function(t, e) {
+         return t === a.transform && (d = e), {
+            o: t,
+            n: t.replace(/^([a-z])/, (function(t, e) {
+               return e.toUpperCase()
+            }))
+         }
+      })), p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+         return t.o
+      })).text((function(t) {
+         return t.n
+      })), p.property("selectedIndex", d), c.append("br"), c.append("label").attr("title", "Center coordinates long/lat in selected coordinate space").attr("for", "centerx").html("Center"), c.append("input").attr("type", "number").attr("id", "centerx").attr("title", "Center right ascension/longitude").attr("max", "24").attr("min", "0").attr("step", "0.1").on("change", k), c.append("span").attr("id", "cxunit").html("h"), c.append("input").attr("type", "number").attr("id", "centery").attr("title", "Center declination/latitude").attr("max", "90").attr("min", "-90").attr("step", "0.1").on("change", k), c.append("span").html("°"), c.append("label").attr("title", "Orientation").attr("for", "centerz").html("Orientation"), c.append("input").attr("type", "number").attr("id", "centerz").attr("title", "Center orientation").attr("max", "180").attr("min", "-180").attr("step", "0.1").on("change", k), c.append("span").html("°"), c.append("label").attr("for", "orientationfixed").attr("class", "advanced").html("Fixed"), c.append("input").attr("type", "checkbox").attr("id", "orientationfixed").attr("class", "advanced").property("checked", a.orientationfixed).on("change", I), c.append("label").attr("title", "Center and zoom in on this constellation").attr("for", "constellation").html("Show");
+      c.append("select").attr("id", "constellation").on("change", S), _t(a.center, a.transform), (c = l.append("div").attr("class", "col").attr("id", "stars")).append("label").attr("class", "header").attr("for", "stars-show").html("Stars"), c.append("input").attr("type", "checkbox").attr("id", "stars-show").property("checked", a.stars.show).on("change", I), c.append("label").attr("for", "stars-limit").html("down to magnitude"), c.append("input").attr("type", "number").attr("id", "stars-limit").attr("title", "Star display limit (magnitude)").attr("value", a.stars.limit).attr("max", "6").attr("min", "-1").attr("step", "0.1").on("change", I), c.append("label").attr("for", "stars-colors").html("with spectral colors"), c.append("input").attr("type", "checkbox").attr("id", "stars-colors").property("checked", a.stars.colors).on("change", I), c.append("label").attr("for", "stars-color").html("or default color "), c.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "stars-style-fill").attr("title", "Star color").property("value", a.stars.style.fill).on("change", I), c.append("br");
+      var h = $.starnames[a.culture] || $.starnames.iau;
+      for (var f in h)
+         if (nt(h, f)) {
+            var m = Object.keys(h[f]);
+            m.length > 1 ? (c.append("label").attr("for", "stars-" + f).html("Show"), d = 0, c.append("label").attr("title", "Type of star name").attr("id", "label-propername").attr("for", "stars-" + f + "Type").html((function() {
+               return "propername" === f ? "proper names" : ""
+            })), p = c.append("select").attr("id", "stars-" + f + "Type").attr("class", (function() {
+               return "propername" === f ? "advanced" : ""
+            })).on("change", I), u = m.map((function(t, e) {
+               return t === a.stars[f + "Type"] && (d = e), {
+                  o: t,
+                  n: h[f][t]
+               }
+            })), p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+               return t.o
+            })).text((function(t) {
+               return t.n
+            })), p.property("selectedIndex", d), c.append("input").attr("type", "checkbox").attr("id", "stars-" + f).property("checked", a.stars[f]).on("change", I)) : 1 === m.length && (c.append("label").attr("for", "stars-" + f).html(" " + h[f][m[0]]), c.append("input").attr("type", "checkbox").attr("id", "stars-" + f).property("checked", a.stars[f]).on("change", I)), c.append("label").attr("for", "stars-" + f + "Limit").html("down to mag"), c.append("input").attr("type", "number").attr("id", "stars-" + f + "Limit").attr("title", "Star name display limit (magnitude)").attr("value", a.stars[f + "Limit"]).attr("max", "6").attr("min", "-1").attr("step", "0.1").on("change", I)
+         } for (f in c.append("br"), c.append("label").attr("for", "stars-size").attr("class", "advanced").html("Stellar disk size: base"), c.append("input").attr("type", "number").attr("id", "stars-size").attr("class", "advanced").attr("title", "Size of the displayed star disk; base").attr("value", a.stars.size).attr("max", "100").attr("min", "0").attr("step", "0.1").on("change", I), c.append("label").attr("for", "stars-exponent").attr("class", "advanced").html(" * e ^ (exponent"), c.append("input").attr("type", "number").attr("id", "stars-exponent").attr("class", "advanced").attr("title", "Size of the displayed star disk; exponent").attr("value", a.stars.exponent).attr("max", "3").attr("min", "-1").attr("step", "0.01").on("change", I), c.append("span").attr("class", "advanced").text(" * (magnitude + 2))  [* adaptation]"), At(Q("stars-show")), (c = l.append("div").attr("class", "col").attr("id", "dsos")).append("label").attr("class", "header").attr("title", "Deep Space Objects").attr("for", "dsos-show").html("DSOs"), c.append("input").attr("type", "checkbox").attr("id", "dsos-show").property("checked", a.dsos.show).on("change", I), c.append("label").attr("for", "dsos-limit").html("down to mag"), c.append("input").attr("type", "number").attr("id", "dsos-limit").attr("title", "DSO display limit (magnitude)").attr("value", a.dsos.limit).attr("max", "6").attr("min", "0").attr("step", "0.1").on("change", I), c.append("label").attr("for", "dsos-colors").html("with symbol colors"), c.append("input").attr("type", "checkbox").attr("id", "dsos-colors").property("checked", a.dsos.colors).on("change", I), c.append("label").attr("for", "dsos-color").html("or default color "), c.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "dsos-style-fill").attr("title", "DSO color").property("value", a.dsos.style.fill).on("change", I), c.append("br"), h = $.dsonames[a.culture] || $.dsonames.iau)
+         if (nt(h, f)) {
+            var y = Object.keys(h[f]);
+            c.append("label").attr("for", "dsos-" + f).html("Show"), d = 0, c.append("label").attr("title", "Type of DSO name").attr("for", "dsos-" + f + "Type").attr("class", "advanced").html(""), p = c.append("select").attr("id", "dsos-" + f + "Type").attr("class", "advanced").on("change", I), u = y.map((function(t, e) {
+               return t === a.stars[f + "Type"] && (d = e), {
+                  o: t,
+                  n: h[f][t]
+               }
+            })), p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+               return t.o
+            })).text((function(t) {
+               return t.n
+            })), p.property("selectedIndex", d), c.append("label").attr("for", "dsos-" + f).html("names"), c.append("input").attr("type", "checkbox").attr("id", "dsos-" + f).property("checked", a.dsos[f]).on("change", I)
+         } for (f in c.append("label").attr("for", "dsos-nameLimit").html("down to mag"), c.append("input").attr("type", "number").attr("id", "dsos-nameLimit").attr("title", "DSO name display limit (magnitude)").attr("value", a.dsos.nameLimit).attr("max", "6").attr("min", "0").attr("step", "0.1").on("change", I), c.append("br"), c.append("label").attr("for", "dsos-size").attr("class", "advanced").html("DSO symbol size: (base"), c.append("input").attr("type", "number").attr("id", "dsos-size").attr("class", "advanced").attr("title", "Size of the displayed symbol: base").attr("value", a.dsos.size).attr("max", "100").attr("min", "0").attr("step", "0.1").on("change", I), c.append("label").attr("for", "dsos-exponent").attr("class", "advanced").html(" * 2 [* adaptation] - magnitude) ^ exponent"), c.append("input").attr("type", "number").attr("id", "dsos-exponent").attr("class", "advanced").attr("title", "Size of the displayed symbol; exponent").attr("value", a.dsos.exponent).attr("max", "3").attr("min", "-1").attr("step", "0.01").on("change", I), At(Q("dsos-show")), (c = l.append("div").attr("class", "col").attr("id", "constellations")).append("label").attr("class", "header").html("Constellations"), h = $.constellations[a.culture] || $.constellations.iau)
+         if (nt(h, f)) {
+            var g = Object.keys(h[f]);
+            g.length > 1 ? (c.append("label").attr("for", "constellations-" + f).html("Show"), d = 0, c.append("label").attr("title", "Language of constellation names").attr("for", "constellations-" + f + "Type").attr("class", "advanced").html(""), p = c.append("select").attr("id", "constellations-" + f + "Type").attr("class", "advanced").on("change", I), u = g.map((function(t, e) {
+               return t === a.constellations[f + "Type"] && (d = e), {
+                  o: t,
+                  n: h[f][t]
+               }
+            })), p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+               return t.o
+            })).text((function(t) {
+               return t.n
+            })), p.property("selectedIndex", d), c.append("label").attr("for", "constellations-" + f).html("names"), c.append("input").attr("type", "checkbox").attr("id", "constellations-" + f).property("checked", a.constellations[f]).on("change", I)) : 1 === g.length && (c.append("label").attr("for", "constellations-" + f).attr("class", "advanced").html(" " + h[f][g[0]]), c.append("input").attr("type", "checkbox").attr("id", "constellations-" + f).attr("class", "advanced").property("checked", a.constellations[f]).on("change", I))
+         } c.append("label").attr("for", "constellations-lines").html(" lines"), c.append("input").attr("type", "checkbox").attr("id", "constellations-lines").property("checked", a.constellations.lines).on("change", I), c.append("label").attr("for", "constellations-bounds").html(" boundaries"), c.append("input").attr("type", "checkbox").attr("id", "constellations-bounds").property("checked", a.constellations.bounds).on("change", I), At(Q("constellations-names")), (c = l.append("div").attr("class", "col").attr("id", "lines")).append("label").attr("class", "header").html("Lines"), c.append("label").attr("title", "Latitude/longitude grid lines").attr("for", "lines-graticule").html("Graticule"), c.append("input").attr("type", "checkbox").attr("id", "lines-graticule-show").property("checked", a.lines.graticule.show).on("change", I), c.append("label").attr("for", "lines-equatorial").html("Equator"), c.append("input").attr("type", "checkbox").attr("id", "lines-equatorial-show").property("checked", a.lines.equatorial.show).on("change", I), c.append("label").attr("for", "lines-ecliptic").html("Ecliptic"), c.append("input").attr("type", "checkbox").attr("id", "lines-ecliptic-show").property("checked", a.lines.ecliptic.show).on("change", I), c.append("label").attr("for", "lines-galactic").html("Galactic plane"), c.append("input").attr("type", "checkbox").attr("id", "lines-galactic-show").property("checked", a.lines.galactic.show).on("change", I), c.append("label").attr("for", "lines-supergalactic").html("Supergalactic plane"), c.append("input").attr("type", "checkbox").attr("id", "lines-supergalactic-show").property("checked", a.lines.supergalactic.show).on("change", I), (c = l.append("div").attr("class", "col").attr("id", "other")).append("label").attr("class", "header").html("Other"), c.append("label").attr("for", "mw-show").html("Milky Way"), c.append("input").attr("type", "checkbox").attr("id", "mw-show").property("checked", a.mw.show).on("change", I), c.append("label").attr("for", "mw-style-fill").attr("class", "advanced").html(" color"), c.append("input").attr("type", "color").attr("id", "mw-style-fill").attr("class", "advanced").attr("title", "Milky Way color").attr("value", a.mw.style.fill).on("change", I), c.append("label").attr("for", "mw-style-opacity").attr("class", "advanced").html(" opacity"), c.append("input").attr("type", "number").attr("id", "mw-style-opacity").attr("class", "advanced").attr("title", "Transparency of each Milky Way layer").attr("value", a.mw.style.opacity).attr("max", "1").attr("min", "0").attr("step", "0.01").on("change", I), c.append("label").attr("for", "advanced").html("Advanced options"), c.append("input").attr("type", "checkbox").attr("id", "advanced").property("checked", a.advanced).on("change", I), c.append("br"), c.append("label").attr("for", "background-fill").html("Background color"), c.append("input").attr("type", "color").attr("id", "background-fill").attr("title", "Background color").attr("value", a.background.fill).on("change", I), c.append("label").attr("for", "background-opacity").attr("class", "advanced").html("opacity"), c.append("input").attr("type", "number").attr("id", "background-opacity").attr("class", "advanced").attr("title", "Background opacity").attr("value", a.background.opacity).attr("max", "1").attr("min", "0").attr("step", "0.01").on("change", I), c.append("label").attr("title", "Star/DSO sizes are increased with higher zoom-levels").attr("for", "adaptable").attr("class", "advanced").html("Adaptable object sizes"), c.append("input").attr("type", "checkbox").attr("id", "adaptable").attr("class", "advanced").property("checked", a.adaptable).on("change", I);
+      var v = K[a.culture];
 
-  zoom.duration = function(_) {
-    return arguments.length ? (duration = _, zoom) : duration;
-  };
+      function M() {
+         var e = this,
+            n = e.value;
+         !1 !== Dt(e) && (a.width = n, t.resize({
+            width: n
+         }))
+      }
 
-  zoom.event = function(g) {
-    g.each(function() {
-      var g = d3.select(this),
-          dispatch = event.of(this, arguments),
-          view1 = view,
-          transition = d3.transition(g);
-     
-      if (transition !== g) {
-        transition
-            .each("start.zoom", function() {
-              if (this.__chart__) { // pre-transition state
-                view = this.__chart__;
-                if (!view.hasOwnProperty("r")) view.r = projection.rotate();
-              } 
-              projection.rotate(view.r).scale(view.k);
-              zoomstarted(dispatch);
-            })
-            .tween("zoom:zoom", function() {
-              var width = zoom.size()[0],
-                  i = interpolateBetween(quaternionFromEuler(view.r), quaternionFromEuler(view1.r)),
-                  d = d3.geo.distance(view.r, view1.r),
-                  smooth = d3.interpolateZoom([0, 0, width / view.k], [d, 0, width / view1.k]);
-              if (duration) transition.duration(duration(smooth.duration * .001)); // see https://github.com/mbostock/d3/pull/2045
-              return function(t) {
-                var uw = smooth(t);
-                this.__chart__ = view = {r: eulerFromQuaternion(i(uw[0] / d)), k: width / uw[2]};
-                projection.rotate(view.r).scale(view.k);
-                zoom.scale(view.k);
-                zoomed(dispatch);
-              };
-            })
-            .each("end.zoom", function() {
-              zoomended(dispatch);
+      function b() {
+         var e, n = this.value,
+            r = Ft(n, a.transform);
+         null !== r && (a.center[0] = r), a.transform = n, V.set(a), t.reload(a)
+      }
+
+      function w() {
+         var e = this;
+         e && (a.projection = e.value, V.set(a), t.reproject(a))
+      }
+
+      function k() {
+         !1 !== Dt(this) && !1 !== x() && t.rotate(a)
+      }
+
+      function x() {
+         var t = Q("centerx"),
+            e = Q("centery"),
+            n = Q("centerz"),
+            r = [];
+         if (t && e) {
+            if ("equatorial" !== a.transform) a.center[0] = parseFloat(t.value);
+            else {
+               var s = parseFloat(t.value);
+               a.center[0] = s > 12 ? 15 * s - 360 : 15 * s
+            }
+            a.center[1] = parseFloat(e.value);
+            var o = parseFloat(n.value);
+            return a.center[2] = isNaN(o) ? 0 : o, "" !== t.value && "" !== e.value
+         }
+      }
+
+      function T(e) {
+         var a = d3.time.format("%Y%m%dT%H%M%S%Z"),
+            n = "d3-celestial",
+            r = t.date();
+         return r && (n += a(r)), n + e
+      }
+
+      function S() {
+         var t = this.value;
+         t && P(t)
+      }
+
+      function P(e) {
+         var a, n = [],
+            r = W;
+         if ("---" === e) return t.constellation = null, 1 !== (a = t.zoomBy()) && n.push({
+            param: "zoom",
+            value: 1 / a,
+            duration: 0
+         }), t.animate(n, !1), void 0;
+         if (it(t.constellations) && nt(t.constellations, e)) {
+            var s = t.constellations[e];
+            var o = z(s.center, j[r.transform]);
+            r.center = o, _t(r.center, r.transform), 1 !== (a = t.zoomBy()) && n.push({
+               param: "zoom",
+               value: 1 / a,
+               duration: 0
+            }), n.push({
+               param: "center",
+               value: o,
+               duration: 0
             });
-        try { // see https://github.com/mbostock/d3/pull/1983
-          transition
-              .each("interrupt.zoom", function() {
-                zoomended(dispatch);
-              });
-        } catch (e) { console.log(e); }
+            var i = 1 + 360 / s.scale;
+            n.push({
+               param: "zoom",
+               value: i,
+               duration: 0
+            }), t.constellation = e, t.animate(n, !1)
+         }
+      }
+
+      function I() {
+         var e, n = this;
+         switch (Object.assign(a, V.set()), n.type) {
+            case "checkbox":
+               e = n.checked, At(n);
+               break;
+            case "number":
+               if (!1 === Dt(n)) return;
+               e = parseFloat(n.value);
+               break;
+            case "color":
+               if (!1 === Ot(n)) return;
+               e = n.value;
+               break;
+            case "text":
+               if (-1 === n.id.search(/fill$/)) return;
+               if (!1 === Ot(n)) return;
+               e = n.value;
+               break;
+            case "select-one":
+               e = n.value;
+               break
+         }
+         null !== e && (A(n.id, e), "dsos-style-fill" === n.id ? (A("dsos-style-stroke", e), A("dsos-nameStyle-fill", e)) : "constellations-namesType" === n.id ? Ht() : "lang" === n.id ? q(e) : "advanced" === n.id && Ct(e), x(), Object.assign(W, a), t.apply(a))
+      }
+
+      function A(t, e) {
+         var n = t.split("-");
+         switch (n.length) {
+            case 1:
+               a[n[0]] = e;
+               break;
+            case 2:
+               a[n[0]][n[1]] = e;
+               break;
+            case 3:
+               a[n[0]][n[1]][n[2]] = e;
+               break;
+            default:
+               return
+         }
+      }
+
+      function q(t) {
+         Object.assign(a, W), a.lang = t;
+         var e = ["constellations", "planets"];
+         for (var n = 0; n < e.length; n++) nt($[e[n]][a.culture].names, t) ? a[e[n]].namesType = t : nt($[e[n]][a.culture].names, "desig") ? a[e[n]].namesType = "desig" : a[e[n]].namesType = "name";
+         return nt($.dsonames[a.culture].names, t) ? a.dsos.namesType = t : a.dsos.namesType = "desig", nt($.starnames[a.culture].propername, t) ? a.stars.propernameType = t : a.stars.propernameType = "desig", Object.assign(W, a), L(), Ht(), a
+      }
+
+      function L() {
+         d3.selectAll("#celestial-form input, #celestial-form select").each((function(t, e) {
+            if (void 0 !== this) {
+               var n = this.id;
+               if ("lat" === n || "lon" === n) ot(a.geopos) && (this.value = "lat" === n ? a.geopos[0] : a.geopos[1]);
+               else if (-1 !== n.search(/center/)) {
+                  if (ot(a.center)) switch (n) {
+                     case "centerx":
+                        this.value = a.center[0];
+                        break;
+                     case "centery":
+                        this.value = a.center[1];
+                        break;
+                     case "centerz":
+                        this.value = a.center[2] || 0;
+                        break
+                  }
+               } else {
+                  if ("datetime" === n || "hr" === n || "min" === n || "sec" === n || "tz" === n) return;
+                  if ("button" !== this.type) {
+                     var r = D(n);
+                     switch (this.type) {
+                        case "checkbox":
+                           this.checked = r, At(n);
+                           break;
+                        case "number":
+                           if (!1 === Dt(this)) break;
+                           this.value = parseFloat(D(n));
+                           break;
+                        case "color":
+                           if (!1 === Ot(this)) break;
+                           this.value = r;
+                           break;
+                        case "text":
+                           if (-1 === n.search(/fill$/)) break;
+                           if (!1 === Ot(this)) break;
+                           this.value = r;
+                           break;
+                        case "select-one":
+                           this.value = r;
+                           break
+                     }
+                  }
+               }
+            }
+         }))
+      }
+
+      function D(t) {
+         var e = t.split("-");
+         switch (e.length) {
+            case 1:
+               return a[e[0]];
+            case 2:
+               return a[e[0]][e[1]];
+            case 3:
+               return a[e[0]][e[1]][e[2]];
+            default:
+               return
+         }
+      }
+      d = 0, c.append("label").attr("title", "General language setting").attr("for", "lang").html("Object names "), p = c.append("select").attr("id", "lang").on("change", I), u = v.map((function(t, e) {
+         return t === a.lang && (d = e), {
+            o: t,
+            n: $.constellations[a.culture].names[t]
+         }
+      })), u = [{
+         o: "---",
+         n: "(Select language)"
+      }].concat(u), p.selectAll("option").data(u).enter().append("option").attr("value", (function(t) {
+         return t.o
+      })).text((function(t) {
+         return t.n
+      })), p.property("selectedIndex", d), (c = l.append("div").attr("class", "col").attr("id", "download")).append("label").attr("class", "header").html("Download"), c.append("input").attr("type", "button").attr("id", "download-png").attr("value", "PNG Image").on("click", (function() {
+         var t = d3.select("body").append("a").node(),
+            e = document.querySelector("#" + a.container + " canvas");
+         t.download = T(".png"), t.rel = "noopener", t.href = e.toDataURL("image/png").replace("image/png", "image/octet-stream"), t.click(), d3.select(t).remove()
+      })), c.append("input").attr("type", "button").attr("id", "download-svg").attr("value", "SVG File").on("click", (function() {
+         return Zt(T(".svg")), !1
+      })), Et(), Ft(a.transform), Nt(e), Ct(a.advanced), t.updateForm = L, t.showConstellation = P, t.setLanguage = function(t) {
+         var e = V.set();
+         return -1 !== K[a.culture].indexOf(t) && (e = q(t)), e
+      }
+   }
+   var It = {
+      "stars-show": ["stars-limit", "stars-colors", "stars-style-fill", "stars-designation", "stars-propername", "stars-size", "stars-exponent"],
+      "stars-designation": ["stars-designationType", "stars-designationLimit"],
+      "stars-propername": ["stars-propernameLimit", "stars-propernameType"],
+      "dsos-show": ["dsos-limit", "dsos-colors", "dsos-style-fill", "dsos-names", "dsos-size", "dsos-exponent"],
+      "dsos-names": ["dsos-namesType", "dsos-nameLimit"],
+      "mw-show": ["mw-style-opacity", "mw-style-fill"],
+      "constellations-names": ["constellations-namesType"],
+      "planets-show": ["planets-symbolType", "planets-names"],
+      "planets-names": ["planets-namesType"]
+   };
+
+   function At(t) {
+      var e = t.id,
+         a;
+      switch (e) {
+         case "stars-show":
+            a = !Q(e).checked;
+            for (var n = 0; n < It[e].length; n++) qt(It[e][n], a);
+         case "stars-designation":
+            for (a = !Q("stars-designation").checked || !Q("stars-show").checked, n = 0; n < It["stars-designation"].length; n++) qt(It["stars-designation"][n], a);
+         case "stars-propername":
+            for (a = !Q("stars-propername").checked || !Q("stars-show").checked, n = 0; n < It["stars-propername"].length; n++) qt(It["stars-propername"][n], a);
+            break;
+         case "dsos-show":
+            for (a = !Q(e).checked, n = 0; n < It[e].length; n++) qt(It[e][n], a);
+         case "dsos-names":
+            for (a = !Q("dsos-names").checked || !Q("dsos-show").checked, n = 0; n < It["dsos-names"].length; n++) qt(It["dsos-names"][n], a);
+            break;
+         case "planets-show":
+            for (a = !Q(e).checked, n = 0; n < It[e].length; n++) qt(It[e][n], a);
+         case "planets-names":
+            for (a = !Q("planets-names").checked || !Q("planets-show").checked, n = 0; n < It["planets-names"].length; n++) qt(It["planets-names"][n], a);
+            break;
+         case "constellations-names":
+         case "mw-show":
+            for (a = !Q(e).checked, n = 0; n < It[e].length; n++) qt(It[e][n], a);
+            break
+      }
+   }
+
+   function qt(t, e) {
+      var a = Q(t);
+      a && (a.disabled = e, a.style.color = e ? "#999" : "#000", a.previousSibling.style.color = e ? "#999" : "#000")
+   }
+
+   function Lt(t, e) {
+      var a = dt(t);
+      d3.select("#error").html(e).style({
+         top: X(a[1] + t.offsetHeight + 1),
+         left: X(a[0]),
+         opacity: 1
+      }), t.focus()
+   }
+
+   function Dt(t) {
+      var e, a = "hr" === t.id || "min" === t.id || "sec" === t.id ? 1 : 0;
+      if (t.validity) {
+         if ((e = t.validity).typeMismatch || e.badInput) return Lt(t, t.title + ": check field value"), !1;
+         if (e.rangeOverflow || e.rangeUnderflow) return Lt(t, t.title + " must be between " + (parseInt(t.min) + a) + " and " + (parseInt(t.max) - a)), !1
       } else {
-        this.__chart__ = view;
-        zoomstarted(dispatch);
-        zoomed(dispatch);
-        zoomended(dispatch);
+         if (!st(e = t.value)) return Lt(t, t.title + ": check field value"), !1;
+         if ((e = parseFloat(e)) < t.min || e > t.max) return Lt(t, t.title + " must be between " + (t.min + a) + " and " + (+t.max - a)), !1
       }
-    });
-  };
+      return d3.select("#error").style({
+         top: "-9999px",
+         left: "-9999px",
+         opacity: 0
+      }), !0
+   }
 
-  function zoomstarted(dispatch) {
-    if (!zooming++) dispatch({type: "zoomstart"});
-  }
-
-  function zoomed(dispatch) {
-    dispatch({type: "zoom"});
-  }
-
-  function zoomended(dispatch) {
-    if (!--zooming) dispatch({type: "zoomend"});
-  }
-
-  return d3.rebind(zoom, event, "on");
-};
-
-function bank(projection, p0, p1) {
-  var t = projection.translate(),
-      angle = Math.atan2(p0[1] - t[1], p0[0] - t[0]) - Math.atan2(p1[1] - t[1], p1[0] - t[0]);
-  return [Math.cos(angle / 2), 0, 0, Math.sin(angle / 2)];
-}
-
-function position(projection, point) {
-  var spherical = projection.invert(point);
-  return spherical && isFinite(spherical[0]) && isFinite(spherical[1]) && cartesian(spherical);
-}
-
-function quaternionFromEuler(euler) {
-  var λ = .5 * euler[0] * radians,
-      φ = .5 * euler[1] * radians,
-      γ = .5 * euler[2] * radians,
-      sinλ = Math.sin(λ), cosλ = Math.cos(λ),
-      sinφ = Math.sin(φ), cosφ = Math.cos(φ),
-      sinγ = Math.sin(γ), cosγ = Math.cos(γ);
-  return [
-    cosλ * cosφ * cosγ + sinλ * sinφ * sinγ,
-    sinλ * cosφ * cosγ - cosλ * sinφ * sinγ,
-    cosλ * sinφ * cosγ + sinλ * cosφ * sinγ,
-    cosλ * cosφ * sinγ - sinλ * sinφ * cosγ
-  ];
-}
-
-function multiply(a, b) {
-  var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3],
-      b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
-  return [
-    a0 * b0 - a1 * b1 - a2 * b2 - a3 * b3,
-    a0 * b1 + a1 * b0 + a2 * b3 - a3 * b2,
-    a0 * b2 - a1 * b3 + a2 * b0 + a3 * b1,
-    a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0
-  ];
-}
-
-function rotateBetween(a, b) {
-  if (!a || !b) return;
-  var axis = cross(a, b),
-      norm = Math.sqrt(dot(axis, axis)),
-      halfγ = .5 * Math.acos(Math.max(-1, Math.min(1, dot(a, b)))),
-      k = Math.sin(halfγ) / norm;
-  return norm && [Math.cos(halfγ), axis[2] * k, -axis[1] * k, axis[0] * k];
-}
-
-// Interpolate between two quaternions (slerp).
-function interpolateBetween(a, b) {
-  var d = Math.max(-1, Math.min(1, dot(a, b))),
-      s = d < 0 ? -1 : 1,
-      θ = Math.acos(s * d),
-      sinθ = Math.sin(θ);
-  return sinθ ? function(t) {
-    var A = s * Math.sin((1 - t) * θ) / sinθ,
-        B = Math.sin(t * θ) / sinθ;
-    return [
-      a[0] * A + b[0] * B,
-      a[1] * A + b[1] * B,
-      a[2] * A + b[2] * B,
-      a[3] * A + b[3] * B
-    ];
-  } : function() { return a; };
-}
-
-function eulerFromQuaternion(q) {
-  return [
-    Math.atan2(2 * (q[0] * q[1] + q[2] * q[3]), 1 - 2 * (q[1] * q[1] + q[2] * q[2])) * degrees,
-    Math.asin(Math.max(-1, Math.min(1, 2 * (q[0] * q[2] - q[3] * q[1])))) * degrees,
-    Math.atan2(2 * (q[0] * q[3] + q[1] * q[2]), 1 - 2 * (q[2] * q[2] + q[3] * q[3])) * degrees
-  ];
-}
-
-function cartesian(spherical) {
-  var λ = spherical[0] * radians,
-      φ = spherical[1] * radians,
-      cosφ = Math.cos(φ);
-  return [
-    cosφ * Math.cos(λ),
-    cosφ * Math.sin(λ),
-    Math.sin(φ)
-  ];
-}
-
-function dot(a, b) {
-  for (var i = 0, n = a.length, s = 0; i < n; ++i) s += a[i] * b[i];
-  return s;
-}
-
-function cross(a, b) {
-  return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0]
-  ];
-}
-
-// Like d3.dispatch, but for custom events abstracting native UI events. These
-// events have a target component (such as a brush), a target element (such as
-// the svg:g element containing the brush) and the standard arguments `d` (the
-// target element's data) and `i` (the selection index of the target element).
-function d3_eventDispatch(target) {
-  var i = 0,
-      n = arguments.length,
-      argumentz = [];
-
-  while (++i < n) argumentz.push(arguments[i]);
-
-  var dispatch = d3.dispatch.apply(null, argumentz);
-
-  // Creates a dispatch context for the specified `thiz` (typically, the target
-  // DOM element that received the source event) and `argumentz` (typically, the
-  // data `d` and index `i` of the target element). The returned function can be
-  // used to dispatch an event to any registered listeners; the function takes a
-  // single argument as input, being the event to dispatch. The event must have
-  // a "type" attribute which corresponds to a type registered in the
-  // constructor. This context will automatically populate the "sourceEvent" and
-  // "target" attributes of the event, as well as setting the `d3.event` global
-  // for the duration of the notification.
-  dispatch.of = function(thiz, argumentz) {
-    return function(e1) {
-      try {
-        var e0 =
-        e1.sourceEvent = d3.event;
-        e1.target = target;
-        d3.event = e1;
-        dispatch[e1.type].apply(thiz, argumentz);
-      } finally {
-        d3.event = e0;
+   function Ot(t) {
+      var e;
+      if (t.validity) {
+         if ((e = t.validity).typeMismatch || e.badInput) return Lt(t, t.title + ": check field value"), !1;
+         if (-1 === t.value.search(/^#[0-9A-F]{6}$/i)) return Lt(t, t.title + ": not a color value"), !1
+      } else {
+         if ("" === (e = t.value)) return !0;
+         if (-1 === e.search(/^#[0-9A-F]{6}$/i)) return Lt(t, t.title + ": not a color value"), !1
       }
-    };
-  };
+      return d3.select("#error").style({
+         top: "-9999px",
+         left: "-9999px",
+         opacity: 0
+      }), !0
+   }
 
-  return dispatch;
-}
+   function Ft(t, e) {
+      var a = Q("centerx");
+      return a ? (e && ("equatorial" === t && "equatorial" !== e ? (a.value = (a.value / 15).toFixed(1), a.value < 0 && (a.value += 24)) : "equatorial" !== t && "equatorial" === e && (a.value = (15 * a.value).toFixed(1), a.value > 180 && (a.value -= 360))), "equatorial" === t ? (a.min = "0", a.max = "24", Q("cxunit").innerHTML = "h") : (a.min = "-180", a.max = "180", Q("cxunit").innerHTML = "°"), a.value) : null
+   }
 
-})();
-// https://d3js.org/d3-queue/ Version 3.0.7. Copyright 2017 Mike Bostock.
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.d3 = global.d3 || {})));
-}(this, (function (exports) { 'use strict';
+   function _t(t, e) {
+      var a = Q("centerx"),
+         n = Q("centery"),
+         r = Q("centerz");
+      a && n && ((null === t || t.length < 1) && (t = [0, 0, 0]), (t.length <= 2 || void 0 === t[2]) && (t[2] = 0), a.value = "equatorial" !== e ? t[0].toFixed(1) : t[0] < 0 ? (t[0] / 15 + 24).toFixed(1) : (t[0] / 15).toFixed(1), n.value = t[1].toFixed(1), r.value = null !== t[2] ? t[2].toFixed(1) : 0, V.set({
+         center: t
+      }))
+   }
 
-var slice = [].slice;
+   function Et() {
+      var e, a = /\d+(\.\d+)?/g,
+         n, r, s = {
+            s: 6,
+            d: 6
+         },
+         o = t.settings();
+      return null !== (e = (r = o.dsos.data).match(a)) && (s.d = parseFloat(e[e.length - 1])), 6 !== s.d && (Q("dsos-limit").max = s.d, Q("dsos-nameLimit").max = s.d), null !== (e = (n = o.stars.data).match(a)) && (s.s = parseFloat(e[e.length - 1])), 6 != s.s && (Q("stars-limit").max = s.s, Q("stars-designationLimit").max = s.s, Q("stars-propernameLimit").max = s.s), s
+   }
 
-var noabort = {};
+   function Ct(t) {
+      var e = t ? "inline-block" : "none";
+      d3.selectAll(".advanced").style("display", e), d3.selectAll("#label-propername").style("display", t ? "none" : "inline-block")
+   }
 
-function Queue(size) {
-  this._size = size;
-  this._call =
-  this._error = null;
-  this._tasks = [];
-  this._data = [];
-  this._waiting =
-  this._active =
-  this._ended =
-  this._start = 0; // inside a synchronous task callback?
-}
-
-Queue.prototype = queue.prototype = {
-  constructor: Queue,
-  defer: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
-    if (this._call) throw new Error("defer after await");
-    if (this._error != null) return this;
-    var t = slice.call(arguments, 1);
-    t.push(callback);
-    ++this._waiting, this._tasks.push(t);
-    poke(this);
-    return this;
-  },
-  abort: function() {
-    if (this._error == null) abort(this, new Error("abort"));
-    return this;
-  },
-  await: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
-    if (this._call) throw new Error("multiple await");
-    this._call = function(error, results) { callback.apply(null, [error].concat(results)); };
-    maybeNotify(this);
-    return this;
-  },
-  awaitAll: function(callback) {
-    if (typeof callback !== "function") throw new Error("invalid callback");
-    if (this._call) throw new Error("multiple await");
-    this._call = callback;
-    maybeNotify(this);
-    return this;
-  }
-};
-
-function poke(q) {
-  if (!q._start) {
-    try { start(q); } // let the current task complete
-    catch (e) {
-      if (q._tasks[q._ended + q._active - 1]) abort(q, e); // task errored synchronously
-      else if (!q._data) throw e; // await callback errored synchronously
-    }
-  }
-}
-
-function start(q) {
-  while (q._start = q._waiting && q._active < q._size) {
-    var i = q._ended + q._active,
-        t = q._tasks[i],
-        j = t.length - 1,
-        c = t[j];
-    t[j] = end(q, i);
-    --q._waiting, ++q._active;
-    t = c.apply(null, t);
-    if (!q._tasks[i]) continue; // task finished synchronously
-    q._tasks[i] = t || noabort;
-  }
-}
-
-function end(q, i) {
-  return function(e, r) {
-    if (!q._tasks[i]) return; // ignore multiple callbacks
-    --q._active, ++q._ended;
-    q._tasks[i] = null;
-    if (q._error != null) return; // ignore secondary errors
-    if (e != null) {
-      abort(q, e);
-    } else {
-      q._data[i] = r;
-      if (q._waiting) poke(q);
-      else maybeNotify(q);
-    }
-  };
-}
-
-function abort(q, e) {
-  var i = q._tasks.length, t;
-  q._error = e; // ignore active callbacks
-  q._data = undefined; // allow gc
-  q._waiting = NaN; // prevent starting
-
-  while (--i >= 0) {
-    if (t = q._tasks[i]) {
-      q._tasks[i] = null;
-      if (t.abort) {
-        try { t.abort(); }
-        catch (e) { /* ignore */ }
+   function Nt(t, e) {
+      var a, n;
+      if (nt(t, "formFields")) {
+         if (e && nt(t.formFields, e)) return d3.select("#" + e).style({
+            display: "none"
+         }), void 0;
+         if (!1 !== t.form || !0 !== t.location)
+            for (n in !1 === t.form && d3.select("#celestial-form").style("display", "none"), t.formFields) nt(t.formFields, n) && "location" !== n && (a = !1 === t.formFields[n] ? "none" : "block", d3.select("#" + n).style({
+               display: a
+            }));
+         else
+            for (n in d3.select("#celestial-form").style("display", "inline-block"), t.formFields) nt(t.formFields, n) && "location" !== n && d3.select("#" + n).style({
+               display: "none"
+            })
       }
-    }
-  }
+   }
 
-  q._active = NaN; // allow notification
-  maybeNotify(q);
-}
+   function Ht() {
+      var e = d3.select("#constellation"),
+         a = [],
+         n = 0,
+         r, s, o = W;
+      if (t.container.selectAll(".constname").each((function(t, e) {
+            (r = t.id) === o.constellation && (n = e), (s = t.properties[o.constellations.namesType]) !== r && (s += " (" + r + ")"), a.push({
+               o: r,
+               n: s
+            })
+         })), a.length < 1 || e.length < 1) return setTimeout(Ht, 1e3), void 0;
+      a = [{
+         o: "---",
+         n: "(Select constellation)"
+      }].concat(a), e.selectAll("option").remove(), e.selectAll("option").data(a).enter().append("option").attr("value", (function(t) {
+         return t.o
+      })).text((function(t) {
+         return t.n
+      })), e.property("selectedIndex", n)
+   }
+   var Bt = null;
 
-function maybeNotify(q) {
-  if (!q._active && q._call) {
-    var d = q._data;
-    q._data = undefined; // allow gc
-    q._call(q._error, d);
-  }
-}
+   function Gt(e) {
+      var a = d3.time.format("%Y-%m-%d %H:%M:%S"),
+         n = [0, 0],
+         r = [0, 0],
+         s = new Date,
+         o = -s.getTimezoneOffset(),
+         i = o,
+         l = V.set(e),
+         c = d3.select("#celestial-form form").insert("div", "div#general").attr("id", "loc");
+      var p = new Xt(l, (function(t, e) {
+         Q("datetime").value = k(t, e), i = e, S()
+      }));
+      nt(l, "geopos") && null !== l.geopos && 2 === l.geopos.length && (r = l.geopos);
+      var d = c.append("div").attr("class", "col").attr("id", "location").style("display", "none");
+      d.append("label").attr("title", "Location coordinates long/lat").attr("for", "lat").html("Location"), d.append("input").attr("type", "number").attr("id", "lat").attr("title", "Latitude").attr("placeholder", "Latitude").attr("max", "90").attr("min", "-90").attr("step", "0.0001").attr("value", r[0]).on("change", (function() {
+         !0 === Dt(this) && S()
+      })), d.append("span").html("°"), d.append("input").attr("type", "number").attr("id", "lon").attr("title", "Longitude").attr("placeholder", "Longitude").attr("max", "180").attr("min", "-180").attr("step", "0.0001").attr("value", r[1]).on("change", (function() {
+         !0 === Dt(this) && S()
+      })), d.append("span").html("°"), "geolocation" in navigator && d.append("input").attr("type", "button").attr("value", "Here").attr("id", "here").on("click", b), d.append("label").attr("title", "Local date/time").attr("for", "datetime").html(" Date/time"), d.append("input").attr("type", "button").attr("id", "day-left").attr("title", "One day back").on("click", (function() {
+         s.setDate(s.getDate() - 1), Q("datetime").value = k(s, i), S()
+      })), d.append("input").attr("type", "text").attr("id", "datetime").attr("title", "Date and time").attr("value", k(s, i)).on("click", w, !0).on("input", (function() {
+         this.value = k(s, i), p.isVisible() || w()
+      })), d.append("div").attr("id", "datepick").on("click", w), d.append("input").attr("type", "button").attr("id", "day-right").attr("title", "One day forward").on("click", (function() {
+         s.setDate(s.getDate() + 1), Q("datetime").value = k(s, i), S()
+      })), d.append("input").attr("type", "button").attr("value", "Now").attr("id", "now").on("click", M), d.append("br"), d.append("label").attr("title", "Show horizon marker").attr("for", "horizon-show").html(" Horizon marker"), d.append("input").attr("type", "checkbox").attr("id", "horizon-show").property("checked", l.horizon.show).on("change", T), d.append("label").attr("title", "Show daylight").attr("for", "daylight-show").html("Daylight sky"), d.append("input").attr("type", "checkbox").attr("id", "daylight-show").property("checked", l.daylight.show).on("change", T), d.append("br"), d.append("label").attr("title", "Show solar system objects").attr("for", "planets-show").html(" Planets, Sun & Moon"), d.append("input").attr("type", "checkbox").attr("id", "planets-show").property("checked", l.planets.show).on("change", T);
+      var u = $.planets[l.culture] || $.planets.iau;
+      for (var h in u)
+         if (nt(u, h)) {
+            var f = Object.keys(u[h]);
+            if (f.length > 1) {
+               var m = "symbol" === h ? "as" : "with";
+               d.append("label").attr("for", "planets-" + h + "Type").html(m);
+               var y = 0;
+               d.append("label").attr("title", "Type of planet name").attr("for", "planets-" + h + "Type").attr("class", "advanced").html("");
+               var g = d.append("select").attr("id", "planets-" + h + "Type").on("change", T);
+               var v = f.map((function(t, e) {
+                  return t === l.planets[h + "Type"] && (y = e), {
+                     o: t,
+                     n: u[h][t]
+                  }
+               }));
+               g.selectAll("option").data(v).enter().append("option").attr("value", (function(t) {
+                  return t.o
+               })).text((function(t) {
+                  return t.n
+               })), g.property("selectedIndex", y), "names" === h && (g.attr("class", "advanced"), d.append("label").attr("for", "planets-" + h).html("names"), d.append("input").attr("type", "checkbox").attr("id", "planets-" + h).property("checked", l.planets[h]).on("change", T))
+            }
+         }
+      function M() {
+         s.setTime(Date.now()), Q("datetime").value = k(s, i), S()
+      }
 
-function queue(concurrency) {
-  if (concurrency == null) concurrency = Infinity;
-  else if (!((concurrency = +concurrency) >= 1)) throw new Error("invalid concurrency");
-  return new Queue(concurrency);
-}
+      function b() {
+         navigator.geolocation.getCurrentPosition((function(t) {
+            r = [tt(t.coords.latitude, 4), tt(t.coords.longitude, 4)], Q("lat").value = r[0], Q("lon").value = r[1], S()
+         }))
+      }
 
-exports.queue = queue;
+      function w() {
+         p.show(s, i)
+      }
 
-Object.defineProperty(exports, '__esModule', { value: true });
+      function k(t, e) {
+         var n;
+         if (e && "0" !== e) {
+            var r = Math.floor(Math.abs(e) / 60),
+               s = Math.abs(e) - 60 * r,
+               o;
+            n = (e > 0 ? " +" : " −") + at(r) + at(s)
+         } else n = " ±0000";
+         return a(t) + n
+      }
 
-})));
-this.Celestial = Celestial;
-})();
+      function x(t) {
+         return !(!t || !ot(t) || t.length < 2) && (!(!st(t[0]) || t[0] < -90 || t[0] > 90) && !(!st(t[1]) || t[1] < -180 || t[1] > 180))
+      }
+
+      function z(t) {
+         return null != t && !(!st(t) && Math.abs(t) > 840)
+      }
+
+      function T() {
+         Object.assign(l, V.set()), l.horizon.show = !!Q("horizon-show").checked, l.daylight.show = !!Q("daylight-show").checked, l.planets.show = !!Q("planets-show").checked, l.planets.names = !!Q("planets-names").checked, l.planets.namesType = Q("planets-namesType").value, l.planets.symbolType = Q("planets-symbolType").value, At(Q("planets-show")), t.apply(l)
+      }
+
+      function S() {
+         var e = parseFloat(Q("lon").value),
+            c = parseFloat(Q("lat").value),
+            p;
+         if (Object.assign(l, V.set()), s = a.parse(Q("datetime").value.slice(0, -6)), !isNaN(e) && !isNaN(c)) {
+            if (c !== r[0] || e !== r[1]) return r = [c, e], j([c, e], !0), void 0;
+            Q("datetime").value = k(s, i);
+            var d = new Date(s.valueOf() - 6e4 * (i - o));
+            (n = t.getPoint(P.inverse(d, [90, 0], r), l.transform))[2] = 0, "zenith" === l.follow ? t.rotate({
+               center: n
+            }) : t.redraw()
+         }
+      }
+
+      function j(t, e) {
+         if (t && nt(l, "settimezone") && !1 !== l.settimezone) {
+            var a = Math.floor(s.getTime() / 1e3),
+               n = "https://api.timezonedb.com/v2.1/get-time-zone?key=" + l.timezoneid + "&format=json&by=position" + "&lat=" + t[0] + "&lng=" + t[1] + "&time=" + a;
+            d3.json(n, (function(e, n) {
+               if (e) return console.warn(e);
+               "FAILED" === n.status ? (i = 60 * Math.round(t[1] / 15), Bt = {
+                  gmtOffset: 60 * i,
+                  message: "Sea locatation inferred",
+                  timestamp: a
+               }) : (i = n.gmtOffset / 60, Bt = n), setTimeout((() => {
+                  Q("datetime").value = k(s, i)
+               }), 150), S()
+            }))
+         }
+      }
+      At(Q("planets-show")), Ct(l.advanced), d3.select(document).on("mousedown", (function() {
+         !ut(d3.event.target, "celestial-date") && p.isVisible() && p.hide()
+      })), t.dateFormat = k, t.date = function(t, e) {
+         if (!t) return s;
+         z(e) && (i = e), Object.assign(l, V.set()), p.isVisible() && p.hide(), s.setTime(t.valueOf()), Q("datetime").value = k(t, i), S()
+      }, t.timezone = function(t) {
+         if (!t) return i;
+         z(t) && (i = t), Object.assign(l, V.set()), p.isVisible() && p.hide(), Q("datetime").value = k(s, i), S()
+      }, t.position = function() {
+         return r
+      }, t.location = function(t, e) {
+         if (!t || t.length < 2) return r;
+         x(t) && (r = t.slice(), Q("lat").value = r[0], Q("lon").value = r[1], z(e) ? i = e : j(r, !0))
+      }, t.skyview = function(e) {
+         if (!e) return {
+            date: s,
+            location: r,
+            timezone: i
+         };
+         var a = !1;
+         return p.isVisible() && p.hide(), nt(e, "timezone") && z(e.timezone) && (i = e.timezone, a = !0), nt(e, "date") && ct(e.date) && (s.setTime(e.date.valueOf()), Q("datetime").value = k(e.date, i), a = !0), nt(e, "location") && x(e.location) && (r = e.location.slice(), Q("lat").value = r[0], Q("lon").value = r[1], !nt(e, "timezone")) ? (j(r, !nt(e, "date")), void 0) : !1 === a ? {
+            date: s,
+            location: r,
+            timezone: i
+         } : ("zenith" === l.follow ? S() : t.redraw(), void 0)
+      }, t.dtLoc = t.skyview, t.zenith = function() {
+         return n
+      }, t.nadir = function() {
+         var t = -n[1],
+            e = n[0] + 180;
+         return e > 180 && (e -= 360), [e, t - .001]
+      }, !nt(e, "formFields") || !0 !== e.location && !0 !== e.formFields.location || d3.select("#location").style({
+         display: "inline-block"
+      }), !0 === e.location && !0 === e.formFields.location && setTimeout(S, 1e3)
+   }
+   var Ut = {
+         sol: .0002959122082855911,
+         mer: 0x95955473dbc3,
+         ven: 0x89d9374048629,
+         ter: 0xa923c08a47948,
+         lun: 36599199229256,
+         mar: 319711652803400,
+         cer: 467549107200,
+         ves: 129071530155,
+         jup: 0xd20883d548bcd80,
+         sat: 0x3ee3798098fbac0,
+         ura: 0x99ad2c4e2f7f70,
+         nep: 0xb54f848fd74430,
+         plu: 7327611364884,
+         eri: 827117568e4
+      },
+      Wt = {
+         sol: "☉",
+         mer: "☿",
+         ven: "♀",
+         ter: "⊕",
+         lun: "●",
+         mar: "♂",
+         cer: "⚳",
+         ves: "⚶",
+         jup: "♃",
+         sat: "♄",
+         ura: "♅",
+         nep: "♆",
+         plu: "♇",
+         eri: "⚪"
+      },
+      Vt = 23.43928 * x,
+      Rt = Math.sin(Vt),
+      Yt = Math.cos(Vt),
+      Jt = ["a", "e", "i", "w", "M", "L", "W", "N", "n", "ep", "ref", "lecl", "becl", "Tilt"];
+   var $t = function() {
+      var t = Ut.sol,
+         e = "sol",
+         a = {},
+         n = {},
+         r, s, o;
+
+      function i(t) {
+         return l(t), "sol" === r ? (n.ephemeris.x = 0, n.ephemeris.y = 0, n.ephemeris.z = 0, n.ephemeris.mag = -6, i) : (c(), i)
+      }
+      var l = function(t) {
+         var e, r = n.ephemeris = {};
+         t && (e = t instanceof Date ? new Date(t.valueOf()) : yt(t)), e || (e = new Date), r.jd = z(e), (e = yt(a.ep)) || (e = yt("2000-01-01")), r.jd0 = z(e), r.d = r.jd - r.jd0, r.cy = r.d / 36525
+      };
+      var c = function() {
+         var t, e = n.ephemeris;
+         if ("lun" === r) {
+            if (!(e = j(e))) return
+         } else {
+            for (var s = 0; s < Jt.length; s++) t = Jt[s], nt(a, t) && (nt(a, "d" + t) ? e[t] = a[t] + a["d" + t] * e.cy : nt(a, t) && (e[t] = a[t]));
+            nt(e, "M") && !nt(e, "dM") && nt(e, "n") && (e.M += e.n * e.d)
+         }
+         h(), u(), g()
+      };
+
+      function p(t, e) {
+         var a = e > 1 ? t * t : -t * t,
+            n = e * a * t / 6,
+            r = (1 - e) * t - n,
+            s = 4;
+         while (Math.abs(n) > 1e-15) r -= n *= a / (s * (s + 1)), s += 2;
+         return r
+      }
+
+      function d() {
+         var t = n.ephemeris,
+            e, a, r, s, o = t.e,
+            i = t.M,
+            l = 1e-8,
+            c = 0,
+            d = 1.9,
+            u = !1,
+            h = 0;
+         if (!i) return 0;
+         if (o < 1 && ((i < -Math.PI || i > Math.PI) && (c = i - (s = vt.normalize0(i)), i = s), o < .9)) {
+            e = Math.atan2(Math.sin(i), Math.cos(i) - o);
+            do {
+               e -= a = (e - o * Math.sin(e) - i) / (1 - o * Math.cos(e))
+            } while (Math.abs(a) > l);
+            return e
+         }
+         if (i < 0 && (i = -i, u = !0), e = i, (l *= Math.abs(1 - o)) < 1e-15 && (l = 1e-15), (o > .8 && i < Math.PI / 3 || o > 1) && ((r = i / Math.abs(1 - o)) * r > 6 * Math.abs(1 - o) && (r = i < Math.PI ? Math.pow(6 * i, 1 / 3) : vt.asinh(i / o)), e = r), o > 1 && i > 4 && (e = Math.log(i)), o < 1)
+            while (Math.abs(d) > l) e += d = -(a = h++ > 8 ? p(e, o) - i : e - o * Math.sin(e) - i) / (1 - o * Math.cos(e));
+         else
+            while (Math.abs(d) > l) e += d = -(a = h++ > 7 ? -p(e, o) - i : o * vt.sinh(e) - e - i) / (o * vt.cosh(e) - 1);
+         return u ? c - e : c + e
+      }
+
+      function u() {
+         var t, e, a, r, s, o = n.ephemeris;
+         1 === o.e ? (s = o.jd0 - o.T, r = o.w0 * s * .5, e = Math.pow(r + Math.sqrt(r * r + 1), 1 / 3), o.v = 2 * Math.atan(e - 1 / e)) : (o.E = d(), o.e > 1 ? (t = o.e - vt.cosh(o.E), e = vt.sinh(o.E)) : (t = Math.cos(o.E) - o.e, e = Math.sin(o.E)), e *= Math.sqrt(Math.abs(1 - o.e * o.e)), o.v = Math.atan2(e, t)), a = o.q * (1 + o.e), o.r = a / (1 + o.e * Math.cos(o.v))
+      }
+
+      function h() {
+         var e = n.ephemeris;
+         e.hasOwnProperty("w") || (e.w = e.W - e.N), e.hasOwnProperty("M") || (e.M = e.L - e.W), e.e < 1 && (e.M = vt.normalize0(e.M)), e.P = w * Math.sqrt(Math.pow(e.a, 3) / t) / 365.25, e.T = e.jd0 - e.M / k / e.P, 1 !== e.e ? (e.q = e.a * (1 - e.e), e.t0 = e.a * Math.sqrt(Math.abs(e.a) / t)) : (e.w0 = 3 / Math.sqrt(2) / (e.q * Math.sqrt(e.q / t)), e.a = 0, e.t0 = 0), e.am = Math.sqrt(t * e.q * (1 + e.e))
+      }
+
+      function f() {
+         var t = n.ephemeris;
+         if (!t.ref || "ecl" === t.ref) return t.tx = t.x, t.ty = t.y, t.tz = t.z, void 0;
+         var e = t.lecl,
+            a, r;
+         M(t, [0, Math.PI / 2 - t.becl, -e]);
+         var s = vt.cartesian([t.tl, t.tb, t.r]);
+         t.tx = s.x, t.ty = s.y, t.tz = s.z
+      }
+
+      function m(t) {
+         var e = n.ephemeris,
+            a = t.ephemeris;
+         Vt = (23.439292 - .0130042 * e.cy - 1.667e-7 * e.cy * e.cy + 5.028e-7 * e.cy * e.cy * e.cy) * x, Rt = Math.sin(Vt), Yt = Math.cos(Vt);
+         var s = "lun" === r ? {
+            x: 0,
+            y: 0,
+            z: 0
+         } : {
+            x: a.x,
+            y: a.y,
+            z: a.z
+         };
+         e.xeq = e.x - s.x, e.yeq = (e.y - s.y) * Yt - (e.z - s.z) * Rt, e.zeq = (e.y - s.y) * Rt + (e.z - s.z) * Yt, e.ra = vt.normalize(Math.atan2(e.yeq, e.xeq)), e.dec = Math.atan2(e.zeq, Math.sqrt(e.xeq * e.xeq + e.yeq * e.yeq)), "lun" === r && (e = P(e, a)), e.pos = [e.ra / x, e.dec / x], e.rt = Math.sqrt(e.xeq * e.xeq + e.yeq * e.yeq + e.zeq * e.zeq), "sol" !== r && (e.mag = y())
+      }
+
+      function y() {
+         var t = n.ephemeris,
+            e = t.r,
+            a = t.rt,
+            r = Math.acos((e * e + a * a - 1) / (2 * e * a)),
+            s = .666 * ((1 - r / Math.PI) * Math.cos(r) + 1 / Math.PI * Math.sin(r)),
+            o;
+         return 1 * n.H + 5 * Math.log(e * a) * Math.LOG10E - 2.5 * Math.log(s) * Math.LOG10E
+      }
+
+      function g() {
+         var t = n.ephemeris,
+            e = t.v + t.w;
+         return t.x = t.r * (Math.cos(t.N) * Math.cos(e) - Math.sin(t.N) * Math.sin(e) * Math.cos(t.i)), t.y = t.r * (Math.sin(t.N) * Math.cos(e) + Math.cos(t.N) * Math.sin(e) * Math.cos(t.i)), t.z = t.r * (Math.sin(e) * Math.sin(t.i)), n
+      }
+
+      function v() {
+         var t = n.ephemeris,
+            e = Math.atan2(t.y, t.x),
+            a = Math.atan2(t.z, Math.sqrt(t.x * t.x + t.y * t.y));
+         return t.l = vt.normalize(e), t.b = a, n
+      }
+
+      function M(t) {}
+
+      function b(t) {
+         var e = Math.cos(t.lat) * t.r;
+         return t.x = e * Math.cos(t.lon), t.y = e * Math.sin(t.lon), t.z = t.r * Math.sin(t.lat), t
+      }
+
+      function z(t) {
+         var e = t.getUTCFullYear(),
+            a = t.getUTCMonth() + 1,
+            n = t.getUTCDate(),
+            r = (t.getUTCHours() - 12 + t.getUTCMinutes() / 60 + t.getUTCSeconds() / 3600) / 24,
+            s;
+         if (e < -4799) return -1;
+         var o = Math.floor((14 - a) / 12),
+            i = e + 4800 - o,
+            l = a + 12 * o - 3;
+         var c;
+         return n + Math.floor((153 * l + 2) / 5) + 365 * i + Math.floor(i / 4) - Math.floor(i / 100) + Math.floor(i / 400) - 32045 + r
+      }
+
+      function T(t) {
+         var e = t || 0;
+         return 15 * (18.697374558 + 24.06570982441908 * n.ephemeris.d) + e
+      }
+
+      function S(t) {
+         var e = 298.257223563,
+            a = 6378.137,
+            n = t.h || 0,
+            r = {},
+            s = T();
+         var o = Math.cos(t.lat),
+            i = Math.sin(t.lat),
+            l = 1 - 1 / e;
+         var c = l * l;
+         var p = 1 / Math.sqrt(o * o + c * i * i),
+            d = a * p + n,
+            u = a * c * p + n,
+            h = Math.sqrt(d * d * o * o + u * u * i * i);
+         r.lat = Math.acos(d * o / h), r.lon = t.lon, r.r = n, t.lat < 0 && (r.lat *= -1), b(r);
+         var f = s * x;
+         return r.x = r.x * Math.cos(f) - r.y * Math.sin(f), r.y = r.x * Math.sin(f) + r.y * Math.cos(f), r
+      }
+
+      function j(t) {
+         if ("undefined" != typeof Kt) return Kt.elements(t)
+      }
+
+      function P(t, e) {
+         if (v(), "undefined" != typeof Kt) return Kt.corr(t, e)
+      }
+      return i.cartesian = function() {
+         return n
+      }, i.spherical = function() {
+         return v(), n
+      }, i.equatorial = function(t) {
+         return m(t), n
+      }, i.transpose = function() {
+         return f(n), n
+      }, i.elements = function(t) {
+         var e;
+         if (!arguments.length || void 0 === arguments[0]) return i;
+         for (var n = 0; n < Jt.length; n++) nt(t, e = Jt[n]) && (a[e] = t[e], "a" === e || "e" === e ? a[e] *= 1 : "ref" !== e && "ep" !== e && (a[e] *= x), nt(t, "d" + e) && (a[e = "d" + e] = t[e], a[e] *= "da" === e || "de" === e ? 1 : x));
+         return i
+      }, i.params = function(t) {
+         if (!arguments.length) return i;
+         for (var e in t) nt(t, e) && "elements" !== t[e] && (n[e] = t[e]);
+         return i
+      }, i.parentBody = function(a) {
+         return arguments.length ? (t = Ut[e = a], i) : e
+      }, i.id = function(t) {
+         return arguments.length ? (r = t, o = Wt[t], i) : r
+      }, i.Name = function(t) {
+         return arguments.length ? (s = t, i) : s
+      }, i.symbol = function(t) {
+         return arguments.length ? (o = Wt[t], i) : o
+      }, i
+   };
+   var Kt = {
+      elements: function(t) {
+         var e = (t.jd - 2451545) / 36525,
+            a = e * e,
+            n = e * a,
+            r = e * n,
+            s = e * r,
+            o = 1e-4 * a,
+            i = 1e-6 * n,
+            l = 1e-8 * r;
+         var c;
+         var p;
+         var d = 383397.6 + (3400.4 * Math.cos(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) - 635.6 * Math.cos(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) - 235.6 * Math.cos(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) + 218.1 * Math.cos(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) + 181 * Math.cos(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) - 39.9 * Math.cos(x * (103.2079 + 377336.3051 * e - 121.035 * o - 10.724 * i + 5.028 * l)) - 38.4 * Math.cos(x * (233.2295 + 926533.2733 * e - 34.136 * o + 3.705 * i - 1.769 * l)) + 33.8 * Math.cos(x * (336.4374 + 1303869.5784 * e - 155.171 * o - 7.02 * i + 3.259 * l)) + 28.8 * Math.cos(x * (111.4008 + 1781068.4461 * e - 65.201 * o + 7.328 * i - 3.538 * l)) + 12.6 * Math.cos(x * (13.1347 + 1331734.0404 * e + 58.906 * o + 17.971 * i - 8.566 * l)) + 11.4 * Math.cos(x * (186.5442 + 966404.0351 * e - 68.058 * o - .567 * i + .232 * l)) - 11.1 * Math.cos(x * (222.5657 - 441199.8173 * e - 91.506 * o - 14.307 * i + 6.797 * l)) - 10.2 * Math.cos(x * (269.9268 + 954397.7353 * e + 179.941 * o + 28.695 * i - 13.594 * l)) + 9.7 * Math.cos(x * (145.6272 + 1844931.9583 * e + 147.34 * o + 32.359 * i - 15.363 * l)) + 9.6 * Math.cos(x * (240.6422 + 818536.1225 * e - 29.529 * o + 3.582 * i - 1.769 * l)) + 8 * Math.cos(x * (297.8502 + 445267.1115 * e - 16.3 * o + 1.832 * i - .884 * l)) - 6.2 * Math.cos(x * (132.4925 + 513197.9179 * e + 88.434 * o + 14.388 * i - 6.797 * l)) + 6 * Math.cos(x * (173.5506 + 1335801.3346 * e - 48.901 * o + 5.496 * i - 2.653 * l)) + 3.7 * Math.cos(x * (113.8717 + 1745069.3958 * e - 63.665 * o + 7.287 * i - 3.538 * l)) + 3.6 * Math.cos(x * (338.9083 + 1267870.5281 * e - 153.636 * o - 7.061 * i + 3.259 * l)) + 3.2 * Math.cos(x * (246.3642 + 2258267.3137 * e + 24.769 * o + 21.675 * i - 10.335 * l)) - 3 * Math.cos(x * (8.1929 + 1403732.141 * e + 55.834 * o + 18.052 * i - 8.566 * l)) + 2.3 * Math.cos(x * (98.2661 + 449334.4057 * e - 124.107 * o - 10.643 * i + 5.028 * l)) - 2.2 * Math.cos(x * (357.5291 + 35999.0503 * e - 1.536 * o + .041 * i + 0 * l)) - 2 * Math.cos(x * (38.5872 + 858602.4669 * e - 138.871 * o - 8.852 * i + 4.144 * l)) - 1.8 * Math.cos(x * (105.6788 + 341337.2548 * e - 119.499 * o - 10.765 * i + 5.028 * l)) - 1.7 * Math.cos(x * (201.474 + 826670.7108 * e - 245.142 * o - 21.367 * i + 10.057 * l)) + 1.6 * Math.cos(x * (184.1196 + 401329.0556 * e + 125.428 * o + 18.579 * i - 8.798 * l)) - 1.4 * Math.cos(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) + 1.3 * Math.cos(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l))) + (-.55 * Math.cos(x * (238.2 + 854535.2 * e)) + .1 * Math.cos(x * (103.2 + 377336.3 * e)) + .1 * Math.cos(x * (233.2 + 926533.3 * e))) * e;
+         var u;
+         var h;
+         var f = .055544 + (.014217 * Math.cos(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) + .008551 * Math.cos(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l)) - .001383 * Math.cos(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) + .001353 * Math.cos(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) - .001146 * Math.cos(x * (66.5106 + 349471.8432 * e - 335.112 * o - 35.715 * i + 16.854 * l)) - 915e-6 * Math.cos(x * (201.474 + 826670.7108 * e - 245.142 * o - 21.367 * i + 10.057 * l)) + 869e-6 * Math.cos(x * (103.2079 + 377336.3051 * e - 121.035 * o - 10.724 * i + 5.028 * l)) - 628e-6 * Math.cos(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) - 393e-6 * Math.cos(x * (291.5472 - 127727.0245 * e - 425.082 * o - 50.062 * i + 23.651 * l)) + 284e-6 * Math.cos(x * (328.2445 - 99862.5625 * e - 211.005 * o - 25.072 * i + 11.826 * l)) - 278e-6 * Math.cos(x * (162.8868 - 31931.7561 * e - 106.271 * o - 12.516 * i + 5.913 * l)) - 24e-5 * Math.cos(x * (269.9268 + 954397.7353 * e + 179.941 * o + 28.695 * i - 13.594 * l)) + 23e-5 * Math.cos(x * (111.4008 + 1781068.4461 * e - 65.201 * o + 7.328 * i - 3.538 * l)) + 229e-6 * Math.cos(x * (167.2476 + 762807.1986 * e - 457.683 * o - 46.398 * i + 21.882 * l)) - 202e-6 * Math.cos(x * (83.3826 - 12006.2998 * e + 247.999 * o + 29.262 * i - 13.826 * l)) + 19e-5 * Math.cos(x * (190.8102 - 541062.3799 * e - 302.511 * o - 39.379 * i + 18.623 * l)) + 177e-6 * Math.cos(x * (357.5291 + 35999.0503 * e - 1.536 * o + .041 * i + 0 * l)) + 153e-6 * Math.cos(x * (32.2842 + 285608.3309 * e - 547.653 * o - 60.746 * i + 28.679 * l)) - 137e-6 * Math.cos(x * (44.8902 + 1431596.6029 * e + 269.911 * o + 43.043 * i - 20.392 * l)) + 122e-6 * Math.cos(x * (145.6272 + 1844931.9583 * e + 147.34 * o + 32.359 * i - 15.363 * l)) + 116e-6 * Math.cos(x * (302.211 + 1240006.0662 * e - 367.713 * o - 32.051 * i + 15.085 * l)) - 111e-6 * Math.cos(x * (203.9449 + 790671.6605 * e - 243.606 * o - 21.408 * i + 10.057 * l)) - 108e-6 * Math.cos(x * (68.9815 + 313472.7929 * e - 333.576 * o - 35.756 * i + 16.854 * l)) + 96e-6 * Math.cos(x * (336.4374 + 1303869.5784 * e - 155.171 * o - 7.02 * i + 3.259 * l)) - 9e-5 * Math.cos(x * (98.2661 + 449334.4057 * e - 124.107 * o - 10.643 * i + 5.028 * l)) + 9e-5 * Math.cos(x * (13.1347 + 1331734.0404 * e + 58.906 * o + 17.971 * i - 8.566 * l)) + 56e-6 * Math.cos(x * (55.8468 - 1018261.2475 * e - 392.482 * o - 53.726 * i + 25.42 * l)) - 56e-6 * Math.cos(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) + 52e-6 * Math.cos(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) - 5e-5 * Math.cos(x * (133.0212 + 698943.6863 * e - 670.224 * o - 71.429 * i + 33.708 * l)) - 49e-6 * Math.cos(x * (267.9846 + 1176142.554 * e - 580.254 * o - 57.082 * i + 26.911 * l)) - 49e-6 * Math.cos(x * (184.1196 + 401329.0556 * e + 125.428 * o + 18.579 * i - 8.798 * l)) - 45e-6 * Math.cos(x * (49.1562 - 75869.812 * e + 35.458 * o + 4.231 * i - 2.001 * l)) + 44e-6 * Math.cos(x * (257.3208 - 191590.5367 * e - 637.623 * o - 75.093 * i + 35.477 * l)) + 42e-6 * Math.cos(x * (105.6788 + 341337.2548 * e - 119.499 * o - 10.765 * i + 5.028 * l)) + 42e-6 * Math.cos(x * (160.4159 + 4067.2942 * e - 107.806 * o - 12.475 * i + 5.913 * l)) + 4e-5 * Math.cos(x * (246.3642 + 2258267.3137 * e + 24.769 * o + 21.675 * i - 10.335 * l)) - 4e-5 * Math.cos(x * (156.5838 - 604925.8921 * e - 515.053 * o - 64.41 * i + 30.448 * l)) + 36e-6 * Math.cos(x * (169.7185 + 726808.1483 * e - 456.147 * o - 46.439 * i + 21.882 * l)) + 29e-6 * Math.cos(x * (113.8717 + 1745069.3958 * e - 63.665 * o + 7.287 * i - 3.538 * l)) - 29e-6 * Math.cos(x * (297.8502 + 445267.1115 * e - 16.3 * o + 1.832 * i - .884 * l)) - 28e-6 * Math.cos(x * (294.0181 - 163726.0747 * e - 423.546 * o - 50.103 * i + 23.651 * l)) + 27e-6 * Math.cos(x * (263.6238 + 381403.5993 * e - 228.841 * o - 23.199 * i + 10.941 * l)) - 26e-6 * Math.cos(x * (358.0578 + 221744.8187 * e - 760.194 * o - 85.777 * i + 40.505 * l)) - 26e-6 * Math.cos(x * (8.1929 + 1403732.141 * e + 55.834 * o + 18.052 * i - 8.566 * l))) + .001 * e * (-.0022 * Math.cos(x * (103.2 + 377336.3 * e)));
+         var m;
+         var y;
+         var g = .0449858 + (.0011776 * Math.cos(x * (49.1562 - 75869.812 * e + 35.458 * o + 4.231 * i - 2.001 * l)) - 971e-7 * Math.cos(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) + 908e-7 * Math.cos(x * (186.5442 + 966404.0351 * e - 68.058 * o - .567 * i + .232 * l)) + 623e-7 * Math.cos(x * (83.3826 - 12006.2998 * e + 247.999 * o + 29.262 * i - 13.826 * l)) + 483e-7 * Math.cos(x * (51.6271 - 111868.8623 * e + 36.994 * o + 4.19 * i - 2.001 * l)) + 348e-7 * Math.cos(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) - 316e-7 * Math.cos(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) - 253e-7 * Math.cos(x * (46.6853 - 39870.7617 * e + 33.922 * o + 4.272 * i - 2.001 * l)) - 141e-7 * Math.cos(x * (274.1928 - 553068.6797 * e - 54.513 * o - 10.116 * i + 4.797 * l)) + 127e-7 * Math.cos(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l)) + 117e-7 * Math.cos(x * (184.1196 + 401329.0556 * e + 125.428 * o + 18.579 * i - 8.798 * l)) - 78e-7 * Math.cos(x * (98.3124 - 151739.624 * e + 70.916 * o + 8.462 * i - 4.001 * l)) - 63e-7 * Math.cos(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) + 63e-7 * Math.cos(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) + 36e-7 * Math.cos(x * (321.5076 + 1443602.9027 * e + 21.912 * o + 13.78 * i - 6.566 * l)) - 35e-7 * Math.cos(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) + 24e-7 * Math.cos(x * (149.8932 + 337465.5434 * e - 87.113 * o - 6.453 * i + 3.028 * l)) + 24e-7 * Math.cos(x * (170.9849 - 930404.9848 * e + 66.523 * o + .608 * i - .232 * l))) + .001 * (-.0203 * Math.cos(x * (125 - 1934.1 * e)) + .0034 * Math.cos(x * (220.2 - 1935.5 * e)));
+         var v;
+         var M;
+         var b = 83.353 + 4069.0137 * e - 103.238 * o - 12.492 * i + 5.263 * l + (-15.448 * Math.sin(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) - 9.642 * Math.sin(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l)) - 2.721 * Math.sin(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) + 2.607 * Math.sin(x * (66.5106 + 349471.8432 * e - 335.112 * o - 35.715 * i + 16.854 * l)) + 2.085 * Math.sin(x * (201.474 + 826670.7108 * e - 245.142 * o - 21.367 * i + 10.057 * l)) + 1.477 * Math.sin(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) + .968 * Math.sin(x * (291.5472 - 127727.0245 * e - 425.082 * o - 50.062 * i + 23.651 * l)) - .949 * Math.sin(x * (103.2079 + 377336.3051 * e - 121.035 * o - 10.724 * i + 5.028 * l)) - .703 * Math.sin(x * (167.2476 + 762807.1986 * e - 457.683 * o - 46.398 * i + 21.882 * l)) - .66 * Math.sin(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) - .577 * Math.sin(x * (190.8102 - 541062.3799 * e - 302.511 * o - 39.379 * i + 18.623 * l)) - .524 * Math.sin(x * (269.9268 + 954397.7353 * e + 179.941 * o + 28.695 * i - 13.594 * l)) - .482 * Math.sin(x * (32.2842 + 285608.3309 * e - 547.653 * o - 60.746 * i + 28.679 * l)) + .452 * Math.sin(x * (357.5291 + 35999.0503 * e - 1.536 * o + .041 * i + 0 * l)) - .381 * Math.sin(x * (302.211 + 1240006.0662 * e - 367.713 * o - 32.051 * i + 15.085 * l)) - .342 * Math.sin(x * (328.2445 - 99862.5625 * e - 211.005 * o - 25.072 * i + 11.826 * l)) - .312 * Math.sin(x * (44.8902 + 1431596.6029 * e + 269.911 * o + 43.043 * i - 20.392 * l)) + .282 * Math.sin(x * (162.8868 - 31931.7561 * e - 106.271 * o - 12.516 * i + 5.913 * l)) + .255 * Math.sin(x * (203.9449 + 790671.6605 * e - 243.606 * o - 21.408 * i + 10.057 * l)) + .252 * Math.sin(x * (68.9815 + 313472.7929 * e - 333.576 * o - 35.756 * i + 16.854 * l)) - .211 * Math.sin(x * (83.3826 - 12006.2998 * e + 247.999 * o + 29.262 * i - 13.826 * l)) + .193 * Math.sin(x * (267.9846 + 1176142.554 * e - 580.254 * o - 57.082 * i + 26.911 * l)) + .191 * Math.sin(x * (133.0212 + 698943.6863 * e - 670.224 * o - 71.429 * i + 33.708 * l)) - .184 * Math.sin(x * (55.8468 - 1018261.2475 * e - 392.482 * o - 53.726 * i + 25.42 * l)) + .182 * Math.sin(x * (145.6272 + 1844931.9583 * e + 147.34 * o + 32.359 * i - 15.363 * l)) - .158 * Math.sin(x * (257.3208 - 191590.5367 * e - 637.623 * o - 75.093 * i + 35.477 * l)) + .148 * Math.sin(x * (156.5838 - 604925.8921 * e - 515.053 * o - 64.41 * i + 30.448 * l)) - .111 * Math.sin(x * (169.7185 + 726808.1483 * e - 456.147 * o - 46.439 * i + 21.882 * l)) + .101 * Math.sin(x * (13.1347 + 1331734.0404 * e + 58.906 * o + 17.971 * i - 8.566 * l)) + .1 * Math.sin(x * (358.0578 + 221744.8187 * e - 760.194 * o - 85.777 * i + 40.505 * l)) + .087 * Math.sin(x * (98.2661 + 449334.4057 * e - 124.107 * o - 10.643 * i + 5.028 * l)) + .08 * Math.sin(x * (42.948 + 1653341.4216 * e - 490.283 * o - 42.734 * i + 20.113 * l)) + .08 * Math.sin(x * (222.5657 - 441199.8173 * e - 91.506 * o - 14.307 * i + 6.797 * l)) + .077 * Math.sin(x * (294.0181 - 163726.0747 * e - 423.546 * o - 50.103 * i + 23.651 * l)) - .073 * Math.sin(x * (280.8834 - 1495460.1151 * e - 482.452 * o - 68.074 * i + 32.217 * l)) - .071 * Math.sin(x * (304.6819 + 1204007.0159 * e - 366.177 * o - 32.092 * i + 15.085 * l)) - .069 * Math.sin(x * (233.7582 + 1112279.0417 * e - 792.795 * o - 82.113 * i + 38.736 * l)) - .067 * Math.sin(x * (34.7551 + 249609.2807 * e - 546.117 * o - 60.787 * i + 28.679 * l)) - .067 * Math.sin(x * (263.6238 + 381403.5993 * e - 228.841 * o - 23.199 * i + 10.941 * l)) + .055 * Math.sin(x * (21.6203 - 1082124.7597 * e - 605.023 * o - 78.757 * i + 37.246 * l)) + .055 * Math.sin(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) - .054 * Math.sin(x * (8.7216 + 1589477.9094 * e - 702.824 * o - 67.766 * i + 31.939 * l)) - .052 * Math.sin(x * (179.8536 + 1908795.4705 * e + 359.881 * o + 57.39 * i - 27.189 * l)) - .05 * Math.sin(x * (98.7948 + 635080.1741 * e - 882.765 * o - 96.461 * i + 45.533 * l)) - .049 * Math.sin(x * (128.6604 - 95795.2683 * e - 318.812 * o - 37.547 * i + 17.738 * l)) - .047 * Math.sin(x * (17.3544 + 425341.6552 * e - 370.57 * o - 39.946 * i + 18.854 * l)) - .044 * Math.sin(x * (160.4159 + 4067.2942 * e - 107.806 * o - 12.475 * i + 5.913 * l)) - .043 * Math.sin(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) + .042 * Math.sin(x * (270.4555 + 1140143.5037 * e - 578.718 * o - 57.123 * i + 26.911 * l)) - .042 * Math.sin(x * (132.4925 + 513197.9179 * e + 88.434 * o + 14.388 * i - 6.797 * l)) - .041 * Math.sin(x * (122.3573 - 668789.4043 * e - 727.594 * o - 89.441 * i + 42.274 * l)) - .04 * Math.sin(x * (105.6788 + 341337.2548 * e - 119.499 * o - 10.765 * i + 5.028 * l)) + .038 * Math.sin(x * (135.4921 + 662944.6361 * e - 668.688 * o - 71.47 * i + 33.708 * l)) - .037 * Math.sin(x * (242.391 - 51857.2124 * e - 460.54 * o - 54.293 * i + 25.652 * l)) + .036 * Math.sin(x * (336.4374 + 1303869.5784 * e - 155.171 * o - 7.02 * i + 3.259 * l)) + .035 * Math.sin(x * (223.0943 - 255454.0489 * e - 850.164 * o - 100.124 * i + 47.302 * l)) - .034 * Math.sin(x * (193.2811 - 577061.4302 * e - 300.976 * o - 39.419 * i + 18.623 * l)) + .031 * Math.sin(x * (87.6023 - 918398.685 * e - 181.476 * o - 28.654 * i + 13.594 * l))) + .001 * e * (2.4 * Math.sin(x * (103.2 + 377336.3 * e)));
+         var w;
+         var k;
+         var z;
+         var T = 125.0446 - 1934.13618 * e + 20.762 * o + 2.139 * i - 1.65 * l + (-1.4979 * Math.sin(x * (49.1562 - 75869.812 * e + 35.458 * o + 4.231 * i - 2.001 * l)) - .15 * Math.sin(x * (357.5291 + 35999.0503 * e - 1.536 * o + .041 * i + 0 * l)) - .1226 * Math.sin(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) + .1176 * Math.sin(x * (186.5442 + 966404.0351 * e - 68.058 * o - .567 * i + .232 * l)) - .0801 * Math.sin(x * (83.3826 - 12006.2998 * e + 247.999 * o + 29.262 * i - 13.826 * l)) - .0616 * Math.sin(x * (51.6271 - 111868.8623 * e + 36.994 * o + 4.19 * i - 2.001 * l)) + .049 * Math.sin(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) + .0409 * Math.sin(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) + .0327 * Math.sin(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) + .0324 * Math.sin(x * (46.6853 - 39870.7617 * e + 33.922 * o + 4.272 * i - 2.001 * l)) + .0196 * Math.sin(x * (98.3124 - 151739.624 * e + 70.916 * o + 8.462 * i - 4.001 * l)) + .018 * Math.sin(x * (274.1928 - 553068.6797 * e - 54.513 * o - 10.116 * i + 4.797 * l)) + .015 * Math.sin(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l)) - .015 * Math.sin(x * (184.1196 + 401329.0556 * e + 125.428 * o + 18.579 * i - 8.798 * l)) - .0078 * Math.sin(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) - .0045 * Math.sin(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) + .0044 * Math.sin(x * (321.5076 + 1443602.9027 * e + 21.912 * o + 13.78 * i - 6.566 * l)) - .0042 * Math.sin(x * (162.8868 - 31931.7561 * e - 106.271 * o - 12.516 * i + 5.913 * l)) - .0031 * Math.sin(x * (170.9849 - 930404.9848 * e + 66.523 * o + .608 * i - .232 * l)) + .0031 * Math.sin(x * (103.2079 + 377336.3051 * e - 121.035 * o - 10.724 * i + 5.028 * l)) + .0029 * Math.sin(x * (222.612 - 1042273.8471 * e + 103.516 * o + 4.798 * i - 2.232 * l)) + .0028 * Math.sin(x * (184.0733 + 1002403.0853 * e - 69.594 * o - .526 * i + .232 * l))) + .001 * (25.9 * Math.sin(x * (125 - 1934.1 * e)) - 4.3 * Math.sin(x * (220.2 - 1935.5 * e)) + .38 * Math.sin(x * (357.5 + 35999.1 * e)) * e);
+         var S;
+         var j;
+         var P;
+         var I;
+         var A = 218.31665 + 481267.88134 * e - 13.268 * o + 1.856 * i - 1.534 * l + (-.92581 * Math.sin(x * (235.7004 + 890534.223 * e - 32.601 * o + 3.664 * i - 1.769 * l)) + .33262 * Math.sin(x * (100.737 + 413335.3554 * e - 122.571 * o - 10.684 * i + 5.028 * l)) - .18402 * Math.sin(x * (357.5291 + 35999.0503 * e - 1.536 * o + .041 * i + 0 * l)) + .11007 * Math.sin(x * (134.9634 + 477198.8676 * e + 89.97 * o + 14.348 * i - 6.797 * l)) - .06055 * Math.sin(x * (238.1713 + 854535.1727 * e - 31.065 * o + 3.623 * i - 1.769 * l)) + .04741 * Math.sin(x * (325.7736 - 63863.5122 * e - 212.541 * o - 25.031 * i + 11.826 * l)) - .03086 * Math.sin(x * (10.6638 + 1367733.0907 * e + 57.37 * o + 18.011 * i - 8.566 * l)) + .02184 * Math.sin(x * (103.2079 + 377336.3051 * e - 121.035 * o - 10.724 * i + 5.028 * l)) + .01645 * Math.sin(x * (49.1562 - 75869.812 * e + 35.458 * o + 4.231 * i - 2.001 * l)) + .01022 * Math.sin(x * (233.2295 + 926533.2733 * e - 34.136 * o + 3.705 * i - 1.769 * l)) - .00756 * Math.sin(x * (336.4374 + 1303869.5784 * e - 155.171 * o - 7.02 * i + 3.259 * l)) - .0053 * Math.sin(x * (222.5657 - 441199.8173 * e - 91.506 * o - 14.307 * i + 6.797 * l)) - .00496 * Math.sin(x * (162.8868 - 31931.7561 * e - 106.271 * o - 12.516 * i + 5.913 * l)) - .00472 * Math.sin(x * (297.8502 + 445267.1115 * e - 16.3 * o + 1.832 * i - .884 * l)) - .00271 * Math.sin(x * (240.6422 + 818536.1225 * e - 29.529 * o + 3.582 * i - 1.769 * l)) + .00264 * Math.sin(x * (132.4925 + 513197.9179 * e + 88.434 * o + 14.388 * i - 6.797 * l)) - .00254 * Math.sin(x * (186.5442 + 966404.0351 * e - 68.058 * o - .567 * i + .232 * l)) + .00234 * Math.sin(x * (269.9268 + 954397.7353 * e + 179.941 * o + 28.695 * i - 13.594 * l)) - .0022 * Math.sin(x * (13.1347 + 1331734.0404 * e + 58.906 * o + 17.971 * i - 8.566 * l)) - .00202 * Math.sin(x * (355.0582 + 71998.1006 * e - 3.072 * o + .082 * i + 0 * l)) + .00167 * Math.sin(x * (328.2445 - 99862.5625 * e - 211.005 * o - 25.072 * i + 11.826 * l)) - .00143 * Math.sin(x * (173.5506 + 1335801.3346 * e - 48.901 * o + 5.496 * i - 2.653 * l)) - .00121 * Math.sin(x * (98.2661 + 449334.4057 * e - 124.107 * o - 10.643 * i + 5.028 * l)) - .00116 * Math.sin(x * (145.6272 + 1844931.9583 * e + 147.34 * o + 32.359 * i - 15.363 * l)) + .00102 * Math.sin(x * (105.6788 + 341337.2548 * e - 119.499 * o - 10.765 * i + 5.028 * l)) - 9e-4 * Math.sin(x * (184.1196 + 401329.0556 * e + 125.428 * o + 18.579 * i - 8.798 * l)) - 86e-5 * Math.sin(x * (338.9083 + 1267870.5281 * e - 153.636 * o - 7.061 * i + 3.259 * l)) - 78e-5 * Math.sin(x * (111.4008 + 1781068.4461 * e - 65.201 * o + 7.328 * i - 3.538 * l)) + 69e-5 * Math.sin(x * (323.3027 - 27864.4619 * e - 214.077 * o - 24.99 * i + 11.826 * l)) + 66e-5 * Math.sin(x * (51.6271 - 111868.8623 * e + 36.994 * o + 4.19 * i - 2.001 * l)) + 65e-5 * Math.sin(x * (38.5872 + 858602.4669 * e - 138.871 * o - 8.852 * i + 4.144 * l)) - 6e-4 * Math.sin(x * (83.3826 - 12006.2998 * e + 247.999 * o + 29.262 * i - 13.826 * l)) + 54e-5 * Math.sin(x * (201.474 + 826670.7108 * e - 245.142 * o - 21.367 * i + 10.057 * l)) - 52e-5 * Math.sin(x * (308.4192 - 489205.1674 * e + 158.029 * o + 14.915 * i - 7.029 * l)) + 48e-5 * Math.sin(x * (8.1929 + 1403732.141 * e + 55.834 * o + 18.052 * i - 8.566 * l)) - 41e-5 * Math.sin(x * (46.6853 - 39870.7617 * e + 33.922 * o + 4.272 * i - 2.001 * l)) - 33e-5 * Math.sin(x * (274.1928 - 553068.6797 * e - 54.513 * o - 10.116 * i + 4.797 * l)) + 3e-4 * Math.sin(x * (160.4159 + 4067.2942 * e - 107.806 * o - 12.475 * i + 5.913 * l))) + .001 * (3.96 * Math.sin(x * (119.7 + 131.8 * e)) + 1.96 * Math.sin(x * (125 - 1934.1 * e)) + (.463 * Math.sin(x * (357.5 + 35999.1 * e)) + .152 * Math.sin(x * (238.2 + 854535.2 * e)) - .071 * Math.sin(x * (27.8 + 131.8 * e)) - .055 * Math.sin(x * (103.2 + 377336.3 * e)) - .026 * Math.sin(x * (233.2 + 926533.3 * e))) * e + (14 * Math.sin(x * (357.5 + 35999.1 * e)) + 5 * Math.sin(x * (238.2 + 854535.2 * e))) * o);
+         return t.a = d, t.e = f, t.i = 2 * Math.asin(g), t.w = vt.normalize(x * (b - T)), t.N = vt.normalize(x * T), t.M = vt.normalize(x * (A - b)), t
+      },
+      corr: function(t, e) {
+         var a = vt.normalize(e.M + Math.PI),
+            n = vt.normalize(e.w + Math.PI),
+            r = t.M + t.w,
+            s = r + t.N - a - n;
+         var o = -.022234 * Math.sin(t.M - 2 * s) + .011494 * Math.sin(2 * s) + -.003246 * Math.sin(a) + -.001029 * Math.sin(2 * t.M - 2 * s) + -994838e-9 * Math.sin(t.M - 2 * s + a) + 925025e-9 * Math.sin(t.M + 2 * s) + 802851e-9 * Math.sin(2 * s - a) + 715585e-9 * Math.sin(t.M - a) + -610865e-9 * Math.sin(s) + -541052e-9 * Math.sin(t.M + a) + -261799e-9 * Math.sin(2 * r - 2 * s) + 191986e-9 * Math.sin(t.M - 4 * s);
+         t.ra += o;
+         var i = -.003019 * Math.sin(r - 2 * s) + -959931e-9 * Math.sin(t.M - r - 2 * s) + -802851e-9 * Math.sin(t.M + r - 2 * s) + 575958e-9 * Math.sin(r + 2 * s) + 296706e-9 * Math.sin(2 * t.M + r);
+         return t.dec += i, t.age = vt.normalize(t.l - e.l + Math.PI), t.phase = .5 * (1 - Math.cos(t.age)), t
+      }
+   };
+
+   function Zt(e) {
+      var a = d3.select("body").append("div").attr("id", "d3-celestial-svg").attr("style", "display: none"),
+         n = d3.select("#d3-celestial-svg").append("svg"),
+         r = t.metrics(),
+         s = V.set(),
+         o = s.datapath,
+         i = J[s.projection],
+         l = S(s.center),
+         c = [-l[0], -l[1]],
+         p = i.scale * r.width / 1024,
+         d = t.projection(s.projection).rotate(l).translate([r.width / 2, r.height / 2]).scale([r.scale]),
+         u = s.adaptable ? Math.sqrt(r.scale / p) : 1,
+         h = "" !== s.culture && "iau" !== s.culture ? s.culture : "",
+         y, g;
+      n.selectAll("*").remove();
+      var v = n.append("defs");
+      i.clip && d.clipAngle(90), y = d3.geo.circle().angle([179.95]).origin(c), n.attr("width", r.width).attr("height", r.height);
+      var M = ["background", "milkyWay", "milkyWayBg", "gridLines", "constBoundaries", "planesequatorial", "planesecliptic", "planesgalactic", "planessupergalactic", "constLines", "mapBorder", "stars", "dsos", "planets", "gridvaluesLon", "gridvaluesLat", "constNames", "starDesignations", "starNames", "dsoNames", "planetNames", "horizon", "daylight"],
+         w = {},
+         x = {};
+      for (var T = 0; T < M.length; T++) w[M[T]] = n.append("g").attr({
+         id: M[T],
+         ":inkscape:groupmode": "layer",
+         ":inkscape:label": M[T]
+      }), x[M[T]] = {};
+      var P = d3.geo.graticule().minorStep([15, 10]);
+      var I = d3.geo.path().projection(d);
+      var A = d3.queue(2);
+      if (w.background.append("path").datum(y).attr("class", "background").attr("d", I), x.background.fill = s.background.fill, s.lines.graticule.show) {
+         if ("equatorial" === s.transform ? (w.gridLines.append("path").datum(P).attr("class", "gridLines").attr("d", I), x.gridLines = B(s.lines.graticule)) : (t.graticule(w.gridLines, I, s.transform), x.gridLines = B(s.lines.graticule)), nt(s.lines.graticule, "lon") && s.lines.graticule.lon.pos.length > 0) {
+            var q = {
+               type: "FeatureCollection",
+               features: N("lon", s.lines.graticule.lon.pos)
+            };
+            w.gridvaluesLon.selectAll(".gridvalues_lon").data(q.features).enter().append("text").attr("transform", (function(t, e) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return t.properties.value
+            })).attr({
+               dy: ".5em",
+               dx: "-.75em",
+               class: "gridvaluesLon"
+            }), x.gridvaluesLon = G(s.lines.graticule.lon)
+         }
+         if (nt(s.lines.graticule, "lat") && s.lines.graticule.lat.pos.length > 0) {
+            var D = {
+               type: "FeatureCollection",
+               features: N("lat", s.lines.graticule.lat.pos)
+            };
+            w.gridvaluesLat.selectAll(".gridvalues_lat").data(D.features).enter().append("text").attr("transform", (function(t, e) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return t.properties.value
+            })).attr({
+               dy: "-.5em",
+               dx: "-.75em",
+               class: "gridvaluesLat"
+            }), x.gridvaluesLat = G(s.lines.graticule.lat)
+         }
+      }
+      for (var F in s.lines) nt(s.lines, F) && "graticule" != F && !1 !== s.lines[F].show && (w[g = "planes" + F].append("path").datum(d3.geo.circle().angle([90]).origin(b[F])).attr("class", g).attr("d", I), x[g] = B(s.lines[F]));
+
+      function E(t) {
+         return i.clip && d3.geo.distance(c, t) > k ? 0 : 1
+      }
+
+      function C(t) {
+         return "translate(" + d(t) + ")"
+      }
+
+      function H(t, e, a) {
+         var n;
+         return t + (e = e ? "." + e : "") + (nt($[t], h) ? "." + h : "") + (a = a ? "." + a : ".json")
+      }
+
+      function B(t) {
+         var e = {};
+         return e.fill = t.fill || "none", e["fill-opacity"] = null !== t.opacity ? t.opacity : 1, e.stroke = t.stroke || "none", e["stroke-width"] = null !== t.width ? t.width : 0, e["stroke-opacity"] = null !== t.opacity ? t.opacity : 1, nt(t, "dash") ? e["stroke-dasharray"] = t.dash.join(" ") : e["stroke-dasharray"] = "none", e.font = t.font || null, e
+      }
+
+      function G(t) {
+         var e = {};
+         return e.stroke = "none", e.fill = t.fill || "none", e["fill-opacity"] = null !== t.opacity ? t.opacity : 1, e["text-anchor"] = K(t.align), e.font = t.font || null, e
+      }
+
+      function U(t, e) {
+         var a = {};
+         return t = t || 1, a.fill = ot(e.fill) ? e.fill[t - 1] : null, a["fill-opacity"] = ot(e.opacity) ? e.opacity[t - 1] : 1, a.stroke = ot(e.stroke) ? e.stroke[t - 1] : null, a["stroke-width"] = ot(e.width) ? e.width[t - 1] : null, a["stroke-opacity"] = ot(e.opacity) ? e.opacity[t - 1] : 1, a["text-anchor"] = K(e.align), a.font = ot(e.font) ? e.font[t - 1] : null, a
+      }
+
+      function W(t, e) {
+         var a, n, r, s, o = 1.36,
+            i = 1.885;
+         if (t > i) return {
+            fill: "transparent"
+         };
+         t <= o ? (n = "#daf1fa", r = "#93d7f0", s = "#57c0e8", a = -(o - t) / 10) : (a = (t - o) / (i - o), n = d3.interpolateLab("#daf1fa", "#e8c866")(a), r = d3.interpolateLab("#93c7d0", "#ff854a")(a), s = d3.interpolateLab("#57b0c8", "#6caae2")(a));
+         var l = w.daylight.append("radialGradient").attr("cx", e[0]).attr("cy", e[1]).attr("fr", "0").attr("r", "300").attr("id", "skygradient").attr("gradientUnits", "userSpaceOnUse");
+         return l.append("stop").attr("offset", "0").attr("stop-color", n), l.append("stop").attr("offset", .2 + .4 * a).attr("stop-color", r), l.append("stop").attr("offset", "1").attr("stop-color", s), {
+            fill: "url(#skygradient)",
+            "fill-opacity": R(a, 1.4)
+         }
+      }
+
+      function R(t, e) {
+         return .9 * (1 - (Math.pow(Math.E, t * e) - 1) / (Math.pow(Math.E, e) - 1))
+      }
+
+      function K(t) {
+         return t ? "center" === t ? "middle" : "right" === t ? "end" : "start" : "start"
+      }
+
+      function Z(t) {
+         var e = X(t.mag, t.dim) || 9,
+            a = Q(t.type);
+         return -1 !== d3.svg.symbolTypes.indexOf(a) ? d3.svg.symbol().type(a).size(e)() : d3.svg.customSymbol().type(a).size(e)()
+      }
+
+      function Q(t) {
+         return t && nt(s.dsos.symbols, t) ? s.dsos.symbols[t].shape : "circle"
+      }
+
+      function X(t, e) {
+         return t && 999 !== t ? Math.pow(2 * s.dsos.size * u - t, s.dsos.exponent) : Math.pow(parseInt(e) * s.dsos.size * u / 7, .5)
+      }
+
+      function et(t) {
+         var e = s.dsos.namesType,
+            a = t.id;
+         return "desig" !== e && nt(m, a) && nt(m[a], e) ? m[a][e] : t.properties.desig
+      }
+
+      function at(t) {
+         return !0 === s.dsos.colors ? B(s.dsos.symbols[t.type]) : B(s.dsos.style)
+      }
+
+      function rt(t) {
+         return nt(f, t) ? f[t][s.stars.designationType] : ""
+      }
+
+      function st(t) {
+         var e = s.stars.propernameType;
+         return nt(f, t) ? nt(f[t], e) ? f[t][e] : f[t].name : ""
+      }
+
+      function it(t) {
+         if (null === t) return .1;
+         var e = s.stars.size * u * Math.exp(s.stars.exponent * (t + 2));
+         return Math.max(e, .1)
+      }
+
+      function lt(t) {
+         return !s.stars.colors || isNaN(t) ? "" : Math.round(10 * t).toString()
+      }
+
+      function ct(t) {
+         return t.properties[s.constellations.namesType]
+      }
+
+      function pt(t, e) {
+         var a = e ? e * e : 121;
+         return d3.svg.customSymbol().type("crescent").size(a).ratio(t.age)()
+      }
+
+      function dt(t, e) {
+         var a = e ? e * e : ut(t.mag);
+         return d3.svg.symbol().type("circle").size(a)()
+      }
+
+      function ut(t) {
+         var e = t || 2;
+         var a = 4 * u * Math.exp(-.05 * (e + 2));
+         return Math.max(a, 2)
+      }
+
+      function ht(t) {
+         var e = {
+            type: "Feature",
+            id: t.id,
+            properties: {},
+            geometry: {}
+         };
+         return e.properties.name = t[s.planets.namesType], "symbol" !== s.planets.symbolType && "letter" !== s.planets.symbolType || (e.properties.symbol = s.planets.symbols[e.id][s.planets.symbolType]), e.properties.mag = t.ephemeris.mag || 10, "lun" === e.id && (e.properties.age = t.ephemeris.age, e.properties.phase = t.ephemeris.phase), e.geometry.type = "Point", e.geometry.coordinates = t.ephemeris.pos, e
+      }
+
+      function ft() {
+         var t = "";
+         for (var e in x) nt(x, e) && (t += " ." + e + mt(x[e]));
+         return "/*<![CDATA[*/\n" + t + "\n/*]]>*/"
+      }
+
+      function mt(t) {
+         var e = " {";
+         for (var a in t) nt(t, a) && (e += a + ":" + t[a] + "; ");
+         return e + "} "
+      }
+      s.mw.show && A.defer((function(t) {
+         d3.json(o + "mw.json", (function(e, a) {
+            e && t(e);
+            var n = L(a, s.transform);
+            var r = _(n);
+            w.milkyWay.selectAll(".mway").data(n.features).enter().append("path").attr("class", "milkyWay").attr("d", I), x.milkyWay = B(s.mw.style), (!nt(s.background, "opacity") || s.background.opacity > .95) && (w.milkyWayBg.selectAll(".mwaybg").data(r.features).enter().append("path").attr("class", "milkyWayBg").attr("d", I), x.milkyWayBg = {
+               fill: s.background.fill,
+               "fill-opacity": s.background.opacity
+            }), t(null)
+         }))
+      })), s.constellations.bounds && A.defer((function(e) {
+         d3.json(o + H("constellations", "borders"), (function(a, n) {
+            a && e(a);
+            var r = L(n, s.transform);
+            if (t.constellation) var o = new RegExp("\\b" + t.constellation + "\\b");
+            w.constBoundaries.selectAll(".bounds").data(r.features).enter().append("path").attr("class", (function(e) {
+               return t.constellation && -1 !== e.ids.search(o) ? "constBoundariesSel" : "constBoundaries"
+            })).attr("d", I), x.constBoundaries = B(s.constellations.boundStyle), x.constBoundariesSel = {
+               fill: "none",
+               stroke: s.constellations.boundStyle.stroke,
+               "stroke-width": 1.5 * s.constellations.boundStyle.width,
+               "stroke-opacity": 1,
+               "stroke-dasharray": "none"
+            }, e(null)
+         }))
+      })), s.constellations.lines && A.defer((function(t) {
+         d3.json(o + H("constellations", "lines"), (function(e, a) {
+            e && t(e);
+            var n = L(a, s.transform);
+            w.constLines.selectAll(".lines").data(n.features).enter().append("path").attr("class", (function(t) {
+               return "constLines" + t.properties.rank
+            })).attr("d", I), x.constLines1 = {
+               fill: "none",
+               stroke: s.constellations.lineStyle.stroke[0],
+               "stroke-width": s.constellations.lineStyle.width[0],
+               "stroke-opacity": s.constellations.lineStyle.opacity[0]
+            }, x.constLines2 = {
+               fill: "none",
+               stroke: s.constellations.lineStyle.stroke[1],
+               "stroke-width": s.constellations.lineStyle.width[1],
+               "stroke-opacity": s.constellations.lineStyle.opacity[1]
+            }, x.constLines3 = {
+               fill: "none",
+               stroke: s.constellations.lineStyle.stroke[2],
+               "stroke-width": s.constellations.lineStyle.width[2],
+               "stroke-opacity": s.constellations.lineStyle.opacity[2]
+            }, t(null)
+         }))
+      })), A.defer((function(t) {
+         var e = d.rotate();
+         d.rotate([0, 0, 0]), w.mapBorder.append("path").datum(P.outline).attr("class", "mapBorder").attr("d", I), x.mapBorder = {
+            fill: "none",
+            stroke: s.background.stroke,
+            "stroke-width": s.background.width,
+            "stroke-opacity": 1,
+            "stroke-dasharray": "none"
+         }, d.rotate(e), t(null)
+      })), s.constellations.names && A.defer((function(t) {
+         d3.json(o + H("constellations"), (function(e, a) {
+            e && t(e);
+            var n = L(a, s.transform);
+            w.constNames.selectAll(".constnames").data(n.features.filter((function(t) {
+               return 1 === E(t.geometry.coordinates)
+            }))).enter().append("text").attr("class", (function(t) {
+               return "constNames" + t.properties.rank
+            })).attr("transform", (function(t, e) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return ct(t)
+            })), x.constNames1 = {
+               fill: s.constellations.nameStyle.fill[0],
+               "fill-opacity": s.constellations.nameStyle.opacity[0],
+               font: s.constellations.nameStyle.font[0],
+               "text-anchor": K(s.constellations.nameStyle.align)
+            }, x.constNames2 = {
+               fill: s.constellations.nameStyle.fill[1],
+               "fill-opacity": s.constellations.nameStyle.opacity[1],
+               font: s.constellations.nameStyle.font[1],
+               "text-anchor": K(s.constellations.nameStyle.align)
+            }, x.constNames3 = {
+               fill: s.constellations.nameStyle.fill[2],
+               "fill-opacity": s.constellations.nameStyle.opacity[2],
+               font: s.constellations.nameStyle.font[2],
+               "text-anchor": K(s.constellations.nameStyle.align)
+            }, t(null)
+         }))
+      })), s.stars.show && A.defer((function(t) {
+         d3.json(o + s.stars.data, (function(e, a) {
+            e && t(e);
+            var n = L(a, s.transform);
+            w.stars.selectAll(".stars").data(n.features.filter((function(t) {
+               return t.properties.mag <= s.stars.limit
+            }))).enter().append("path").attr("class", (function(t) {
+               return "stars" + lt(t.properties.bv)
+            })).attr("d", I.pointRadius((function(t) {
+               return t.properties ? it(t.properties.mag) : 1
+            }))), x.stars = B(s.stars.style);
+            var r = Y.domain();
+            for (T = tt(r[1], 1); T <= tt(r[0], 1); T += .1) x["stars" + Math.round(10 * T).toString()] = {
+               fill: Y(T)
+            };
+            s.stars.designation && (w.starDesignations.selectAll(".stardesigs").data(n.features.filter((function(t) {
+               return t.properties.mag <= s.stars.designationLimit * u && 1 === E(t.geometry.coordinates)
+            }))).enter().append("text").attr("transform", (function(t) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return rt(t.id)
+            })).attr({
+               dy: ".85em",
+               dx: ".35em",
+               class: "starDesignations"
+            }), x.starDesignations = G(s.stars.designationStyle)), s.stars.propername && (w.starNames.selectAll(".starnames").data(n.features.filter((function(t) {
+               return t.properties.mag <= s.stars.propernameLimit * u && 1 === E(t.geometry.coordinates)
+            }))).enter().append("text").attr("transform", (function(t) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return st(t.id)
+            })).attr({
+               dy: "-.5em",
+               dx: "-.35em",
+               class: "starNames"
+            }), x.starNames = G(s.stars.propernameStyle)), t(null)
+         }))
+      })), s.dsos.show && A.defer((function(t) {
+         d3.json(o + s.dsos.data, (function(e, a) {
+            e && t(e);
+            var n = L(a, s.transform);
+            for (F in w.dsos.selectAll(".dsos").data(n.features.filter((function(t) {
+                  return 1 === E(t.geometry.coordinates) && (999 === t.properties.mag && Math.sqrt(parseInt(t.properties.dim)) > s.dsos.limit * u || 999 !== t.properties.mag && t.properties.mag <= s.dsos.limit)
+               }))).enter().append("path").attr("class", (function(t) {
+                  return "dsos" + t.properties.type
+               })).attr("transform", (function(t) {
+                  return C(t.geometry.coordinates)
+               })).attr("d", (function(t) {
+                  return Z(t.properties)
+               })), x.dsos = B(s.dsos.style), s.dsos.symbols) nt(s.dsos.symbols, F) && (x[g = "dsos" + F] = {
+               "fill-opacity": s.dsos.style.opacity,
+               "stroke-opacity": s.dsos.style.opacity
+            }, nt(s.dsos.symbols[F], "stroke") ? (x[g].fill = "none", x[g].stroke = s.dsos.colors ? s.dsos.symbols[F].stroke : s.dsos.style.stroke, x[g]["stroke-width"] = s.dsos.colors ? s.dsos.symbols[F].width : s.dsos.style.width) : (x[g].stroke = "none", x[g].fill = s.dsos.colors ? s.dsos.symbols[F].fill : s.dsos.style.fill));
+            if (s.dsos.names)
+               for (F in w.dsoNames.selectAll(".dsonames").data(n.features.filter((function(t) {
+                     return 1 === E(t.geometry.coordinates) && (999 == t.properties.mag && Math.sqrt(parseInt(t.properties.dim)) > s.dsos.nameLimit || 999 != t.properties.mag && t.properties.mag <= s.dsos.nameLimit)
+                  }))).enter().append("text").attr("class", (function(t) {
+                     return "dsoNames " + t.properties.type
+                  })).attr("transform", (function(t) {
+                     return C(t.geometry.coordinates)
+                  })).text((function(t) {
+                     return et(t)
+                  })).attr({
+                     dy: "-.5em",
+                     dx: ".35em"
+                  }), x.dsoNames = {
+                     "fill-opacity": s.dsos.style.opacity,
+                     font: s.dsos.nameStyle.font,
+                     "text-anchor": K(s.dsos.nameStyle.align)
+                  }, s.dsos.symbols) nt(s.dsos.symbols, F) && (x[F] = {
+                  fill: s.dsos.colors ? s.dsos.symbols[F].fill : s.dsos.style.fill
+               });
+            t(null)
+         }))
+      })), (s.location || s.formFields.location) && s.planets.show && t.origin && A.defer((function(e) {
+         var a = t.date(),
+            n = t.origin(a).spherical(),
+            r = {
+               type: "FeatureCollection",
+               features: []
+            },
+            o = {
+               type: "FeatureCollection",
+               features: []
+            };
+         if (t.container.selectAll(".planet").each((function(t) {
+               var e = t.id(),
+                  i = 12,
+                  l = t(a).equatorial(n);
+               l.ephemeris.pos = z(l.ephemeris.pos, j[s.transform]), 1 === E(l.ephemeris.pos) && ("lun" === e ? o.features.push(ht(l)) : r.features.push(ht(l)))
+            })), "disk" === s.planets.symbolType ? w.planets.selectAll(".planets").data(r.features).enter().append("path").attr("transform", (function(t) {
+               return C(t.geometry.coordinates)
+            })).attr("d", (function(t) {
+               var e = nt(s.planets.symbols[t.id], "size") ? (s.planets.symbols[t.id].size - 1) * u : null;
+               return dt(t.properties, e)
+            })).attr("class", (function(t) {
+               return "planets " + t.id
+            })) : w.planets.selectAll(".planets").data(r.features).enter().append("text").attr("transform", (function(t) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return t.properties.symbol
+            })).attr("class", (function(t) {
+               return "planets " + t.id
+            })).attr({
+               dy: ".35em"
+            }), o.features.length > 0)
+            if ("letter" === s.planets.symbolType) w.planets.selectAll(".moon").data(o.features).enter().append("text").attr("transform", (function(t) {
+               return C(t.geometry.coordinates)
+            })).text((function(t) {
+               return t.properties.symbol
+            })).attr("class", (function(t) {
+               return "planets " + t.id
+            })).attr({
+               dy: ".35em"
+            });
+            else {
+               var i = nt(s.planets.symbols.lun, "size") ? (s.planets.symbols.lun.size - 1) * u : 11 * u;
+               w.planets.selectAll(".dmoon").data(o.features).enter().append("path").attr("class", "darkluna").attr("transform", (function(t) {
+                  return C(t.geometry.coordinates)
+               })).attr("d", (function(t) {
+                  return d3.svg.symbol().type("circle").size(i * i)()
+               })), w.planets.selectAll(".moon").data(o.features).enter().append("path").attr("class", (function(t) {
+                  return "planets " + t.id
+               })).attr("transform", (function(t) {
+                  return C(t.geometry.coordinates)
+               })).attr("d", (function(t) {
+                  return pt(t.properties, i)
+               }))
+            } for (F in x.planets = G(s.planets.symbolStyle), x.darkluna = {
+               fill: "#666666"
+            }, s.planets.symbols) nt(s.planets.symbols, F) && (x[F] = {
+            fill: s.planets.symbols[F].fill
+         });
+         s.planets.names && (w.planetNames.selectAll(".planetnames").data(r.features).enter().append("text").attr("transform", (function(t) {
+            return C(t.geometry.coordinates)
+         })).text((function(t) {
+            return t.properties.name
+         })).attr({
+            dy: ".85em",
+            dx: "-.35em"
+         }).attr("class", (function(t) {
+            return "planetNames " + t.id
+         })), o.features.length > 0 && w.planetNames.selectAll(".moonname").data(o.features).enter().append("text").attr("transform", (function(t) {
+            return C(t.geometry.coordinates)
+         })).text((function(t) {
+            return t.properties.name
+         })).attr({
+            dy: ".85em",
+            dx: "-.35em"
+         }).attr("class", (function(t) {
+            return "planetNames " + t.id
+         }))), x.planetNames = G(s.planets.nameStyle), e(null)
+      })), (s.location || s.formFields.location) && s.daylight.show && i.clip && A.defer((function(e) {
+         var a = O("sol");
+         if (a) {
+            var n = t.zenith(),
+               r = a.ephemeris.pos,
+               s = d3.geo.distance(n, r),
+               o = d(r),
+               i = d3.geo.circle().angle([179.95]).origin(r);
+            w.daylight.append("path").datum(i).attr("class", "daylight").attr("d", I), x.daylight = W(s, o), 1 === E(r) && s < k && w.daylight.append("circle").attr("cx", o[0]).attr("cy", o[1]).attr("r", 5).style("fill", "#fff")
+         }
+         e(null)
+      })), (s.location || s.formFields.location) && s.horizon.show && !i.clip && A.defer((function(e) {
+         var a = d3.geo.circle().angle([90]).origin(t.nadir());
+         w.horizon.append("path").datum(a).attr("class", "horizon").attr("d", I), x.horizon = B(s.horizon), e(null)
+      })), t.data.length > 0 && t.data.forEach((function(t) {
+         nt(t, "save") && A.defer((function(e) {
+            t.save(), e(null)
+         }))
+      })), A.await((function(t) {
+         if (t) throw t;
+         var e = d3.select("#d3-celestial-svg svg").attr("title", "D3-Celestial").attr("version", 1.1).attr("encoding", "UTF-8").attr("xmlns", "http://www.w3.org/2000/svg").attr("xmlns:xlink", "http://www.w3.org/1999/xlink").attr("xmlns:sodipodi", "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd").attr("xmlns:inkscape", "http://www.inkscape.org/namespaces/inkscape").attr("viewBox", " 0 0 " + r.width + " " + r.height);
+         v.append("style").attr("type", "text/css").text(ft());
+         var a = document.createElement("div");
+         a.id = "newDiv", a.innerHTML = '<textarea id="svg_element" class="d-none">' + e.node().outerHTML + "</textarea>", document.body.appendChild(a)
+      }))
+   }
+   var Qt = d3.map({
+      ellipse: function(t, e) {
+         var a = Math.sqrt(t),
+            n = .666 * a,
+            r = a / 3;
+         return "M" + -n + "," + -r + " m" + -n + ",0" + " a" + n + "," + r + " 0 1,0" + 2 * n + ",0" + " a" + n + "," + r + " 0 1,0" + -2 * n + ",0"
+      },
+      marker: function(t, e) {
+         var a, n = (t > 48 ? t / 4 : 12) / 2,
+            r = n - 3;
+         return "M " + -n + " 0 h " + r + " M 0 " + -n + " v " + r + " M " + n + " 0 h " + -r + " M 0 " + n + " v " + -r
+      },
+      "cross-circle": function(t, e) {
+         var a = Math.sqrt(t),
+            n = a / 2;
+         return "M" + -n + "," + -n + " m" + -n + ",0" + " a" + n + "," + n + " 0 1,0" + 2 * n + ",0" + " a" + n + "," + n + " 0 1,0" + -2 * n + ",0" + " M" + -n + " 0 h " + a + " M 0 " + -n + " v " + a
+      },
+      "stroke-circle": function(t, e) {
+         var a = Math.sqrt(t),
+            n = a / 2;
+         return "M" + -n + "," + -n + " m" + -n + ",0" + " a" + n + "," + n + " 0 1,0" + 2 * n + ",0" + " a" + n + "," + n + " 0 1,0" + -2 * n + ",0" + " M" + (-a - 2) + "," + (-a - 2) + " l" + (a + 4) + "," + (a + 4)
+      },
+      crescent: function(t, e) {
+         var a, n = Math.sqrt(t) / 2,
+            r = .5 * (1 - Math.cos(e)),
+            s = 1.6 * Math.abs(r - .5) + .01,
+            o = e > Math.PI ? 0 : 1,
+            i;
+         return "M " + -1 + "," + -1 + " m 1," + (-n + 1) + " a" + n + "," + n + " 0 1 " + o + " 0," + 2 * n + " a" + n * s + "," + n + " 0 1 " + (Math.abs(r) > .5 ? o : Math.abs(o - 1)) + " 0," + -2 * n + "z"
+      }
+   });
+   d3.svg.customSymbol = function() {
+      var t, e = 64,
+         a = d3.functor(1);
+
+      function n(n, r) {
+         return Qt.get(t.call(this, n, r))(e.call(this, n, r), a.call(this, n, r))
+      }
+      return n.type = function(e) {
+         return arguments.length ? (t = d3.functor(e), n) : t
+      }, n.size = function(t) {
+         return arguments.length ? (e = d3.functor(t), n) : e
+      }, n.ratio = function(t) {
+         return arguments.length ? (a = d3.functor(t), n) : a
+      }, n
+   };
+   var Xt = function(t, e) {
+      var a = new Date,
+         n = d3.time.format("%Z"),
+         r = [{
+            "−12:00": -720
+         }, {
+            "−11:00": -660
+         }, {
+            "−10:00": -600
+         }, {
+            "−09:30": -570
+         }, {
+            "−09:00": -540
+         }, {
+            "−08:00": -480
+         }, {
+            "−07:00": -420
+         }, {
+            "−06:00": -360
+         }, {
+            "−05:00": -300
+         }, {
+            "−04:30": -270
+         }, {
+            "−04:00": -240
+         }, {
+            "−03:30": -210
+         }, {
+            "−03:00": -180
+         }, {
+            "−02:30": -150
+         }, {
+            "−02:00": -120
+         }, {
+            "−01:00": -60
+         }, {
+            "±00:00": 0
+         }, {
+            "+01:00": 60
+         }, {
+            "+02:00": 120
+         }, {
+            "+03:00": 180
+         }, {
+            "+03:30": 210
+         }, {
+            "+04:00": 240
+         }, {
+            "+04:30": 270
+         }, {
+            "+05:00": 300
+         }, {
+            "+05:30": 330
+         }, {
+            "+05:45": 345
+         }, {
+            "+06:00": 360
+         }, {
+            "+06:30": 390
+         }, {
+            "+07:00": 420
+         }, {
+            "+08:00": 480
+         }, {
+            "+08:30": 510
+         }, {
+            "+08:45": 525
+         }, {
+            "+09:00": 540
+         }, {
+            "+09:30": 570
+         }, {
+            "+10:00": 600
+         }, {
+            "+10:30": 630
+         }, {
+            "+11:00": 660
+         }, {
+            "+12:00": 720
+         }, {
+            "+12:45": 765
+         }, {
+            "+13:00": 780
+         }, {
+            "+14:00": 840
+         }],
+         s = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+         o = ["Su", "M", "Tu", "W", "Th", "F", "Sa"],
+         i = M(a),
+         l = d3.time.format("%Y-%m-%d"),
+         c = t.daterange || [];
+      var p = d3.select("#celestial-form").append("div").attr("id", "celestial-date");
+      y("left"), m(), h(), y("right");
+      var d = p.append("div").attr("id", "cal");
+
+      function u() {
+         var t = Q("mon").value,
+            e = Q("yr").value,
+            n = new Date(e, t, 1),
+            r = d3.select("#cal"),
+            s = new Date;
+         e = parseInt(e), t = parseInt(t), n.setDate(n.getDate() - n.getDay());
+         var i = r.node();
+         while (i.firstChild) i.removeChild(i.firstChild);
+         for (var c = 0; c < 7; c++) r.append("div").classed({
+            date: !0,
+            weekday: !0
+         }).html(o[c]);
+         for (c = 0; c < 42; c++) {
+            var p = n.getMonth(),
+               d = n.getDay(),
+               u = l(n);
+            r.append("div").classed({
+               date: !0,
+               grey: p !== t,
+               weekend: p === t && (0 === d || 6 === d),
+               today: 0 === mt(n, s),
+               selected: 0 === mt(n, a)
+            }).attr("id", u).on("click", z).html(n.getDate().toString()), n.setDate(n.getDate() + 1)
+         }
+      }
+
+      function h() {
+         p.append("select").attr("title", "Year").attr("id", "yr").on("change", u), f()
+      }
+
+      function f() {
+         var t = d3.select("select#yr"),
+            e = a.getFullYear(),
+            n = 0,
+            r = M(a);
+         t.selectAll("*").remove(), t.selectAll("option").data(r).enter().append("option").text((function(t, a) {
+            return t === e && (n = a), t.toString()
+         })), t.property("selectedIndex", n)
+      }
+
+      function m() {
+         var t = p.append("select").attr("title", "Month").attr("id", "mon").on("change", u),
+            e = 0,
+            n = a.getMonth();
+         t.selectAll("option").data(s).enter().append("option").attr("value", (function(t, a) {
+            return a === n && (e = a), a
+         })).text((function(t) {
+            return t
+         })), t.property("selectedIndex", e)
+      }
+
+      function y(t) {
+         var e = p.append("div").attr("id", t).on("click", (function() {
+            var e = Q("mon"),
+               a = Q("yr");
+            "left" === t ? 0 === e.selectedIndex ? (e.selectedIndex = 11, a.selectedIndex--) : e.selectedIndex-- : 11 === e.selectedIndex ? (e.selectedIndex = 0, a.selectedIndex++) : e.selectedIndex++, u()
+         }))
+      }
+
+      function g() {
+         p.append("input").attr("type", "number").attr("id", "hr").attr("title", "Hours").attr("max", "24").attr("min", "-1").attr("step", "1").attr("value", a.getHours()).on("change", (function() {
+            !0 === Dt(this) && z()
+         })), p.append("input").attr("type", "number").attr("id", "min").attr("title", "Minutes").attr("max", "60").attr("min", "-1").attr("step", "1").attr("value", a.getMinutes()).on("change", (function() {
+            !0 === Dt(this) && z()
+         })), p.append("input").attr("type", "number").attr("id", "sec").attr("title", "Seconds").attr("max", "60").attr("min", "-1").attr("step", "1").attr("value", a.getSeconds()).on("change", (function() {
+            !0 === Dt(this) && z()
+         }))
+      }
+
+      function v() {
+         var t = p.append("select").attr("title", "Time zone offset from UTC").attr("id", "tz").on("change", z),
+            e = 15,
+            n = -a.getTimezoneOffset();
+         t.selectAll("option").data(r).enter().append("option").attr("value", (function(t, a) {
+            var r = Object.keys(t)[0];
+            return t[r] === n && (e = a), t[r]
+         })).text((function(t) {
+            return Object.keys(t)[0]
+         })), t.property("selectedIndex", e)
+      }
+
+      function M(t) {
+         var e = b(t.getFullYear()),
+            a = [];
+         for (var n = e[0]; n <= e[1]; n++) a.push(n);
+         return a
+      }
+
+      function b(t) {
+         var e;
+         var a = (new Date).getFullYear();
+         return !c || c.length < 1 ? [t - 70, t + 10] : 1 === c.length && st(c[0]) ? c[0] >= 100 ? [c[0] - 70, c[0] + 10] : [t - c[0], t + c[0]] : 2 === c.length && st(c[0]) && st(c[1]) ? c[1] >= 100 ? [c[0], c[1]] : [c[0] - c[1], c[0] + c[1]] : [t - 70, t + 10]
+      }
+
+      function w(t, e) {
+         var a = Q(t);
+         for (var n = 0; n < a.childNodes.length; n++)
+            if (a.childNodes[n].value == e) {
+               a.selectedIndex = n;
+               break
+            }
+      }
+
+      function k(t) {
+         t && a.setTime(t.valueOf()), w("yr", a.getFullYear()), w("mon", a.getMonth()), u(), Q("hr").value = a.getHours(), Q("min").value = a.getMinutes(), Q("sec").value = a.getSeconds()
+      }
+
+      function x() {
+         d3.select("#celestial-date").style("opacity", 0), d3.select("#error").style({
+            top: "-9999px",
+            left: "-9999px",
+            opacity: 0
+         }), d3.select("#datepick").classed("active", !1), setTimeout((function() {
+            Q("celestial-date").style.top = X(-9999)
+         }), 600)
+      }
+
+      function z() {
+         var t = Q("hr").value,
+            n = Q("min").value,
+            r = Q("sec").value,
+            s = Q("tz").value;
+         this.id && -1 !== this.id.search(/^\d/) && (a = l.parse(this.id)), f(), a.setHours(t, n, r), k(), e(a, s)
+      }
+      u(), g(), v(), this.show = function(t, e) {
+         var n = Q("celestial-date"),
+            r = Q("datepick"),
+            s = r.offsetLeft + r.offsetWidth - n.offsetWidth,
+            o = r.offsetTop - n.offsetHeight - 1; - 9999 === n.offsetTop ? (a.setTime(t.valueOf()), w("tz", e), k(), d3.select("#celestial-date").style({
+            top: X(o),
+            left: X(s),
+            opacity: 1
+         }), d3.select("#datepick").classed("active", !0)) : x()
+      }, this.isVisible = function() {
+         return !!document.getElementById("datepick") && !0 === d3.select("#datepick").classed("active")
+      }, this.hide = function() {
+         x()
+      }
+   };
+   ! function() {
+      var t = Math.PI / 180,
+         e = 180 / Math.PI;
+
+      function a(t, e, a) {
+         var n = t.translate(),
+            r = Math.atan2(e[1] - n[1], e[0] - n[0]) - Math.atan2(a[1] - n[1], a[0] - n[0]);
+         return [Math.cos(r / 2), 0, 0, Math.sin(r / 2)]
+      }
+
+      function n(t, e) {
+         var a = t.invert(e);
+         return a && isFinite(a[0]) && isFinite(a[1]) && c(a)
+      }
+
+      function r(e) {
+         var a = .5 * e[0] * t,
+            n = .5 * e[1] * t,
+            r = .5 * e[2] * t,
+            s = Math.sin(a),
+            o = Math.cos(a),
+            i = Math.sin(n),
+            l = Math.cos(n),
+            c = Math.sin(r),
+            p = Math.cos(r);
+         return [o * l * p + s * i * c, s * l * p - o * i * c, o * i * p + s * l * c, o * l * c - s * i * p]
+      }
+
+      function s(t, e) {
+         var a = t[0],
+            n = t[1],
+            r = t[2],
+            s = t[3],
+            o = e[0],
+            i = e[1],
+            l = e[2],
+            c = e[3];
+         return [a * o - n * i - r * l - s * c, a * i + n * o + r * c - s * l, a * l - n * c + r * o + s * i, a * c + n * l - r * i + s * o]
+      }
+
+      function o(t, e) {
+         if (t && e) {
+            var a = d(t, e),
+               n = Math.sqrt(p(a, a)),
+               r = .5 * Math.acos(Math.max(-1, Math.min(1, p(t, e)))),
+               s = Math.sin(r) / n;
+            return n && [Math.cos(r), a[2] * s, -a[1] * s, a[0] * s]
+         }
+      }
+
+      function i(t, e) {
+         var a = Math.max(-1, Math.min(1, p(t, e))),
+            n = a < 0 ? -1 : 1,
+            r = Math.acos(n * a),
+            s = Math.sin(r);
+         return s ? function(a) {
+            var o = n * Math.sin((1 - a) * r) / s,
+               i = Math.sin(a * r) / s;
+            return [t[0] * o + e[0] * i, t[1] * o + e[1] * i, t[2] * o + e[2] * i, t[3] * o + e[3] * i]
+         } : function() {
+            return t
+         }
+      }
+
+      function l(t) {
+         return [Math.atan2(2 * (t[0] * t[1] + t[2] * t[3]), 1 - 2 * (t[1] * t[1] + t[2] * t[2])) * e, Math.asin(Math.max(-1, Math.min(1, 2 * (t[0] * t[2] - t[3] * t[1])))) * e, Math.atan2(2 * (t[0] * t[3] + t[1] * t[2]), 1 - 2 * (t[2] * t[2] + t[3] * t[3])) * e]
+      }
+
+      function c(e) {
+         var a = e[0] * t,
+            n = e[1] * t,
+            r = Math.cos(n);
+         return [r * Math.cos(a), r * Math.sin(a), Math.sin(n)]
+      }
+
+      function p(t, e) {
+         for (var a = 0, n = t.length, r = 0; a < n; ++a) r += t[a] * e[a];
+         return r
+      }
+
+      function d(t, e) {
+         return [t[1] * e[2] - t[2] * e[1], t[2] * e[0] - t[0] * e[2], t[0] * e[1] - t[1] * e[0]]
+      }
+
+      function u(t) {
+         var e = 0,
+            a = arguments.length,
+            n = [];
+         while (++e < a) n.push(arguments[e]);
+         var r = d3.dispatch.apply(null, n);
+         return r.of = function(e, a) {
+            return function(n) {
+               try {
+                  var s = n.sourceEvent = d3.event;
+                  n.target = t, d3.event = n, r[n.type].apply(e, a)
+               } finally {
+                  d3.event = s
+               }
+            }
+         }, r
+      }
+      d3.geo.zoom = function() {
+         var t, e;
+         var p, d = 0,
+            h = u(f, "zoomstart", "zoom", "zoomend"),
+            f = d3.behavior.zoom().on("zoomstart", (function() {
+               var e = d3.mouse(this),
+                  i = r(t.rotate()),
+                  c = n(t, e);
+               c && (p = c), m.call(f, "zoom", (function() {
+                  t.scale(y.k = d3.event.scale);
+                  var r = d3.mouse(this),
+                     c = o(p, n(t, r));
+                  t.rotate(y.r = l(i = c ? s(i, c) : s(a(t, e, r), i))), e = r, v(h.of(this, arguments))
+               })), g(h.of(this, arguments))
+            })).on("zoomend", (function() {
+               m.call(f, "zoom", null), M(h.of(this, arguments))
+            })),
+            m = f.on,
+            y = {
+               r: [0, 0, 0],
+               k: 1
+            };
+
+         function g(t) {
+            d++ || t({
+               type: "zoomstart"
+            })
+         }
+
+         function v(t) {
+            t({
+               type: "zoom"
+            })
+         }
+
+         function M(t) {
+            --d || t({
+               type: "zoomend"
+            })
+         }
+         return f.rotateTo = function(t) {
+            var e = o(c(t), c([-y.r[0], -y.r[1]]));
+            return l(s(r(y.r), e))
+         }, f.projection = function(e) {
+            return arguments.length ? (y = {
+               r: (t = e).rotate(),
+               k: t.scale()
+            }, f.scale(y.k)) : t
+         }, f.duration = function(t) {
+            return arguments.length ? (e = t, f) : e
+         }, f.event = function(a) {
+            a.each((function() {
+               var a = d3.select(this),
+                  n = h.of(this, arguments),
+                  s = y,
+                  o = d3.transition(a);
+               if (o !== a) {
+                  o.each("start.zoom", (function() {
+                     this.__chart__ && ((y = this.__chart__).hasOwnProperty("r") || (y.r = t.rotate())), t.rotate(y.r).scale(y.k), g(n)
+                  })).tween("zoom:zoom", (function() {
+                     var a = f.size()[0],
+                        c = i(r(y.r), r(s.r)),
+                        p = d3.geo.distance(y.r, s.r),
+                        d = d3.interpolateZoom([0, 0, a / y.k], [p, 0, a / s.k]);
+                     return e && o.duration(e(.001 * d.duration)),
+                        function(e) {
+                           var r = d(e);
+                           this.__chart__ = y = {
+                              r: l(c(r[0] / p)),
+                              k: a / r[2]
+                           }, t.rotate(y.r).scale(y.k), f.scale(y.k), v(n)
+                        }
+                  })).each("end.zoom", (function() {
+                     M(n)
+                  }));
+                  try {
+                     o.each("interrupt.zoom", (function() {
+                        M(n)
+                     }))
+                  } catch (t) {
+                     console.log(t)
+                  }
+               } else this.__chart__ = y, g(n), v(n), M(n)
+            }))
+         }, d3.rebind(f, h, "on")
+      }
+   }(),
+   function(t, e) {
+      "object" == typeof exports && "undefined" != typeof module ? e(exports) : "function" == typeof define && define.amd ? define(["exports"], e) : e(t.d3 = t.d3 || {})
+   }(this, (function(t) {
+      "use strict";
+      var e = [].slice;
+      var a = {};
+
+      function n(t) {
+         this._size = t, this._call = this._error = null, this._tasks = [], this._data = [], this._waiting = this._active = this._ended = this._start = 0
+      }
+
+      function r(t) {
+         if (!t._start) try {
+            s(t)
+         } catch (e) {
+            if (t._tasks[t._ended + t._active - 1]) i(t, e);
+            else if (!t._data) throw e
+         }
+      }
+
+      function s(t) {
+         while (t._start = t._waiting && t._active < t._size) {
+            var e = t._ended + t._active,
+               n = t._tasks[e],
+               r = n.length - 1,
+               s = n[r];
+            n[r] = o(t, e), --t._waiting, ++t._active, n = s.apply(null, n), t._tasks[e] && (t._tasks[e] = n || a)
+         }
+      }
+
+      function o(t, e) {
+         return function(a, n) {
+            t._tasks[e] && (--t._active, ++t._ended, t._tasks[e] = null, null == t._error && (null != a ? i(t, a) : (t._data[e] = n, t._waiting ? r(t) : l(t))))
+         }
+      }
+
+      function i(t, e) {
+         var a = t._tasks.length,
+            n;
+         t._error = e, t._data = void 0, t._waiting = NaN;
+         while (--a >= 0)
+            if ((n = t._tasks[a]) && (t._tasks[a] = null, n.abort)) try {
+               n.abort()
+            } catch (e) {}
+         t._active = NaN, l(t)
+      }
+
+      function l(t) {
+         if (!t._active && t._call) {
+            var e = t._data;
+            t._data = void 0, t._call(t._error, e)
+         }
+      }
+
+      function c(t) {
+         if (null == t) t = Infinity;
+         else if (!((t = +t) >= 1)) throw new Error("invalid concurrency");
+         return new n(t)
+      }
+      n.prototype = c.prototype = {
+         constructor: n,
+         defer: function(t) {
+            if ("function" != typeof t) throw new Error("invalid callback");
+            if (this._call) throw new Error("defer after await");
+            if (null != this._error) return this;
+            var a = e.call(arguments, 1);
+            return a.push(t), ++this._waiting, this._tasks.push(a), r(this), this
+         },
+         abort: function() {
+            return null == this._error && i(this, new Error("abort")), this
+         },
+         await: function(t) {
+            if ("function" != typeof t) throw new Error("invalid callback");
+            if (this._call) throw new Error("multiple await");
+            return this._call = function(e, a) {
+               t.apply(null, [e].concat(a))
+            }, l(this), this
+         },
+         awaitAll: function(t) {
+            if ("function" != typeof t) throw new Error("invalid callback");
+            if (this._call) throw new Error("multiple await");
+            return this._call = t, l(this), this
+         }
+      }, t.queue = c, Object.defineProperty(t, "__esModule", {
+         value: !0
+      })
+   })), this.Celestial = t
+}();
+//# sourceMappingURL=/s/files/1/0511/8522/1811/files/celestial.js.map?v=1605711306
