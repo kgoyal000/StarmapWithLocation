@@ -854,7 +854,7 @@
          namesType: "desig",
          nameStyle: {
             fill: "#cccccc",
-            font: "11px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, serif",
+            font: "18px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, serif",
             align: "left",
             baseline: "bottom"
          },
