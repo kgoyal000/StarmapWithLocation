@@ -1535,7 +1535,7 @@ var settings = {
     namesType: "desig",  // Type of displayed name: desig, name, or 15 different language codes from dsonames.json
     nameStyle: { fill: "#cccccc", font: "11px 'Lucida Sans Unicode', 'DejaVu Sans', Helvetica, Arial, serif", align: "left", baseline: "bottom" },
     nameLimit: 4,  // Show only names for DSOs brighter than nameLimit
-    size: null,    // Optional seperate scale size for DSOs, null = stars.size
+    size: 6,    // Optional seperate scale size for DSOs, null = stars.size
     exponent: 1.4, // Scale exponent for DSO size, larger = more non-linear
     data: "dsos.bright.json",  // Data source for DSOs
     symbols: {  // DSO symbol styles
