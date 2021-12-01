@@ -778,7 +778,7 @@
    }, t.getData = L, t.getPoint = q, t.getPlanet = O;
    var W = {};
    var V = {
-      width: 1080,
+      width: 580,
       projection: "airy",
       transform: "equatorial",
       center: null,
@@ -1031,7 +1031,7 @@
       },
       planets: {
          show: !0,
-         which: ["ter", "lun"],
+         which: ["sol", "mer", "ven", "ter", "lun", "mar", "jup", "sat", "ura", "nep"],
          symbols: {
             sol: {
                symbol: "☉",
