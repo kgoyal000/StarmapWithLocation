@@ -778,7 +778,7 @@
    }, t.getData = L, t.getPoint = q, t.getPlanet = O;
    var W = {};
    var V = {
-      width: 280,
+      width: 480,
       projection: "airy",
       transform: "equatorial",
       center: null,
