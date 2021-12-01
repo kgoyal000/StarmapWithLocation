@@ -778,7 +778,7 @@
    }, t.getData = L, t.getPoint = q, t.getPlanet = O;
    var W = {};
    var V = {
-      width: 580,
+      width: 500,
       projection: "airy",
       transform: "equatorial",
       center: null,
@@ -1113,7 +1113,7 @@
             align: "center",
             baseline: "middle"
          },
-         symbolType: "disc",
+         symbolType: "symbol",
          names: !1,
          nameStyle: {
             fill: "#cccccc",
