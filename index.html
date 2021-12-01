@@ -9,15 +9,19 @@
   <script type="text/javascript" src="celestial.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="celestial.css">
-
+<style>
+  #celestial-map canvas{
+    width: 100% !important
+  }
+  </style>
 </head>
 <body>
   <div class="container-fluid h-100" style="margin: 60px auto;">
   <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-6">
       <div style="overflow:hidden;"><div id="celestial-map"></div></div>    
     </div> 
-    <div class="col-sm-7">
+    <div class="col-sm-6">
 <!--       Input for auto location suggestions  -->
       <label for="address" class="display-4">Location</label>
       <input type="search" class="form-control" placeholder="Start typing your location" id="address">
