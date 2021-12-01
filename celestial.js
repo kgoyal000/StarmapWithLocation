@@ -836,8 +836,8 @@
             baseline: "bottom"
          },
          propernameLimit: 1.5,
-         size: 12,
-         exponent: -.29,
+         size: 8,
+         exponent: -.32,
          data: "stars.6.json"
       },
       dsos: {
@@ -1113,7 +1113,7 @@
             align: "center",
             baseline: "middle"
          },
-         symbolType: "symbol",
+         symbolType: "disc",
          names: !1,
          nameStyle: {
             fill: "#cccccc",
