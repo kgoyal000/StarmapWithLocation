@@ -1113,7 +1113,7 @@
             align: "center",
             baseline: "middle"
          },
-         symbolType: "symbol",
+         symbolType: "disc",
          names: !1,
          nameStyle: {
             fill: "#cccccc",
